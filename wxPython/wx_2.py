@@ -70,7 +70,7 @@ class MyForm(wx.Panel):
         self.Bind(wx.EVT_BUTTON, self.onOK, okBtn)
         self.Bind(wx.EVT_BUTTON, self.onCancel, cancelBtn)
 
-        # add iszers
+        # add sizers
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         titleSizer = wx.BoxSizer(wx.HORIZONTAL)
         inputOneSizer = wx.BoxSizer(wx.HORIZONTAL)

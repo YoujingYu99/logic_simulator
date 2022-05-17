@@ -8,6 +8,7 @@ Classes:
 MyGLCanvas - handles all canvas drawing operations.
 Gui - configures the main window and all the widgets.
 """
+import os
 import wx
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
@@ -215,13 +216,30 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
 
-        # Configure the file menu
-        fileMenu = wx.Menu()
+        # # Configure the file menu
+        # fileMenu = wx.Menu()
+        # menuBar = wx.MenuBar()
+        # fileMenu.Append(wx.ID_ABOUT, "&About")
+        # fileMenu.Append(wx.ID_EXIT, "&Exit")
+        # menuBar.Append(fileMenu, "&File")
+
+        fileMenu = FileMenu(parentFrame=self)
         menuBar = wx.MenuBar()
+        menuBar.Append(fileMenu, "&File")
+
+        # editMenu = EditMenu(parentFrame=self)
+        # menuBar.Append(editMenu, "&Edit")
+
         fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_EXIT, "&Exit")
-        menuBar.Append(fileMenu, "&File")
+
+        # set menubar
         self.SetMenuBar(menuBar)
+
+        # self.Bind(wx.EVT_MENU, self.MenuHandler)
+        self.Centre()
+        self.Show(True)
+
 
         # Canvas for drawing signals
         self.canvas = MyGLCanvas(self, devices, monitors)
@@ -234,7 +252,7 @@ class Gui(wx.Frame):
                                     style=wx.TE_PROCESS_ENTER)
 
         # Bind events to widgets
-        self.Bind(wx.EVT_MENU, self.on_menu)
+        # self.Bind(wx.EVT_MENU, self.on_menu)
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
         self.run_button.Bind(wx.EVT_BUTTON, self.on_run_button)
         self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
@@ -254,14 +272,14 @@ class Gui(wx.Frame):
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
 
-    def on_menu(self, event):
-        """Handle the event when the user selects a menu item."""
-        Id = event.GetId()
-        if Id == wx.ID_EXIT:
-            self.Close(True)
-        if Id == wx.ID_ABOUT:
-            wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-                          "About Logsim", wx.ICON_INFORMATION | wx.OK)
+    # def on_menu(self, event):
+    #     """Handle the event when the user selects a menu item."""
+    #     Id = event.GetId()
+    #     if Id == wx.ID_EXIT:
+    #         self.Close(True)
+    #     if Id == wx.ID_ABOUT:
+    #         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
+    #                       "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
@@ -279,3 +297,109 @@ class Gui(wx.Frame):
         text_box_value = self.text_box.GetValue()
         text = "".join(["New text box value: ", text_box_value])
         self.canvas.render(text)
+
+
+class FileMenu(wx.Menu):
+    def __init__(self, parentFrame):
+        super().__init__()
+        self.OnInit()
+        self.parentFrame = parentFrame
+
+    def OnInit(self):
+        # menu stuff hoes here
+        # add new item
+        # special command : wx.ID_NEW is for buttons that create new items or new windows
+        # text has text and shortcut command
+        newItem = wx.MenuItem(
+            parentMenu=self, id=wx.ID_NEW, text="&New\tCtrl+N", kind=wx.ITEM_NORMAL
+        )
+
+
+        # open an item
+        openItem = wx.MenuItem(
+            parentMenu=self, id=wx.ID_OPEN, text="&Open\tCtrl+O", kind=wx.ITEM_NORMAL
+        )
+        self.Append(openItem)
+        self.Bind(wx.EVT_MENU, handler=self.onOpen, source=openItem)
+
+        # saveItem = wx.MenuItem(
+        #     parentMenu=self,
+        #     id=wx.ID_SAVE,
+        #     text="&Save\tCtrl+S",
+        #     helpString="Save your file",
+        #     kind=wx.ITEM_NORMAL,
+        # )
+        # self.Append(saveItem)
+        # self.Bind(wx.EVT_MENU, handler=self.onSave, source=saveItem)
+
+        self.AppendSeparator()
+
+        quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
+        self.Append(quitItem)
+        self.Bind(wx.EVT_MENU, handler=self.onQuit, source=quitItem)
+
+        # Id = event.GetId()
+        # if Id == wx.ID_EXIT:
+        #     self.Close(True)
+        # if Id == wx.ID_ABOUT:
+        #     wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
+        #                   "About Logsim", wx.ICON_INFORMATION | wx.OK)
+
+
+    def onOpen(self, event):
+        wildcard = "TXT files (*.txt)|*.txt"
+        dialog = wx.FileDialog(
+            self.parentFrame,
+            "Open Text Files",
+            wildcard=wildcard,
+            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
+        )
+        if dialog.ShowModal() == wx.ID_CANCEL:
+            return None
+
+        path = dialog.GetPath()
+        if os.path.exists(path):
+            with open(path) as myfile:
+                for line in myfile:
+                    self.parentFrame.text.WriteText(line)
+
+        if dialog.ShowModal() == wx.ID_OK:
+            path = dialog.GetPath()
+            text = "Loading definition file:  " + str(path) + "\n"
+
+
+        dialog.Destroy()
+
+
+    # def onSave(self, event):
+    #     dialog = wx.FileDialog(
+    #         self.parentFrame,
+    #         message="Save your data",
+    #         defaultFile="Untitled.txt",
+    #         style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+    #     )
+    #
+    #     if dialog.ShowModal() == wx.ID_CANCEL:
+    #         return None
+    #
+    #     path = dialog.GetPath()
+    #     data = self.parentFrame.text.GetValue()
+    #     print(data)
+    #     data = data.split("\n")
+    #     print(data)
+    #     with open(path, "w+") as myfile:
+    #         for line in data:
+    #             myfile.write(line + "\n")
+
+    def onQuit(self, event):
+        self.parentFrame.Close()
+
+    # def on_menu(self, event):
+    #     """Handle the event when the user selects a menu item."""
+    #     Id = event.GetId()
+    #     if Id == wx.ID_EXIT:
+    #         self.Close(True)
+    #     if Id == wx.ID_ABOUT:
+    #         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
+    #                       "About Logsim", wx.ICON_INFORMATION | wx.OK)
+
