@@ -230,7 +230,6 @@ class Gui(wx.Frame):
         # editMenu = EditMenu(parentFrame=self)
         # menuBar.Append(editMenu, "&Edit")
 
-        fileMenu.Append(wx.ID_ABOUT, "&About")
         fileMenu.Append(wx.ID_EXIT, "&Exit")
 
         # set menubar
@@ -261,6 +260,7 @@ class Gui(wx.Frame):
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         side_sizer = wx.BoxSizer(wx.VERTICAL)
 
+        # Box.Add(control, proportion, flag, border)
         main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
         main_sizer.Add(side_sizer, 1, wx.ALL, 5)
 
@@ -310,9 +310,9 @@ class FileMenu(wx.Menu):
         # add new item
         # special command : wx.ID_NEW is for buttons that create new items or new windows
         # text has text and shortcut command
-        newItem = wx.MenuItem(
-            parentMenu=self, id=wx.ID_NEW, text="&New\tCtrl+N", kind=wx.ITEM_NORMAL
-        )
+        # newItem = wx.MenuItem(
+        #     parentMenu=self, id=wx.ID_NEW, text="&New\tCtrl+N", kind=wx.ITEM_NORMAL
+        # )
 
 
         # open an item
@@ -337,6 +337,10 @@ class FileMenu(wx.Menu):
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
         self.Append(quitItem)
         self.Bind(wx.EVT_MENU, handler=self.onQuit, source=quitItem)
+
+        aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
+        self.Append(aboutItem)
+        self.Bind(wx.EVT_MENU, handler=self.onAbout, source=aboutItem)
 
         # Id = event.GetId()
         # if Id == wx.ID_EXIT:
@@ -393,6 +397,11 @@ class FileMenu(wx.Menu):
 
     def onQuit(self, event):
         self.parentFrame.Close()
+
+    def onAbout(self, event):
+        wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
+                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
+        return
 
     # def on_menu(self, event):
     #     """Handle the event when the user selects a menu item."""
