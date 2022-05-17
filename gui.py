@@ -5,6 +5,7 @@ Classes:
 --------
 MyGLCanvas - handles all canvas drawing operations.
 Gui - configures the main window and all the widgets.
+FileMenu - handles all menu items under 'File' menu
 """
 import os
 import wx
@@ -88,7 +89,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         # Clear everything
         GL.glClear(GL.GL_COLOR_BUFFER_BIT)
-
 
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
@@ -200,20 +200,9 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
 
-        # # Configure the file menu
-        # fileMenu = wx.Menu()
-        # menuBar = wx.MenuBar()
-        # fileMenu.Append(wx.ID_ABOUT, "&About")
-        # fileMenu.Append(wx.ID_EXIT, "&Exit")
-        # menuBar.Append(fileMenu, "&File")
-
         fileMenu = FileMenu(parentFrame=self)
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
-
-        # editMenu = EditMenu(parentFrame=self)
-        # menuBar.Append(editMenu, "&Edit")
-
 
         # set menubar
         self.SetMenuBar(menuBar)
@@ -221,7 +210,6 @@ class Gui(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.MenuHandler)
         self.Centre()
         self.Show(True)
-
 
         # Canvas for drawing signals
         self.canvas = MyGLCanvas(self, devices, monitors)
@@ -255,15 +243,6 @@ class Gui(wx.Frame):
         self.SetSizeHints(600, 600)
         self.SetSizer(main_sizer)
 
-    # def on_menu(self, event):
-    #     """Handle the event when the user selects a menu item."""
-    #     Id = event.GetId()
-    #     if Id == wx.ID_EXIT:
-    #         self.Close(True)
-    #     if Id == wx.ID_ABOUT:
-    #         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-    #                       "About Logsim", wx.ICON_INFORMATION | wx.OK)
-
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
         spin_value = self.spin.GetValue()
@@ -283,12 +262,21 @@ class Gui(wx.Frame):
 
 
 class FileMenu(wx.Menu):
+    """This class contains all the methods for creating the menu named 'File'
+        Public methods
+        --------------
+        on_init(self): Initialisation step
+        onOpen(self, event): Open definition file.
+        on_about(self, event): Display about information.
+        on_quit(self, event): Quit system.
+        """
     def __init__(self, parentFrame):
         super().__init__()
-        self.OnInit()
+        self.on_init()
         self.parentFrame = parentFrame
 
-    def OnInit(self):
+    def on_init(self):
+        """Initialise menu and menu items"""
         # menu stuff hoes here
         # add new item
         # special command : wx.ID_NEW is for buttons that create new items or new windows
@@ -297,7 +285,6 @@ class FileMenu(wx.Menu):
         #     parentMenu=self, id=wx.ID_NEW, text="&New\tCtrl+N", kind=wx.ITEM_NORMAL
         # )
 
-
         # open an item
         openItem = wx.MenuItem(
             parentMenu=self, id=wx.ID_OPEN, text="&Open\tCtrl+O", kind=wx.ITEM_NORMAL
@@ -305,7 +292,6 @@ class FileMenu(wx.Menu):
         self.Append(openItem)
         self.Bind(wx.EVT_MENU, handler=self.onOpen, source=openItem)
         self.AppendSeparator()
-
 
         # saveItem = wx.MenuItem(
         #     parentMenu=self,
@@ -320,27 +306,18 @@ class FileMenu(wx.Menu):
         # about information on project
         aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
         self.Append(aboutItem)
-        self.Bind(wx.EVT_MENU, handler=self.onAbout, source=aboutItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
         self.AppendSeparator()
 
         # quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
         self.Append(quitItem)
-        self.Bind(wx.EVT_MENU, handler=self.onQuit, source=quitItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_quit, source=quitItem)
         self.AppendSeparator()
-
-
-#
-
-        # Id = event.GetId()
-        # if Id == wx.ID_EXIT:
-        #     self.Close(True)
-        # if Id == wx.ID_ABOUT:
-        #     wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-        #                   "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
     # open definition file(text file at the moment)
     def onOpen(self, event):
+        """Open definition file uploaded by user."""
         wildcard = "TXT files (*.txt)|*.txt"
         dialog = wx.FileDialog(
             self.parentFrame,
@@ -361,9 +338,7 @@ class FileMenu(wx.Menu):
             path = dialog.GetPath()
             text = "Loading definition file:  " + str(path) + "\n"
 
-
         dialog.Destroy()
-
 
     # possibly save file in the future
     # def onSave(self, event):
@@ -386,20 +361,12 @@ class FileMenu(wx.Menu):
     #         for line in data:
     #             myfile.write(line + "\n")
 
-    def onAbout(self, event):
+    def on_about(self, event):
+        """Display about information"""
         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
                            "About Logsim", wx.ICON_INFORMATION | wx.OK)
         return
 
-    def onQuit(self, event):
+    def on_quit(self, event):
+        """Quit the system."""
         self.parentFrame.Close()
-
-
-    # def on_menu(self, event):
-    #     """Handle the event when the user selects a menu item."""
-    #     Id = event.GetId()
-    #     if Id == wx.ID_EXIT:
-    #         self.Close(True)
-    #     if Id == wx.ID_ABOUT:
-    #         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-    #                       "About Logsim", wx.ICON_INFORMATION | wx.OK)

@@ -6,13 +6,26 @@ from devices import Devices
 from network import Network
 from monitors import Monitors
 
+
 # create App class
 class LogicSimulatorApp(wx.App):
+    """This class creates a LogicSimulatorApp of the type wx.App.
+    --------------
+    Public methods
+    --------------
+    on_init(self, event): Initialisation with all parsed information passed into the App.
+    """
     def __init__(self):
         super().__init__()
-        self.OnInit()
+        self.on_init()
 
-    def OnInit(self):
+        # """Initialise variables."""
+        # self.names = names
+        # self.devices = devices
+        # self.monitors = monitors
+        # self.network = network
+
+    def on_init(self):
         # # only uncomment when full code integratable
         # names = Names()
         # devices = Devices(names)
@@ -25,12 +38,6 @@ class LogicSimulatorApp(wx.App):
         monitors = None
         path = None
 
-
-        """Initialise variables."""
-        self.names = names
-        self.devices = devices
-        self.monitors = monitors
-        self.network = network
 
         return True
 
