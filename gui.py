@@ -1,8 +1,6 @@
 """Implement the graphical user interface for the Logic Simulator.
-
 Used in the Logic Simulator project to enable the user to run the simulation
 or adjust the network properties.
-
 Classes:
 --------
 MyGLCanvas - handles all canvas drawing operations.
@@ -23,28 +21,20 @@ from parse import Parser
 
 class MyGLCanvas(wxcanvas.GLCanvas):
     """Handle all drawing operations.
-
     This class contains functions for drawing onto the canvas. It
     also contains handlers for events relating to the canvas.
-
     Parameters
     ----------
     parent: parent window.
     devices: instance of the devices.Devices() class.
     monitors: instance of the monitors.Monitors() class.
-
     Public methods
     --------------
     init_gl(self): Configures the OpenGL context.
-
     render(self, text): Handles all drawing operations.
-
     on_paint(self, event): Handles the paint event.
-
     on_size(self, event): Handles the canvas resize event.
-
     on_mouse(self, event): Handles mouse events.
-
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
     """
@@ -191,24 +181,18 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
-
     This class provides a graphical user interface for the Logic Simulator and
     enables the user to change the circuit properties and run simulations.
-
     Parameters
     ----------
     title: title of the window.
-
     Public methods
     --------------
     on_menu(self, event): Event handler for the file menu.
-
     on_spin(self, event): Event handler for when the user changes the spin
                            control value.
-
     on_run_button(self, event): Event handler for when the user clicks the run
                                 button.
-
     on_text_box(self, event): Event handler for when the user enters text.
     """
 
@@ -230,7 +214,6 @@ class Gui(wx.Frame):
         # editMenu = EditMenu(parentFrame=self)
         # menuBar.Append(editMenu, "&Edit")
 
-        fileMenu.Append(wx.ID_EXIT, "&Exit")
 
         # set menubar
         self.SetMenuBar(menuBar)
@@ -321,6 +304,8 @@ class FileMenu(wx.Menu):
         )
         self.Append(openItem)
         self.Bind(wx.EVT_MENU, handler=self.onOpen, source=openItem)
+        self.AppendSeparator()
+
 
         # saveItem = wx.MenuItem(
         #     parentMenu=self,
@@ -332,15 +317,20 @@ class FileMenu(wx.Menu):
         # self.Append(saveItem)
         # self.Bind(wx.EVT_MENU, handler=self.onSave, source=saveItem)
 
-        self.AppendSeparator()
-
-        quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
-        self.Append(quitItem)
-        self.Bind(wx.EVT_MENU, handler=self.onQuit, source=quitItem)
-
+        # about information on project
         aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
         self.Append(aboutItem)
         self.Bind(wx.EVT_MENU, handler=self.onAbout, source=aboutItem)
+        self.AppendSeparator()
+
+        # quit project
+        quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
+        self.Append(quitItem)
+        self.Bind(wx.EVT_MENU, handler=self.onQuit, source=quitItem)
+        self.AppendSeparator()
+
+
+#
 
         # Id = event.GetId()
         # if Id == wx.ID_EXIT:
@@ -349,7 +339,7 @@ class FileMenu(wx.Menu):
         #     wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
         #                   "About Logsim", wx.ICON_INFORMATION | wx.OK)
 
-
+    # open definition file(text file at the moment)
     def onOpen(self, event):
         wildcard = "TXT files (*.txt)|*.txt"
         dialog = wx.FileDialog(
@@ -375,6 +365,7 @@ class FileMenu(wx.Menu):
         dialog.Destroy()
 
 
+    # possibly save file in the future
     # def onSave(self, event):
     #     dialog = wx.FileDialog(
     #         self.parentFrame,
@@ -395,13 +386,14 @@ class FileMenu(wx.Menu):
     #         for line in data:
     #             myfile.write(line + "\n")
 
-    def onQuit(self, event):
-        self.parentFrame.Close()
-
     def onAbout(self, event):
         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
                            "About Logsim", wx.ICON_INFORMATION | wx.OK)
         return
+
+    def onQuit(self, event):
+        self.parentFrame.Close()
+
 
     # def on_menu(self, event):
     #     """Handle the event when the user selects a menu item."""
@@ -411,4 +403,3 @@ class FileMenu(wx.Menu):
     #     if Id == wx.ID_ABOUT:
     #         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
     #                       "About Logsim", wx.ICON_INFORMATION | wx.OK)
-
