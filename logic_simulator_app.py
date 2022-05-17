@@ -10,13 +10,31 @@ from monitors import Monitors
 class LogicSimulatorApp(wx.App):
     def __init__(self):
         super().__init__()
-        self.InitBrowser()
+        self.OnInit()
 
-    def InitBrowser(self):
+    def OnInit(self):
+        # # only uncomment when full code integratable
+        # names = Names()
+        # devices = Devices(names)
+        # network = Network(names, devices)
+        # monitors = Monitors(names, devices, network)
+
+        names = None
+        devices = None
+        network = None
+        monitors = None
+        path = None
+
+
         """Initialise variables."""
         self.names = names
         self.devices = devices
         self.monitors = monitors
         self.network = network
+
+        return True
+
+
+
 
 
