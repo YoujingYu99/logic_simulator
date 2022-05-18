@@ -9,6 +9,10 @@ Names - maps variable names and string names to unique integers.
 """
 
 
+from typing import Type
+from unicodedata import name
+
+
 class Names:
 
     """Map variable names and string names to unique integers.
@@ -41,29 +45,67 @@ class Names:
     def __init__(self):
         """Initialise names list."""
         self.error_code_count = 0  # how many error codes have been declared
+        #initialise a private list to store names
+        self._names_list = []
 
-    def unique_error_codes(self, num_error_codes):
-        """Return a list of unique integer error codes."""
+    def unique_error_codes(self, num_error_codes: int) -> list[int]:
+        """Return a list of unique integer error codes.
+           Args
+           num_error_codes - number of error codes present
+           
+           returns: list with unique integer error codes"""
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
         self.error_code_count += num_error_codes
         return range(self.error_code_count - num_error_codes,
                      self.error_code_count)
 
-    def query(self, name_string):
+    def query(self, name_string: str) -> int:
         """Return the corresponding name ID for name_string.
-
         If the name string is not present in the names list, return None.
-        """
 
-    def lookup(self, name_string_list):
+        Args:
+        name_string - the name to be queried
+
+
+        returns: the ID for name_string
+        """
+        if type(name_string) != "string":
+            raise TypeError
+        if name_string in self._names_list:
+            return self._names_list.index(name_string)
+        else:
+            return None
+
+    def lookup(self, name_string_list: list[str]) -> list[int]:
         """Return a list of name IDs for each name string in name_string_list.
 
         If the name string is not present in the names list, add it.
-        """
 
-    def get_name_string(self, name_id):
+        Args
+        name_string_list - list of names to be looked up or added
+
+        returns: a list of name IDs
+        """
+        results = []
+        for name_string in name_string_list:
+            if name_string in self._names_list:
+                results.append(self._names_list.index(name_string))
+            else:
+                self._names_list.append(name_string)
+                # can do this return as the append will always be on the end
+                results.apend(len(self._names_list) - 1)
+        return results
+
+    def get_name_string(self, name_id:int) -> str:
         """Return the corresponding name string for name_id.
 
         If the name_id is not an index in the names list, return None.
+
+        Args:
+        name_id: the ID of the name to be returned
+
+
+        returns: the name corresponding to the ID
         """
+        return self._names_list[name_id]
