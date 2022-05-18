@@ -44,9 +44,12 @@ class Gui(wx.Frame):
         fileMenu = FileMenu(parentFrame=self)
         # set HelpMenu
         helpMenu = HelpMenu(parentFrame=self)
+        # set AboutMenu
+        aboutMenu = AboutMenu(parentFrame=self)
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")
+        menuBar.Append(aboutMenu, "&About")
 
         # set menubar
         self.SetMenuBar(menuBar)
@@ -137,8 +140,7 @@ class FileMenu(wx.Menu):
     Public methods
     --------------
     on_init(self): Initialisation step
-    onOpen(self, event): Open definition file.
-    on_about(self, event): Display about information.
+    on_open(self, event): Open definition file.
     on_quit(self, event): Quit system.
     """
 
@@ -162,7 +164,7 @@ class FileMenu(wx.Menu):
             parentMenu=self, id=wx.ID_OPEN, text="&Open\tCtrl+O", kind=wx.ITEM_NORMAL
         )
         self.Append(openItem)
-        self.Bind(wx.EVT_MENU, handler=self.onOpen, source=openItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_open, source=openItem)
         self.AppendSeparator()
 
         # saveItem = wx.MenuItem(
@@ -175,20 +177,13 @@ class FileMenu(wx.Menu):
         # self.Append(saveItem)
         # self.Bind(wx.EVT_MENU, handler=self.onSave, source=saveItem)
 
-        # about information on project
-        aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
-        self.Append(aboutItem)
-        self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
-        self.AppendSeparator()
-
         # quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
         self.Append(quitItem)
         self.Bind(wx.EVT_MENU, handler=self.on_quit, source=quitItem)
-        self.AppendSeparator()
 
     # open definition file(text file at the moment)
-    def onOpen(self, event):
+    def on_open(self, event):
         """Open definition file uploaded by user."""
         wildcard = "TXT files (*.txt)|*.txt"
         dialog = wx.FileDialog(
@@ -233,14 +228,6 @@ class FileMenu(wx.Menu):
     #         for line in data:
     #             myfile.write(line + "\n")
 
-    def on_about(self, event):
-        """Display about information"""
-        wx.MessageBox(
-            "Logic Simulator\nCreated by Mojisola Agboola\n2017",
-            "About Logsim",
-            wx.ICON_INFORMATION | wx.OK,
-        )
-        return
 
     def on_quit(self, event):
         """Quit the system."""
@@ -291,6 +278,38 @@ class HelpMenu(wx.Menu):
     def on_documentation(self, event):
         """Open the GitHub Page"""
         wx.LaunchDefaultBrowser("https://github.com/LogicSimulator/GF2_11")
+
+class AboutMenu(wx.Menu):
+    """This class contains all the methods for creating the menu named 'About'
+    Public methods
+    --------------
+    on_init(self): Initialisation step
+    on_about(self, event): Display About information.
+    """
+
+    def __init__(self, parentFrame):
+        super().__init__()
+        self.on_init()
+        self.parentFrame = parentFrame
+
+    def on_init(self):
+        """Initialise menu and menu items"""
+        # menu stuff hoes here
+
+        # about information on project
+        aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
+        self.Append(aboutItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
+        self.AppendSeparator()
+
+    def on_about(self, event):
+        """Display about information"""
+        wx.MessageBox(
+            "Logic Simulator\nCreated by Mojisola Agboola\n2017",
+            "About Logsim",
+            wx.ICON_INFORMATION | wx.OK,
+        )
+        return
 
 
 # class ConsolePanel(wx.Panel):
