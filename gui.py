@@ -47,13 +47,13 @@ class Gui(wx.Frame):
         # set menubar
         self.SetMenuBar(menuBar)
 
-        # set ConsolePanel
-        self.consolePanel = ConsolePanel(parentFrame=self)
-
         # Canvas for drawing signals
         self.canvas = MyGLCanvas(self, devices, monitors)
         # Get window size
         self.window_size = self.GetClientSize()
+
+        # Configure console properties
+        self.console_text = "Welcom to Logic Simulation App!"
 
         # Configure the widgets
         self.text = wx.StaticText(self, wx.ID_ANY, "Cycles")
@@ -61,6 +61,9 @@ class Gui(wx.Frame):
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.text_box = wx.TextCtrl(self, wx.ID_ANY, "",
                                     style=wx.TE_PROCESS_ENTER)
+        self.console_box = wx.TextCtrl(self, wx.ID_ANY, self.console_text,
+                                          style=wx.TE_READONLY |
+                                                wx.TE_MULTILINE)
 
         # Bind events to widgets
         # self.Bind(wx.EVT_MENU, self.on_menu)
@@ -88,7 +91,7 @@ class Gui(wx.Frame):
         side_sizer.Add(self.text_box, 1, wx.ALL, 5)
 
         # console sizer configuration
-        console_sizer.Add(self.consolePanel, 5, wx.EXPAND | wx.ALL, 5)
+        console_sizer.Add(self.console_box, 5, wx.EXPAND | wx.ALL, 5)
         console_sizer.SetMinSize(self.window_size[0], self.window_size[1]/3)
 
         self.SetSizeHints(600, 600)
@@ -111,6 +114,20 @@ class Gui(wx.Frame):
         text_box_value = self.text_box.GetValue()
         text = "".join(["New text box value: ", text_box_value])
         self.canvas.render(text)
+        
+    def print_to_console(self, text):
+        """Print text to the console output."""
+        self.console_text += text
+        self.console_box.SetValue(self.console_text)
+
+        # Autoscroll to make last line visible
+        pos = self.console_box.GetLastPosition()
+        self.console_box.ShowPosition(pos-1)
+
+    def clear_console(self):
+        """Clear the console output."""
+        self.console_text = ""
+        self.console_box.SetValue(self.console_text)
 
 
 class FileMenu(wx.Menu):
@@ -225,39 +242,39 @@ class FileMenu(wx.Menu):
         self.parentFrame.Close()
 
 
-class ConsolePanel(wx.Panel):
-    """This class contains all the methods for creating the console panel.
-        Public methods
-        --------------
-        on_init(self): Initialisation step.
-        print_to_console(self, text): Print text to console.
-        clear_console(self): Clear all console outputs.
-    """
-
-    def __init__(self, parentFrame):
-        wx.Panel.__init__(self, parent=parentFrame)
-        # print welcome text
-        welcome_text = 'Welcome to Logic Simulator!'
-        self.console_text = welcome_text
-        self.console_box = wx.TextCtrl(self, wx.ID_ANY, self.console_text,
-                           style=wx.TE_READONLY |
-                                 wx.TE_MULTILINE)
-
-    def on_init(self):
-        """Initialise Console Message"""
-        # print welcome text
-        self.print_to_console(text=self.console_text)
-
-    def print_to_console(self, text):
-        """Print text to the console output."""
-        self.console_text += text
-        self.console_box.SetValue(self.console_text)
-
-        # Autoscroll to make last line visible
-        pos = self.console_box.GetLastPosition()
-        self.console_box.ShowPosition(pos-1)
-
-    def clear_console(self):
-        """Clear the console output."""
-        self.console_text = ""
-        self.console_box.SetValue(self.console_text)
+# class ConsolePanel(wx.Panel):
+#     """This class contains all the methods for creating the console panel.
+#         Public methods
+#         --------------
+#         on_init(self): Initialisation step.
+#         print_to_console(self, text): Print text to console.
+#         clear_console(self): Clear all console outputs.
+#     """
+#
+#     def __init__(self, parentFrame):
+#         wx.Panel.__init__(self, parent=parentFrame)
+#         # print welcome text
+#         welcome_text = 'Welcome to Logic Simulator!'
+#         self.console_text = welcome_text
+#         self.console_box = wx.TextCtrl(self, wx.ID_ANY, self.console_text,
+#                            style=wx.TE_READONLY |
+#                                  wx.TE_MULTILINE)
+#
+#     def on_init(self):
+#         """Initialise Console Message"""
+#         # print welcome text
+#         self.print_to_console(text=self.console_text)
+#
+#     def print_to_console(self, text):
+#         """Print text to the console output."""
+#         self.console_text += text
+#         self.console_box.SetValue(self.console_text)
+#
+#         # Autoscroll to make last line visible
+#         pos = self.console_box.GetLastPosition()
+#         self.console_box.ShowPosition(pos-1)
+#
+#     def clear_console(self):
+#         """Clear the console output."""
+#         self.console_text = ""
+#         self.console_box.SetValue(self.console_text)
