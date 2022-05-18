@@ -40,8 +40,13 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
 
+        # Canvas for drawing signals
+        self.canvas = MyGLCanvas(self, devices, monitors)
+        # Get window size
+        self.window_size = self.GetClientSize()
+
         # set FileMenu
-        fileMenu = FileMenu(parentFrame=self)
+        fileMenu = FileMenu(parentFrame=self, client_size=self.window_size)
         # set HelpMenu
         helpMenu = HelpMenu(parentFrame=self)
         # set AboutMenu
@@ -54,13 +59,8 @@ class Gui(wx.Frame):
         # set menubar
         self.SetMenuBar(menuBar)
 
-        # Canvas for drawing signals
-        self.canvas = MyGLCanvas(self, devices, monitors)
-        # Get window size
-        self.window_size = self.GetClientSize()
-
         # Configure console properties
-        self.console_text = "Welcom to Logic Simulation App!"
+        self.console_text = "Welcome to Logic Simulation App!"
 
         # Configure the widgets
         self.text = wx.StaticText(self, wx.ID_ANY, "Cycles")
@@ -144,10 +144,11 @@ class FileMenu(wx.Menu):
     on_quit(self, event): Quit system.
     """
 
-    def __init__(self, parentFrame):
+    def __init__(self, parentFrame, client_size):
         super().__init__()
         self.on_init()
         self.parentFrame = parentFrame
+        self.client_size = client_size
 
     def on_init(self):
         """Initialise menu and menu items"""
@@ -167,15 +168,15 @@ class FileMenu(wx.Menu):
         self.Bind(wx.EVT_MENU, handler=self.on_open, source=openItem)
         self.AppendSeparator()
 
-        # saveItem = wx.MenuItem(
-        #     parentMenu=self,
-        #     id=wx.ID_SAVE,
-        #     text="&Save\tCtrl+S",
-        #     helpString="Save your file",
-        #     kind=wx.ITEM_NORMAL,
-        # )
-        # self.Append(saveItem)
-        # self.Bind(wx.EVT_MENU, handler=self.onSave, source=saveItem)
+        saveItem = wx.MenuItem(
+            parentMenu=self,
+            id=wx.ID_SAVE,
+            text="&Save\tCtrl+S",
+            helpString="Save your file",
+            kind=wx.ITEM_NORMAL,
+        )
+        self.Append(saveItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_save, source=saveItem)
 
         # quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
@@ -208,25 +209,67 @@ class FileMenu(wx.Menu):
         dialog.Destroy()
 
     # possibly save file in the future
-    # def onSave(self, event):
-    #     dialog = wx.FileDialog(
-    #         self.parentFrame,
-    #         message="Save your data",
-    #         defaultFile="Untitled.txt",
-    #         style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
-    #     )
+    # def on_save(self, event):
+    #     context = wx.ClientDC(self.main_panel)
+    #     memory = wx.MemoryDC()
+    #     x, y = self.client_size
+    #     bitmap = wx.EmptyBitmap(x, y, -1)
+    #     memory.SelectObject(bitmap)
+    #     memory.Blit(0, 0, x, y, context, 0, 0)
+    #     memory.SelectObject(wx.NullBitmap)
+    #     bitmap.SaveFile('test.bmp', wx.BITMAP_TYPE_BMP)
+    # # def on_save(self, event):
     #
-    #     if dialog.ShowModal() == wx.ID_CANCEL:
-    #         return None
+    #     # based largely on code posted to wxpython-users by Andrea Gavana 2006-11-08
+    #     size = dcSource.Size
     #
-    #     path = dialog.GetPath()
-    #     data = self.parentFrame.text.GetValue()
-    #     print(data)
-    #     data = data.split("\n")
-    #     print(data)
-    #     with open(path, "w+") as myfile:
-    #         for line in data:
-    #             myfile.write(line + "\n")
+    #     # Create a Bitmap that will later on hold the screenshot image
+    #     # Note that the Bitmap must have a size big enough to hold the screenshot
+    #     # -1 means using the current default colour depth
+    #     bmp = wx.EmptyBitmap(size.width, size.height)
+    #
+    #     # Create a memory DC that will be used for actually taking the screenshot
+    #     memDC = wx.MemoryDC()
+    #
+    #     # Tell the memory DC to use our Bitmap
+    #     # all drawing action on the memory DC will go to the Bitmap now
+    #     memDC.SelectObject(bmp)
+    #
+    #     # Blit (in this case copy) the actual screen on the memory DC
+    #     # and thus the Bitmap
+    #     memDC.Blit(0,  # Copy to this X coordinate
+    #                0,  # Copy to this Y coordinate
+    #                size.width,  # Copy this width
+    #                size.height,  # Copy this height
+    #                dcSource,  # From where do we copy?
+    #                0,  # What's the X offset in the original DC?
+    #                0  # What's the Y offset in the original DC?
+    #                )
+    #
+    #     # Select the Bitmap out of the memory DC by selecting a new
+    #     # uninitialized Bitmap
+    #     memDC.SelectObject(wx.NullBitmap)
+    #
+    #     img = bmp.ConvertToImage()
+    #     img.SaveFile('saved.png', wx.BITMAP_TYPE_PNG)
+        # dialog = wx.FileDialog(
+        #     self.parentFrame,
+        #     message="Save your data",
+        #     defaultFile="Untitled.txt",
+        #     style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+        # )
+        #
+        # if dialog.ShowModal() == wx.ID_CANCEL:
+        #     return None
+        #
+        # path = dialog.GetPath()
+        # data = self.parentFrame.text.GetValue()
+        # print(data)
+        # data = data.split("\n")
+        # print(data)
+        # with open(path, "w+") as myfile:
+        #     for line in data:
+        #         myfile.write(line + "\n")
 
 
     def on_quit(self, event):
