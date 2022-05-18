@@ -248,6 +248,9 @@ class Gui(wx.Frame):
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.text_box = wx.TextCtrl(self, wx.ID_ANY, "",
                                     style=wx.TE_PROCESS_ENTER)
+        self.console_output = wx.TextCtrl(self, wx.ID_ANY, self.console_text,
+                                          style=wx.TE_READONLY |
+                                                wx.TE_MULTILINE)
 
         # Bind events to widgets
         self.Bind(wx.EVT_MENU, self.on_menu)

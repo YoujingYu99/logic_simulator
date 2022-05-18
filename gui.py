@@ -9,8 +9,6 @@ FileMenu - handles all menu items under 'File' menu
 import os
 import wx
 
-
-
 from names import Names
 from devices import Devices
 from network import Network
@@ -18,7 +16,6 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 from gl_canvas import MyGLCanvas
-
 
 
 class Gui(wx.Frame):
@@ -42,6 +39,7 @@ class Gui(wx.Frame):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
 
+        # set FileMenu
         fileMenu = FileMenu(parentFrame=self)
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
@@ -49,8 +47,13 @@ class Gui(wx.Frame):
         # set menubar
         self.SetMenuBar(menuBar)
 
+        # set ConsolePanel
+        self.consolePanel = ConsolePanel(parentFrame=self)
+
         # Canvas for drawing signals
         self.canvas = MyGLCanvas(self, devices, monitors)
+        # Get window size
+        self.window_size = self.GetClientSize()
 
         # Configure the widgets
         self.text = wx.StaticText(self, wx.ID_ANY, "Cycles")
@@ -66,20 +69,31 @@ class Gui(wx.Frame):
         self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
 
         # Configure sizers for layout
+        top_level_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
         side_sizer = wx.BoxSizer(wx.VERTICAL)
+        console_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # Box.Add(control, proportion, flag, border)
+        top_level_sizer.Add(main_sizer, 5, wx.ALL | wx.EXPAND, 5)
+        top_level_sizer.Add(console_sizer, 2, wx.ALL | wx.EXPAND, 5)
         main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
         main_sizer.Add(side_sizer, 1, wx.ALL, 5)
 
+
+        # side sizer configuration
         side_sizer.Add(self.text, 1, wx.TOP, 10)
         side_sizer.Add(self.spin, 1, wx.ALL, 5)
         side_sizer.Add(self.run_button, 1, wx.ALL, 5)
         side_sizer.Add(self.text_box, 1, wx.ALL, 5)
 
+        # console sizer configuration
+        console_sizer.Add(self.consolePanel, 5, wx.EXPAND | wx.ALL, 5)
+        console_sizer.SetMinSize(self.window_size[0], self.window_size[1]/3)
+
         self.SetSizeHints(600, 600)
-        self.SetSizer(main_sizer)
+        # self.SetSizer(main_sizer)
+        self.SetSizer(top_level_sizer)
 
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
@@ -107,7 +121,8 @@ class FileMenu(wx.Menu):
         onOpen(self, event): Open definition file.
         on_about(self, event): Display about information.
         on_quit(self, event): Quit system.
-        """
+    """
+
     def __init__(self, parentFrame):
         super().__init__()
         self.on_init()
@@ -202,9 +217,47 @@ class FileMenu(wx.Menu):
     def on_about(self, event):
         """Display about information"""
         wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-                           "About Logsim", wx.ICON_INFORMATION | wx.OK)
+                      "About Logsim", wx.ICON_INFORMATION | wx.OK)
         return
 
     def on_quit(self, event):
         """Quit the system."""
         self.parentFrame.Close()
+
+
+class ConsolePanel(wx.Panel):
+    """This class contains all the methods for creating the console panel.
+        Public methods
+        --------------
+        on_init(self): Initialisation step.
+        print_to_console(self, text): Print text to console.
+        clear_console(self): Clear all console outputs.
+    """
+
+    def __init__(self, parentFrame):
+        wx.Panel.__init__(self, parent=parentFrame)
+        # print welcome text
+        welcome_text = 'Welcome to Logic Simulator!'
+        self.console_text = welcome_text
+        self.console_box = wx.TextCtrl(self, wx.ID_ANY, self.console_text,
+                           style=wx.TE_READONLY |
+                                 wx.TE_MULTILINE)
+
+    def on_init(self):
+        """Initialise Console Message"""
+        # print welcome text
+        self.print_to_console(text=self.console_text)
+
+    def print_to_console(self, text):
+        """Print text to the console output."""
+        self.console_text += text
+        self.console_box.SetValue(self.console_text)
+
+        # Autoscroll to make last line visible
+        pos = self.console_box.GetLastPosition()
+        self.console_box.ShowPosition(pos-1)
+
+    def clear_console(self):
+        """Clear the console output."""
+        self.console_text = ""
+        self.console_box.SetValue(self.console_text)
