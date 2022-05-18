@@ -8,6 +8,7 @@ FileMenu - handles all menu items under 'File' menu
 """
 import os
 import wx
+from wx import html2
 
 from names import Names
 from devices import Devices
@@ -41,8 +42,11 @@ class Gui(wx.Frame):
 
         # set FileMenu
         fileMenu = FileMenu(parentFrame=self)
+        # set HelpMenu
+        helpMenu = HelpMenu(parentFrame=self)
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
+        menuBar.Append(helpMenu, "&Help")
 
         # set menubar
         self.SetMenuBar(menuBar)
@@ -59,11 +63,10 @@ class Gui(wx.Frame):
         self.text = wx.StaticText(self, wx.ID_ANY, "Cycles")
         self.spin = wx.SpinCtrl(self, wx.ID_ANY, "10")
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
-        self.text_box = wx.TextCtrl(self, wx.ID_ANY, "",
-                                    style=wx.TE_PROCESS_ENTER)
-        self.console_box = wx.TextCtrl(self, wx.ID_ANY, self.console_text,
-                                          style=wx.TE_READONLY |
-                                                wx.TE_MULTILINE)
+        self.text_box = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
+        self.console_box = wx.TextCtrl(
+            self, wx.ID_ANY, self.console_text, style=wx.TE_READONLY | wx.TE_MULTILINE
+        )
 
         # Bind events to widgets
         # self.Bind(wx.EVT_MENU, self.on_menu)
@@ -83,7 +86,6 @@ class Gui(wx.Frame):
         main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
         main_sizer.Add(side_sizer, 1, wx.ALL, 5)
 
-
         # side sizer configuration
         side_sizer.Add(self.text, 1, wx.TOP, 10)
         side_sizer.Add(self.spin, 1, wx.ALL, 5)
@@ -92,7 +94,7 @@ class Gui(wx.Frame):
 
         # console sizer configuration
         console_sizer.Add(self.console_box, 5, wx.EXPAND | wx.ALL, 5)
-        console_sizer.SetMinSize(self.window_size[0], self.window_size[1]/3)
+        console_sizer.SetMinSize(self.window_size[0], self.window_size[1] / 3)
 
         self.SetSizeHints(600, 600)
         # self.SetSizer(main_sizer)
@@ -114,7 +116,7 @@ class Gui(wx.Frame):
         text_box_value = self.text_box.GetValue()
         text = "".join(["New text box value: ", text_box_value])
         self.canvas.render(text)
-        
+
     def print_to_console(self, text):
         """Print text to the console output."""
         self.console_text += text
@@ -122,7 +124,7 @@ class Gui(wx.Frame):
 
         # Autoscroll to make last line visible
         pos = self.console_box.GetLastPosition()
-        self.console_box.ShowPosition(pos-1)
+        self.console_box.ShowPosition(pos - 1)
 
     def clear_console(self):
         """Clear the console output."""
@@ -132,12 +134,12 @@ class Gui(wx.Frame):
 
 class FileMenu(wx.Menu):
     """This class contains all the methods for creating the menu named 'File'
-        Public methods
-        --------------
-        on_init(self): Initialisation step
-        onOpen(self, event): Open definition file.
-        on_about(self, event): Display about information.
-        on_quit(self, event): Quit system.
+    Public methods
+    --------------
+    on_init(self): Initialisation step
+    onOpen(self, event): Open definition file.
+    on_about(self, event): Display about information.
+    on_quit(self, event): Quit system.
     """
 
     def __init__(self, parentFrame):
@@ -233,13 +235,62 @@ class FileMenu(wx.Menu):
 
     def on_about(self, event):
         """Display about information"""
-        wx.MessageBox("Logic Simulator\nCreated by Mojisola Agboola\n2017",
-                      "About Logsim", wx.ICON_INFORMATION | wx.OK)
+        wx.MessageBox(
+            "Logic Simulator\nCreated by Mojisola Agboola\n2017",
+            "About Logsim",
+            wx.ICON_INFORMATION | wx.OK,
+        )
         return
 
     def on_quit(self, event):
         """Quit the system."""
         self.parentFrame.Close()
+
+
+class HelpMenu(wx.Menu):
+    """This class contains all the methods for creating the menu named 'Help'
+    Public methods
+    --------------
+    on_init(self): Initialisation step
+    on_info(self, event): Display Help information.
+    on_documentation(self, event): Direct to documentation page of the App.
+    """
+
+    def __init__(self, parentFrame):
+        super().__init__()
+        self.on_init()
+        self.parentFrame = parentFrame
+
+    def on_init(self):
+        """Initialise menu and menu items"""
+        # menu stuff hoes here
+
+        # open an item
+        infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO, text="&Open\tCtrl+H")
+        self.Append(infoItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_info, source=infoItem)
+        self.AppendSeparator()
+
+        # about information on project
+        documentationItem = wx.MenuItem(
+            parentMenu=self, id=wx.ID_ANY, text="&Documetation\tCtrl+A"
+        )
+        self.Append(documentationItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_documentation, source=documentationItem)
+        self.AppendSeparator()
+
+    def on_info(self, event):
+        """Display Basic Help information"""
+        wx.MessageBox(
+            "Start by uploading your definition file by selecting 'File/Open'. Then press 'Run' to run the simulation.",
+            "How to Use Logic Simulator App",
+            wx.ICON_INFORMATION | wx.OK,
+        )
+        return
+
+    def on_documentation(self, event):
+        """Open the GitHub Page"""
+        wx.LaunchDefaultBrowser("https://github.com/LogicSimulator/GF2_11")
 
 
 # class ConsolePanel(wx.Panel):
