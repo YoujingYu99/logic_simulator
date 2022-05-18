@@ -49,10 +49,6 @@ class Gui(wx.Frame):
         # set menubar
         self.SetMenuBar(menuBar)
 
-        # self.Bind(wx.EVT_MENU, self.MenuHandler)
-        self.Centre()
-        self.Show(True)
-
         # Canvas for drawing signals
         self.canvas = MyGLCanvas(self, devices, monitors)
 
