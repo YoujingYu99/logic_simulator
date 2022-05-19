@@ -55,11 +55,15 @@ class Gui(wx.Frame):
         self.configure_style()
 
         # Set parameters
-        self.cycle_text_colour = (230, 255, 255)
+        self.cycle_text_colour = (0, 0, 0)
         # Set fonts
-        monitor_font = wx.Font(14, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
+        self.cycle_font = wx.Font(11, wx.FONTFAMILY_SWISS, 0, 90, underline=False,
+                           faceName="")
+        self.monitor_font = wx.Font(14, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
                                faceName="")
-        run_font = wx.Font(12, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
+        self.run_font = wx.Font(12, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
+                           faceName="")
+        self.console_font = wx.Font(12, wx.FONTFAMILY_SWISS, 0, 90, underline=False,
                            faceName="")
 
         # Monitor names list with two sublists: list of signal monitored and list of signal not monitored
@@ -98,6 +102,7 @@ class Gui(wx.Frame):
 
         # Configure the widgets
         self.text = CycleNumberText(self, wx.ID_ANY, "Number of Cycles")
+        self.text.SetFont(self.cycle_font)
         self.text.SetForegroundColour(wx.Colour(self.cycle_text_colour))
         self.spin = wx.SpinCtrl(self, wx.ID_ANY, str(self.spin_value))
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
@@ -108,17 +113,18 @@ class Gui(wx.Frame):
         self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
 
         # Set fonts for all
-        self.run_button.SetFont(run_font)
-        self.rerun_button.SetFont(run_font)
-        self.continue_button.SetFont(run_font)
-        self.monitor_button.SetFont(monitor_font)
-        self.switch_button.SetFont(monitor_font)
+        self.run_button.SetFont(self.run_font)
+        self.rerun_button.SetFont(self.run_font)
+        self.continue_button.SetFont(self.run_font)
+        self.monitor_button.SetFont(self.monitor_font)
+        self.switch_button.SetFont(self.monitor_font)
 
         # self.text_box = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
         # self.console_box = wx.TextCtrl(
         #     self, wx.ID_ANY, self.console_text, style=wx.TE_READONLY | wx.TE_MULTILINE
         # )
         self.console_box = ConsoleBox(self, wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE)
+        self.console_box.SetFont(self.console_font)
 
         # Bind events to widgets
         # self.Bind(wx.EVT_MENU, self.on_menu)
@@ -201,7 +207,7 @@ class Gui(wx.Frame):
             return True
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot run simulation. Please check your definition file\n"
+            text = "Cannot run simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
     def on_rerun_button(self, spin_value):
@@ -219,7 +225,7 @@ class Gui(wx.Frame):
                     self.cycles_completed += spin_value
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot rerun simulation. Please check your definition file\n"
+            text = "Cannot rerun simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
     def on_continue_button(self):
@@ -243,7 +249,7 @@ class Gui(wx.Frame):
                     )
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot continue running simulation. Please check your definition file\n"
+            text = "Cannot continue running simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
     def get_monitor_names(self):
@@ -297,7 +303,7 @@ class Gui(wx.Frame):
             dlg.Destroy()
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot Show on Monitor. Please check your definition file\n"
+            text = "Cannot Show on Monitor. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
             # for (device_id, output_id) in self.monitor_list:
