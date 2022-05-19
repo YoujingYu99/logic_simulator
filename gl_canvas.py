@@ -72,6 +72,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         ]
         self.signal_height = 20
         self.signal_cycle_width = 15
+        self.signal_y_distance = 3
 
         # Set monitors to be drawn
         self.devices = devices
@@ -258,8 +259,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GL.glColor3f(0.0, 0.0, 1.0)
             GL.glBegin(GL.GL_LINE_STRIP)
 
-            # Get unit width per cycle
-            self.signal_unit_width = self.x_axis_length / (self.x_max - self.x_min)
+            # Find starting y position
+            offset = count * (self.signal_height + self.signal_y_distance)
 
             # Draw signal trace
             for index in range(len(signal_list)):
@@ -270,12 +271,14 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
                 # If signal is high
                 if indiv_signal == self.devices.HIGH:
-                    y = self.canvas_origin[1] + self.signal_height
+                    # Add offset to y
+                    y = self.canvas_origin[1] + self.signal_height + offset
                     GL.glVertex2f(x_start, y)
                     GL.glVertex2f(x_end, y)
                 # If signal is low
                 if indiv_signal == self.devices.LOW:
-                    y = self.canvas_origin[1]
+                    # Add offset to y
+                    y = self.canvas_origin[1] + offset
                     GL.glVertex2f(x_start, y)
                     GL.glVertex2f(x_end, y)
 
