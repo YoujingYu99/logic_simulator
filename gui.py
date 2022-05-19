@@ -45,28 +45,32 @@ class Gui(wx.Frame):
         # Get window size
         self.window_size = self.GetClientSize()
 
-        # set FileMenu
+        # Set FileMenu
         fileMenu = FileMenu(parentFrame=self, main_canvas=self.canvas)
-        # set HelpMenu
+        # Set HelpMenu
         helpMenu = HelpMenu(parentFrame=self)
-        # set AboutMenu
+        # Set AboutMenu
         aboutMenu = AboutMenu(parentFrame=self)
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "&File")
         menuBar.Append(helpMenu, "&Help")
         menuBar.Append(aboutMenu, "&About")
 
-        # set menubar
+        # Set menubar
         self.SetMenuBar(menuBar)
 
         # Configure console properties
         self.console_text = "Welcome to Logic Simulation App!"
 
         # Configure the widgets
-        self.text = wx.StaticText(self, wx.ID_ANY, "Cycles")
+        self.text = wx.StaticText(self, wx.ID_ANY, "Number of Cycles")
         self.spin = wx.SpinCtrl(self, wx.ID_ANY, "10")
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
-        self.text_box = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
+        self.stop_button = wx.Button(self, wx.ID_ANY, "Stop")
+        self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
+        self.monitor_button = wx.Button(self, wx.ID_ANY, "Choose Monitor")
+        self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
+        # self.text_box = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
         self.console_box = wx.TextCtrl(
             self, wx.ID_ANY, self.console_text, style=wx.TE_READONLY | wx.TE_MULTILINE
         )
@@ -75,25 +79,46 @@ class Gui(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.on_menu)
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
         self.run_button.Bind(wx.EVT_BUTTON, self.on_run_button)
-        self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
+        # self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
 
-        # Configure sizers for layout
+        ## Configure sizers for layout
+        # Controls the entire screen
         top_level_sizer = wx.BoxSizer(wx.VERTICAL)
+        # Contains canvas and sidebar
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        # Contains simulation/function sizers
         side_sizer = wx.BoxSizer(wx.VERTICAL)
+        # Contains the console
         console_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        # Sidebar Sizers
+        simulation_sizer = wx.StaticBoxSizer(wx.VERTICAL, self)
+        simulation_setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        simulation_action_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        function_sizer = wx.StaticBoxSizer(wx.VERTICAL, self)
+
 
         # Box.Add(control, proportion, flag, border)
         top_level_sizer.Add(main_sizer, 5, wx.ALL | wx.EXPAND, 5)
         top_level_sizer.Add(console_sizer, 2, wx.ALL | wx.EXPAND, 5)
         main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
-        main_sizer.Add(side_sizer, 1, wx.ALL, 5)
+        main_sizer.Add(side_sizer, 5, wx.EXPAND |wx.ALL, 5)
+        side_sizer.Add(simulation_sizer, 1, wx.EXPAND, 0)
+        side_sizer.Add(function_sizer, 1, wx.EXPAND, 0)
 
         # side sizer configuration
-        side_sizer.Add(self.text, 1, wx.TOP, 10)
-        side_sizer.Add(self.spin, 1, wx.ALL, 5)
-        side_sizer.Add(self.run_button, 1, wx.ALL, 5)
-        side_sizer.Add(self.text_box, 1, wx.ALL, 5)
+        simulation_setting_sizer.Add(self.text, 1, wx.TOP, 10)
+        simulation_setting_sizer.Add(self.spin, 1, wx.TOP, 5)
+        simulation_action_sizer.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer.Add(self.stop_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_sizer.Add(simulation_setting_sizer, 5, wx.ALL | wx.EXPAND, 5)
+        simulation_sizer.Add(simulation_action_sizer, 5, wx.ALL | wx.EXPAND, 5)
+
+        function_sizer.Add(self.monitor_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 5 )
+        function_sizer.Add(self.switch_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 5 )
+
+        # side_sizer.Add(self.text_box, 1, wx.ALL, 5)
 
         # console sizer configuration
         console_sizer.Add(self.console_box, 5, wx.EXPAND | wx.ALL, 5)
