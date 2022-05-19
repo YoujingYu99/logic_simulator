@@ -5,8 +5,9 @@
  Green: #7E8F7C
  */
 
-body {
-    background-color: #7E8F7C;
+main_frame {
+    /*greyish blue background color*/
+    background-color: #b5cce3;
     width: 500px;
     height: 400px;
 }
@@ -16,7 +17,7 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 div {
-    background-color: #FDF3E7;
+    background-color: #b3ffcc;
     width: 300px;
     height: 200px;
 }
