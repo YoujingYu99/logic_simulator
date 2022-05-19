@@ -78,7 +78,7 @@ def main(arg_list):
             sys.exit()
 
         # Initialise an instance of the LogicSimulatorApp class
-        app = LogicSimulatorApp()
+        app = LogicSimulatorApp('./style.css')
         gui = Gui("Logic Simulator", path, names, devices, network, monitors)
         gui.Show(True)
         app.MainLoop()

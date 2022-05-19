@@ -44,12 +44,16 @@ class Gui(wx.Frame):
     def __init__(self, title, path, names, devices, network, monitors):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
+        self.token = 'body'
 
         # Set input parameters
         self.network = network
         self.names = names
         self.devices = devices
         self.monitors = monitors
+        self.style = wx.GetApp().stylesheet
+        self.configure_style()
+
 
         # Monitor names list with two sublists: list of signal monitored and list of signal not monitored
         self.monitor_names_list = []
@@ -154,6 +158,9 @@ class Gui(wx.Frame):
         self.SetSizeHints(600, 600)
         # self.SetSizer(main_sizer)
         self.SetSizer(top_level_sizer)
+
+    def configure_style(self):
+        self.style.apply_rules(self)
 
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""

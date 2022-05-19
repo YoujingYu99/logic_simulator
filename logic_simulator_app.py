@@ -1,6 +1,7 @@
 import wx
 from gui import Gui
 import builtins
+import stylesheet
 from names import Names
 from devices import Devices
 from network import Network
@@ -15,9 +16,10 @@ class LogicSimulatorApp(wx.App):
     --------------
     on_init(self, event): Initialisation with all parsed information passed into the App.
     """
-    def __init__(self):
+    def __init__(self, css_file):
         super().__init__()
         self.on_init()
+        self.stylesheet = stylesheet.WXStyleSheet(css_file)
 
         # """Initialise variables."""
         # self.names = names
