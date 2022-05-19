@@ -10,7 +10,6 @@ import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
 
 
-
 class MyGLCanvas(wxcanvas.GLCanvas):
     """Handle all drawing operations.
     This class contains functions for drawing onto the canvas. It
@@ -29,14 +28,22 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     on_mouse(self, event): Handles mouse events.
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
+    draw_signal(self): Draw signals chosen.
     """
 
     def __init__(self, parent, devices, monitors):
         """Initialise canvas properties and useful variables."""
-        super().__init__(parent, -1,
-                         attribList=[wxcanvas.WX_GL_RGBA,
-                                     wxcanvas.WX_GL_DOUBLEBUFFER,
-                                     wxcanvas.WX_GL_DEPTH_SIZE, 16, 0])
+        super().__init__(
+            parent,
+            -1,
+            attribList=[
+                wxcanvas.WX_GL_RGBA,
+                wxcanvas.WX_GL_DOUBLEBUFFER,
+                wxcanvas.WX_GL_DEPTH_SIZE,
+                16,
+                0,
+            ],
+        )
         GLUT.glutInit()
         self.init = False
         self.context = wxcanvas.GLContext(self)
@@ -49,6 +56,31 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         # Initialise variables for zooming
         self.zoom = 1
+
+        # Initialise variables for diagram dimensions
+        self.x_axis_length = 300
+        self.y_axis_length = 1
+        self.min_width = 0
+        self.min_height = 0
+
+        # Initialise variables for drawing signals
+        # width, height
+        canvas_width, canvas_height = self.GetClientSize()
+        self.canvas_origin = [
+            (canvas_width - self.min_width) / 2,
+            (canvas_height - self.min_height) / 2,
+        ]
+        self.signal_height = 20
+        self.signal_cycle_width = 15
+
+        # Set monitors to be drawn
+        self.devices = devices
+        self.monitors = monitors
+        # Uncomment when all modules ready
+        # [self.monitored_signal_list,
+        #  self.non_monitored_signal_list] = self.monitors.get_signal_names()
+        self.monitored_signal_list = []
+        self.non_monitored_signal_list = []
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -84,20 +116,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Draw specified text at position (10, 10)
         self.render_text(text, 10, 10)
 
-        # # Draw a sample signal trace
-        # GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
-        # GL.glBegin(GL.GL_LINE_STRIP)
-        # for i in range(10):
-        #     x = (i * 20) + 10
-        #     x_next = (i * 20) + 30
-        #     if i % 2 == 0:
-        #         y = 75
-        #     else:
-        #         y = 100
-        #     GL.glVertex2f(x, y)
-        #     GL.glVertex2f(x_next, y)
-        # GL.glEnd()
-
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
         GL.glFlush()
@@ -112,8 +130,14 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.init = True
 
         size = self.GetClientSize()
-        text = "".join(["Canvas redrawn on paint event, size is ",
-                        str(size.width), ", ", str(size.height)])
+        text = "".join(
+            [
+                "Canvas redrawn on paint event, size is ",
+                str(size.width),
+                ", ",
+                str(size.height),
+            ]
+        )
         self.render(text)
 
     def on_size(self, event):
@@ -133,41 +157,63 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         if event.ButtonDown():
             self.last_mouse_x = event.GetX()
             self.last_mouse_y = event.GetY()
-            text = "".join(["Mouse button pressed at: ", str(event.GetX()),
-                            ", ", str(event.GetY())])
+            text = "".join(
+                [
+                    "Mouse button pressed at: ",
+                    str(event.GetX()),
+                    ", ",
+                    str(event.GetY()),
+                ]
+            )
         if event.ButtonUp():
-            text = "".join(["Mouse button released at: ", str(event.GetX()),
-                            ", ", str(event.GetY())])
+            text = "".join(
+                [
+                    "Mouse button released at: ",
+                    str(event.GetX()),
+                    ", ",
+                    str(event.GetY()),
+                ]
+            )
         if event.Leaving():
-            text = "".join(["Mouse left canvas at: ", str(event.GetX()),
-                            ", ", str(event.GetY())])
+            text = "".join(
+                ["Mouse left canvas at: ", str(event.GetX()), ", ", str(event.GetY())]
+            )
         if event.Dragging():
             self.pan_x += event.GetX() - self.last_mouse_x
             self.pan_y -= event.GetY() - self.last_mouse_y
             self.last_mouse_x = event.GetX()
             self.last_mouse_y = event.GetY()
             self.init = False
-            text = "".join(["Mouse dragged to: ", str(event.GetX()),
-                            ", ", str(event.GetY()), ". Pan is now: ",
-                            str(self.pan_x), ", ", str(self.pan_y)])
+            text = "".join(
+                [
+                    "Mouse dragged to: ",
+                    str(event.GetX()),
+                    ", ",
+                    str(event.GetY()),
+                    ". Pan is now: ",
+                    str(self.pan_x),
+                    ", ",
+                    str(self.pan_y),
+                ]
+            )
         if event.GetWheelRotation() < 0:
-            self.zoom *= (1.0 + (
-                event.GetWheelRotation() / (20 * event.GetWheelDelta())))
+            self.zoom *= 1.0 + (event.GetWheelRotation() / (20 * event.GetWheelDelta()))
             # Adjust pan so as to zoom around the mouse position
             self.pan_x -= (self.zoom - old_zoom) * ox
             self.pan_y -= (self.zoom - old_zoom) * oy
             self.init = False
-            text = "".join(["Negative mouse wheel rotation. Zoom is now: ",
-                            str(self.zoom)])
+            text = "".join(
+                ["Negative mouse wheel rotation. Zoom is now: ", str(self.zoom)]
+            )
         if event.GetWheelRotation() > 0:
-            self.zoom /= (1.0 - (
-                event.GetWheelRotation() / (20 * event.GetWheelDelta())))
+            self.zoom /= 1.0 - (event.GetWheelRotation() / (20 * event.GetWheelDelta()))
             # Adjust pan so as to zoom around the mouse position
             self.pan_x -= (self.zoom - old_zoom) * ox
             self.pan_y -= (self.zoom - old_zoom) * oy
             self.init = False
-            text = "".join(["Positive mouse wheel rotation. Zoom is now: ",
-                            str(self.zoom)])
+            text = "".join(
+                ["Positive mouse wheel rotation. Zoom is now: ", str(self.zoom)]
+            )
         if text:
             self.render(text)
         else:
@@ -180,8 +226,57 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         font = GLUT.GLUT_BITMAP_HELVETICA_12
 
         for character in text:
-            if character == '\n':
+            if character == "\n":
                 y_pos = y_pos - 20
                 GL.glRasterPos2f(x_pos, y_pos)
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
+
+    def draw_signal(self):
+        """Draw signal traces for each monitor."""
+        for count in range(len(self.monitored_signal_list)):
+            monitor_name = self.monitored_signal_list[count]
+            # Find signal list for each monitor
+            [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
+            signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
+
+            # Draw a sample signal trace
+            # GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
+            # GL.glBegin(GL.GL_LINE_STRIP)
+            # for i in range(10):
+            #     x = (i * 20) + 10
+            #     x_next = (i * 20) + 30
+            #     if i % 2 == 0:
+            #         y = 75
+            #     else:
+            #         y = 100
+            #     GL.glVertex2f(x, y)
+            #     GL.glVertex2f(x_next, y)
+            # GL.glEnd()
+
+            # Signal trace is blue
+            GL.glColor3f(0.0, 0.0, 1.0)
+            GL.glBegin(GL.GL_LINE_STRIP)
+
+            # Get unit width per cycle
+            self.signal_unit_width = self.x_axis_length / (self.x_max - self.x_min)
+
+            # Draw signal trace
+            for index in range(len(signal_list)):
+                indiv_signal = signal_list[index]
+                # horizontal start point of signal
+                x_start = (index * self.signal_cycle_width) + self.canvas_origin[0]
+                x_end = x_start + self.signal_cycle_width
+
+                # If signal is high
+                if indiv_signal == self.devices.HIGH:
+                    y = self.canvas_origin[1] + self.signal_height
+                    GL.glVertex2f(x_start, y)
+                    GL.glVertex2f(x_end, y)
+                # If signal is low
+                if indiv_signal == self.devices.LOW:
+                    y = self.canvas_origin[1]
+                    GL.glVertex2f(x_start, y)
+                    GL.glVertex2f(x_end, y)
+
+            GL.glEnd()
