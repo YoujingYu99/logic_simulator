@@ -102,7 +102,7 @@ class Gui(wx.Frame):
         top_level_sizer.Add(main_sizer, 5, wx.ALL | wx.EXPAND, 5)
         top_level_sizer.Add(console_sizer, 2, wx.ALL | wx.EXPAND, 5)
         main_sizer.Add(self.canvas, 5, wx.EXPAND | wx.ALL, 5)
-        main_sizer.Add(side_sizer, 5, wx.EXPAND |wx.ALL, 5)
+        main_sizer.Add(side_sizer, 1, wx.EXPAND | wx.ALL, 5)
         side_sizer.Add(simulation_sizer, 1, wx.EXPAND, 0)
         side_sizer.Add(function_sizer, 1, wx.EXPAND, 0)
 
