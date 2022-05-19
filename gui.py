@@ -46,7 +46,7 @@ class Gui(wx.Frame):
         self.window_size = self.GetClientSize()
 
         # set FileMenu
-        fileMenu = FileMenu(parentFrame=self, client_size=self.window_size)
+        fileMenu = FileMenu(parentFrame=self, main_canvas=self.canvas)
         # set HelpMenu
         helpMenu = HelpMenu(parentFrame=self)
         # set AboutMenu
@@ -141,14 +141,15 @@ class FileMenu(wx.Menu):
     --------------
     on_init(self): Initialisation step
     on_open(self, event): Open definition file.
+    on_save(self, event): Save a screenshot of the whole window.
     on_quit(self, event): Quit system.
     """
 
-    def __init__(self, parentFrame, client_size):
+    def __init__(self, parentFrame, main_canvas):
         super().__init__()
         self.on_init()
         self.parentFrame = parentFrame
-        self.client_size = client_size
+        self.canvas = main_canvas
 
     def on_init(self):
         """Initialise menu and menu items"""
@@ -209,6 +210,49 @@ class FileMenu(wx.Menu):
         dialog.Destroy()
 
     # possibly save file in the future
+    def on_save(self, event=None):
+        """Save screenshot of the App."""
+        im = self.get_screenshot()
+        save_dialog = wx.FileDialog(
+            self.parentFrame,
+            "Save file as ...",
+            defaultFile="",
+            wildcard="*.png",
+            style=wx.FD_SAVE
+        )
+        # GetPath fails to get actual path
+        path = save_dialog.GetPath()
+        if save_dialog.ShowModal() == wx.ID_OK:
+            if not (path[-4:].lower() == ".png"):
+                path = path + ".png"
+                im.SaveFile(path)
+
+    def get_screenshot(self):
+        """Capture a screenshot of the App."""
+        screen = wx.ScreenDC()
+
+        size = screen.GetSize()
+        width = size.width
+        height = size.height
+        bmp = wx.Bitmap(width, height)
+
+        # Create a memory DC that will be used for actually taking the screenshot
+        memDC = wx.MemoryDC()
+        # Tell the memory DC to use our Bitmap
+        # all drawing action on the memory DC will go to the Bitmap now
+        memDC.SelectObject(bmp)
+        # Blit (in this case copy) the actual screen on the memory DC
+        memDC.Blit(
+            0, 0,
+            width, height,
+            screen,
+            0, 0
+        )
+        # Select the Bitmap out of the memory DC by selecting a new bitmap
+        memDC.SelectObject(wx.NullBitmap)
+        im = bmp.ConvertToImage()
+        return im
+
     # def on_save(self, event):
     #     context = wx.ClientDC(self.main_panel)
     #     memory = wx.MemoryDC()
@@ -252,25 +296,24 @@ class FileMenu(wx.Menu):
     #
     #     img = bmp.ConvertToImage()
     #     img.SaveFile('saved.png', wx.BITMAP_TYPE_PNG)
-        # dialog = wx.FileDialog(
-        #     self.parentFrame,
-        #     message="Save your data",
-        #     defaultFile="Untitled.txt",
-        #     style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
-        # )
-        #
-        # if dialog.ShowModal() == wx.ID_CANCEL:
-        #     return None
-        #
-        # path = dialog.GetPath()
-        # data = self.parentFrame.text.GetValue()
-        # print(data)
-        # data = data.split("\n")
-        # print(data)
-        # with open(path, "w+") as myfile:
-        #     for line in data:
-        #         myfile.write(line + "\n")
-
+    # dialog = wx.FileDialog(
+    #     self.parentFrame,
+    #     message="Save your data",
+    #     defaultFile="Untitled.txt",
+    #     style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+    # )
+    #
+    # if dialog.ShowModal() == wx.ID_CANCEL:
+    #     return None
+    #
+    # path = dialog.GetPath()
+    # data = self.parentFrame.text.GetValue()
+    # print(data)
+    # data = data.split("\n")
+    # print(data)
+    # with open(path, "w+") as myfile:
+    #     for line in data:
+    #         myfile.write(line + "\n")
 
     def on_quit(self, event):
         """Quit the system."""
@@ -322,6 +365,7 @@ class HelpMenu(wx.Menu):
         """Open the GitHub Page"""
         wx.LaunchDefaultBrowser("https://github.com/LogicSimulator/GF2_11")
 
+
 class AboutMenu(wx.Menu):
     """This class contains all the methods for creating the menu named 'About'
     Public methods
@@ -353,7 +397,6 @@ class AboutMenu(wx.Menu):
             wx.ICON_INFORMATION | wx.OK,
         )
         return
-
 
 # class ConsolePanel(wx.Panel):
 #     """This class contains all the methods for creating the console panel.
