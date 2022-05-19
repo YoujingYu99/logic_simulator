@@ -54,6 +54,13 @@ class Gui(wx.Frame):
         self.style = wx.GetApp().stylesheet
         self.configure_style()
 
+        # Set parameters
+        self.cycle_text_colour = (230, 255, 255)
+        # Set fonts
+        monitor_font = wx.Font(14, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
+                               faceName="")
+        run_font = wx.Font(12, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
+                           faceName="")
 
         # Monitor names list with two sublists: list of signal monitored and list of signal not monitored
         self.monitor_names_list = []
@@ -90,17 +97,28 @@ class Gui(wx.Frame):
         self.console_text = "Welcome to Logic Simulation App!"
 
         # Configure the widgets
-        self.text = wx.StaticText(self, wx.ID_ANY, "Number of Cycles")
+        self.text = CycleNumberText(self, wx.ID_ANY, "Number of Cycles")
+        self.text.SetForegroundColour(wx.Colour(self.cycle_text_colour))
         self.spin = wx.SpinCtrl(self, wx.ID_ANY, str(self.spin_value))
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
         self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
+        # Monitor and Switch Buttons
         self.monitor_button = wx.Button(self, wx.ID_ANY, "Choose Monitor")
         self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
+
+        # Set fonts for all
+        self.run_button.SetFont(run_font)
+        self.rerun_button.SetFont(run_font)
+        self.continue_button.SetFont(run_font)
+        self.monitor_button.SetFont(monitor_font)
+        self.switch_button.SetFont(monitor_font)
+
         # self.text_box = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
-        self.console_box = wx.TextCtrl(
-            self, wx.ID_ANY, self.console_text, style=wx.TE_READONLY | wx.TE_MULTILINE
-        )
+        # self.console_box = wx.TextCtrl(
+        #     self, wx.ID_ANY, self.console_text, style=wx.TE_READONLY | wx.TE_MULTILINE
+        # )
+        self.console_box = ConsoleBox(self, wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE)
 
         # Bind events to widgets
         # self.Bind(wx.EVT_MENU, self.on_menu)
@@ -177,14 +195,14 @@ class Gui(wx.Frame):
                 if self.network.execute_network():
                     self.monitors.record_signals()
                 else:
-                    self.print_console_message("Error! Network oscillating.")
+                    self.console_box.print_console_message("Error! Network oscillating.")
                     return False
             self.monitors.display_signals()
             return True
         else:
             # Show error if file was not parsed correctly
             text = "Cannot run simulation. Please check your definition file\n"
-            self.print_console_message(text)
+            self.console_box.print_console_message(text)
 
     def on_rerun_button(self, spin_value):
         """Run the simulation from scratch."""
@@ -193,7 +211,7 @@ class Gui(wx.Frame):
 
             if spin_value is not None:  # if the number of cycles provided is valid
                 self.monitors.reset_monitors()
-                self.print_console_message(
+                self.console_box.print_console_message(
                     "".join(["Running for ", str(spin_value), " cycles"])
                 )
                 self.devices.cold_startup()
@@ -202,17 +220,17 @@ class Gui(wx.Frame):
         else:
             # Show error if file was not parsed correctly
             text = "Cannot rerun simulation. Please check your definition file\n"
-            self.print_console_message(text)
+            self.console_box.print_console_message(text)
 
     def on_continue_button(self):
         """Continue a previously run simulation."""
         if self.is_parsed:
             if self.spin_value is not None:  # if the number of cycles provided is valid
                 if self.cycles_completed == 0:
-                    self.print_console_message("Error! Nothing to continue. Run first.")
+                    self.console_box.print_console_message("Error! Nothing to continue. Run first.")
                 elif self.on_run_button(self.spin_value):
                     self.cycles_completed += self.spin_value
-                    self.print_console_message(
+                    self.console_box.print_console_message(
                         " ".join(
                             [
                                 "Continuing for",
@@ -226,7 +244,7 @@ class Gui(wx.Frame):
         else:
             # Show error if file was not parsed correctly
             text = "Cannot continue running simulation. Please check your definition file\n"
-            self.print_console_message(text)
+            self.console_box.print_console_message(text)
 
     def get_monitor_names(self):
         """monitor_list : [(device_id, output_id)]
@@ -272,15 +290,15 @@ class Gui(wx.Frame):
                             device_id, output_id, self.cycles_completed
                         )
                         if monitor_error == self.monitors.NO_ERROR:
-                            self.print_console_message("Successfully made monitor.")
+                            self.console_box.print_console_message("Successfully made monitor.")
                         else:
-                            self.print_console_message("Error! Could not make monitor.")
+                            self.console_box.print_console_message("Error! Could not make monitor.")
                 self.canvas.draw_signal()
             dlg.Destroy()
         else:
             # Show error if file was not parsed correctly
             text = "Cannot Show on Monitor. Please check your definition file\n"
-            self.print_console_message(text)
+            self.console_box.print_console_message(text)
 
             # for (device_id, output_id) in self.monitor_list:
             #     monitor_error = self.monitors.make_monitor(device_id, output_id,
@@ -289,20 +307,6 @@ class Gui(wx.Frame):
             #         self.print_console_message("Successfully made monitor.")
             #     else:
             #         self.print_console_message("Error! Could not make monitor.")
-
-    def print_console_message(self, text):
-        """Print text to the console output."""
-        self.console_text += text
-        self.console_box.SetValue(self.console_text)
-
-        # Autoscroll to make last line visible
-        pos = self.console_box.GetLastPosition()
-        self.console_box.ShowPosition(pos - 1)
-
-    def clear_console(self):
-        """Clear the console output."""
-        self.console_text = ""
-        self.console_box.SetValue(self.console_text)
 
 
 class FileMenu(wx.Menu):
@@ -320,6 +324,7 @@ class FileMenu(wx.Menu):
         self.on_init()
         self.parentFrame = parentFrame
         self.canvas = main_canvas
+        self.token = FileMenu
 
     def on_init(self):
         """Initialise menu and menu items"""
@@ -564,39 +569,60 @@ class AboutMenu(wx.Menu):
         return
 
 
-# class ConsolePanel(wx.Panel):
-#     """This class contains all the methods for creating the console panel.
-#         Public methods
-#         --------------
-#         on_init(self): Initialisation step.
-#         print_console_message(self, text): Print text to console.
-#         clear_console(self): Clear all console outputs.
-#     """
-#
-#     def __init__(self, parentFrame):
-#         wx.Panel.__init__(self, parent=parentFrame)
-#         # print welcome text
-#         welcome_text = 'Welcome to Logic Simulator!'
-#         self.console_text = welcome_text
-#         self.console_box = wx.TextCtrl(self, wx.ID_ANY, self.console_text,
-#                            style=wx.TE_READONLY |
-#                                  wx.TE_MULTILINE)
-#
-#     def on_init(self):
-#         """Initialise Console Message"""
-#         # print welcome text
-#         self.print_console_message(text=self.console_text)
-#
-#     def print_console_message(self, text):
-#         """Print text to the console output."""
-#         self.console_text += text
-#         self.console_box.SetValue(self.console_text)
-#
-#         # Autoscroll to make last line visible
-#         pos = self.console_box.GetLastPosition()
-#         self.console_box.ShowPosition(pos-1)
-#
-#     def clear_console(self):
-#         """Clear the console output."""
-#         self.console_text = ""
-#         self.console_box.SetValue(self.console_text)
+class ConsoleBox(wx.TextCtrl):
+    """This class contains all the methods for creating the menu named 'File'
+        Public methods
+        --------------
+        on_init(self): Initialisation step
+        configure_style(self): Follow the stylesheet defined.
+        print_console_message(self, event): Print user message to console.
+        clear_console(self, event): Clear all console outputs.
+        """
+
+    def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
+        super(ConsoleBox, self).__init__(parent, id, label, pos, size, style)
+        self.token = 'console_box'
+        if parent:
+            self.token = parent.token + self.token
+        self.style = wx.GetApp().stylesheet
+        self.configure_style()
+        self.console_text = ""
+
+    def configure_style(self):
+        self.style.apply_rules(self)
+
+    def print_console_message(self, text):
+        """Print text to the console output."""
+        self.console_text += text
+        self.SetValue(self.console_text)
+
+        # Autoscroll to make last line visible
+        pos = self.GetLastPosition()
+        self.ShowPosition(pos - 1)
+
+    def clear_console(self):
+        """Clear the console output."""
+        self.console_text = ""
+        self.SetValue(self.console_text)
+
+
+class CycleNumberText(wx.StaticText):
+    """This class contains all the methods for displaying the static number of cycles
+        Public methods
+        --------------
+        configure_style(self): Follow the stylesheet defined.
+    """
+
+    def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=0,
+                 name=wx.StaticTextNameStr):
+        super(CycleNumberText, self).__init__(parent, id, label, pos, size, style, name)
+        self.token = 'cycle_text'
+        if parent:
+            self.token = parent.token + self.token
+        self.style = wx.GetApp().stylesheet
+        self.configure_style()
+
+    def configure_style(self):
+        self.style.apply_rules(self)
+
+
