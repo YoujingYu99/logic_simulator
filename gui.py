@@ -39,6 +39,9 @@ class Gui(wx.Frame):
     button.
     get_monitor_names(self): Return monitor_list and monitor_names_list.
     on_monitor_button(self): Event handler for when the user chooses a few monitors and draw the signals on canvas.
+    get_switch_names(self): Return switch_name_list and switch_on_list.
+    on_monitor_button(self): Event handler for when the user chooses a few switches.
+
     """
 
     def __init__(self, title, path, names, devices, network, monitors):
@@ -70,6 +73,14 @@ class Gui(wx.Frame):
         self.monitor_names_list = []
         self.monitor_list = []
         self.monitor_selected_list = []
+
+        # Switch names and IDs
+        # all switch IDs
+        self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
+        # all switch names
+        self.switch_name_list = [self.names.get_name_string(x)
+                             for x in self.switch_IDs]
+        self.switch_on_list =[]
 
         # Temporarily set file to be not parsed
         self.is_parsed = False
@@ -104,7 +115,7 @@ class Gui(wx.Frame):
         self.text = CycleNumberText(self, wx.ID_ANY, "Number of Cycles")
         self.text.SetFont(self.cycle_font)
         self.text.SetForegroundColour(wx.Colour(self.cycle_text_colour))
-        self.spin = wx.SpinCtrl(self, wx.ID_ANY, str(self.spin_value))
+        self.spin = wx.SpinCtrl(self, wx.ID_ANY, str(self.spin_value), style=wx.SP_ARROW_KEYS, min=0, max=100)
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
         self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
@@ -306,13 +317,63 @@ class Gui(wx.Frame):
             text = "Cannot Show on Monitor. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
-            # for (device_id, output_id) in self.monitor_list:
-            #     monitor_error = self.monitors.make_monitor(device_id, output_id,
-            #                                                self.cycles_completed)
-            #     if monitor_error == self.monitors.NO_ERROR:
-            #         self.print_console_message("Successfully made monitor.")
-            #     else:
-            #         self.print_console_message("Error! Could not make monitor.")
+    # def on_zap_monitor(self):
+    #     """Remove the specified monitor."""
+    #     if self.is_parsed:
+    #         monitor = self.read_signal_name()
+    #         if monitor is not None:
+    #             [device, port] = monitor
+    #             if self.monitors.remove_monitor(device, port):
+    #                 print("Successfully zapped monitor")
+    #             else:
+    #                 print("Error! Could not zap monitor.")
+    #     else:
+    #         # Show error if file was not parsed correctly
+    #         text = "Cannot choose a Monitor. Please check your definition file.\n"
+    #         self.console_box.print_console_message(text)
+
+    def get_switch_names(self):
+        """switch_id_list : list of the switch ids
+            switch_names_list : list of switch names
+            switch_on_list : list of switch set to High
+        """
+        # Get switch ids for all devices present
+        self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
+        self.switch_name_list = [self.names.get_name_string(x)
+                             for x in self.switch_id_list]
+        for i in range(len(self.switch_id_list)):
+            count, switch_id = self.switch_id_list[count]
+            if self.devices.get_device(switch_id).switch_state == self.devices.HIGH:
+                # Add the position of the switch into the switch_on list
+                self.switch_on_list.append(count)
+
+
+    def on_switch_button(self):
+        """Set switch to desired state."""
+        if self.is_parsed:
+            dlg = wx.MultiChoiceDialog(self,
+                                       "Choose the switches to be set to 1",
+                                       "Switch Settings", self.switch_name_list)
+
+            # Set the dialogue default before the user chooses it.
+            # dlg.SetSelections(self.switch_on_list)
+
+            if dlg.ShowModal() == wx.ID_OK:
+                selections = dlg.GetSelections()
+
+                for count in range(len(selections)):
+                    switch_on_list = [self.switch_name_list[x] for x in selections]
+                    # switch_off_list = [self.switch_name_list[x] for x in range(
+                    #     0, len(self.switch_name_list)) if x not in selections]
+                self.switch_on_list = switch_on_list
+                self.canvas.draw_signal()
+            dlg.Destroy()
+
+        else:
+            # Show error if file was not parsed correctly
+            text = "Cannot Show on Monitor. Please check your definition file.\n"
+            self.console_box.print_console_message(text)
+
 
 
 class FileMenu(wx.Menu):
