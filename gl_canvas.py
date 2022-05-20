@@ -79,9 +79,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Set monitors to be drawn
         self.devices = devices
         self.monitors = monitors
-        self.switch_id_list = devices.find_devices(devices.SWITCH)
-        self.switch_name_list = [devices.get_signal_name(x, None)
-                             for x in self.switch_IDs]
+        # All switch IDs. Only uncomment when other modules ready
+        # self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
+        # self.switch_name_list = [
+        #     self.devices.get_signal_name(x, None) for x in self.switch_IDs
+        # ]
+        self.switch_id_list = []
+        self.switch_name_list = []
         # Uncomment when all modules ready
         # [self.monitored_signal_list,
         #  self.non_monitored_signal_list] = self.monitors.get_signal_names()
@@ -289,14 +293,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
             GL.glEnd()
 
-
     def update_switches(self, devices):
         """Update signals when switches are changed."""
         self.devices = devices
         self.switch_id_list = devices.find_devices(devices.SWITCH)
-        self.switch_name_list = [devices.get_signal_name(x, None)
-                             for x in self.switch_IDs]
-
+        self.switch_name_list = [
+            devices.get_signal_name(x, None) for x in self.switch_IDs
+        ]
 
     def update_monitors(self, monitors):
         """Update monitors and redraw signal on canvas."""
@@ -307,4 +310,3 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         if not self.monitored_signal_list:
             self.blank = True
-

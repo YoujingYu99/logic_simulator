@@ -48,7 +48,7 @@ class Gui(wx.Frame):
     def __init__(self, title, path, names, devices, network, monitors):
         """Initialise widgets and layout."""
         super().__init__(parent=None, title=title, size=(800, 600))
-        self.token = 'main_frame'
+        self.token = "main_frame"
 
         # Set input parameters
         self.network = network
@@ -61,14 +61,18 @@ class Gui(wx.Frame):
         # Set parameters
         self.cycle_text_colour = (0, 0, 0)
         # Set fonts
-        self.cycle_font = wx.Font(11, wx.FONTFAMILY_SWISS, 0, 90, underline=False,
-                           faceName="")
-        self.monitor_font = wx.Font(14, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
-                               faceName="")
-        self.run_font = wx.Font(12, wx.FONTFAMILY_ROMAN, 0, 90, underline=False,
-                           faceName="")
-        self.console_font = wx.Font(12, wx.FONTFAMILY_SWISS, 0, 90, underline=False,
-                           faceName="")
+        self.cycle_font = wx.Font(
+            11, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
+        )
+        self.monitor_font = wx.Font(
+            14, wx.FONTFAMILY_ROMAN, 0, 90, underline=False, faceName=""
+        )
+        self.run_font = wx.Font(
+            12, wx.FONTFAMILY_ROMAN, 0, 90, underline=False, faceName=""
+        )
+        self.console_font = wx.Font(
+            12, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
+        )
 
         # Monitor names list with two sublists: list of signal monitored and list of signal not monitored
         self.monitor_names_list = []
@@ -76,12 +80,12 @@ class Gui(wx.Frame):
         self.monitor_selected_list = []
 
         # Switch names and IDs
-        # all switch IDs
-        self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
+        # All switch IDs. Only uncomment when other modules ready
+        # self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
+        self.switch_id_list = []
         # all switch names
-        self.switch_name_list = [self.names.get_name_string(x)
-                             for x in self.switch_IDs]
-        self.switch_on_list =[]
+        self.switch_name_list = [self.names.get_name_string(x) for x in self.switch_id_list]
+        self.switch_on_list = []
 
         # Temporarily set file to be not parsed
         self.is_parsed = False
@@ -116,7 +120,14 @@ class Gui(wx.Frame):
         self.text = CycleNumberText(self, wx.ID_ANY, "Number of Cycles")
         self.text.SetFont(self.cycle_font)
         self.text.SetForegroundColour(wx.Colour(self.cycle_text_colour))
-        self.spin = wx.SpinCtrl(self, wx.ID_ANY, str(self.spin_value), style=wx.SP_ARROW_KEYS, min=0, max=100)
+        self.spin = wx.SpinCtrl(
+            self,
+            wx.ID_ANY,
+            str(self.spin_value),
+            style=wx.SP_ARROW_KEYS,
+            min=0,
+            max=100,
+        )
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
         self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
@@ -135,7 +146,9 @@ class Gui(wx.Frame):
         # self.console_box = wx.TextCtrl(
         #     self, wx.ID_ANY, self.console_text, style=wx.TE_READONLY | wx.TE_MULTILINE
         # )
-        self.console_box = ConsoleBox(self, wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE)
+        self.console_box = ConsoleBox(
+            self, wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE
+        )
         self.console_box.SetFont(self.console_font)
 
         # Bind events to widgets
@@ -213,7 +226,9 @@ class Gui(wx.Frame):
                 if self.network.execute_network():
                     self.monitors.record_signals()
                 else:
-                    self.console_box.print_console_message("Error! Network oscillating.")
+                    self.console_box.print_console_message(
+                        "Error! Network oscillating."
+                    )
                     return False
             self.monitors.display_signals()
             self.canvas.update_monitors(self.monitors)
@@ -247,7 +262,9 @@ class Gui(wx.Frame):
         if self.is_parsed:
             if self.spin_value is not None:  # if the number of cycles provided is valid
                 if self.cycles_completed == 0:
-                    self.console_box.print_console_message("Error! Nothing to continue. Run first.")
+                    self.console_box.print_console_message(
+                        "Error! Nothing to continue. Run first."
+                    )
                 elif self.on_run_button(self.spin_value):
                     self.canvas.update_monitors(self.monitors)
                     self.cycles_completed += self.spin_value
@@ -311,9 +328,13 @@ class Gui(wx.Frame):
                             device_id, output_id, self.cycles_completed
                         )
                         if monitor_error == self.monitors.NO_ERROR:
-                            self.console_box.print_console_message("Successfully made monitor.")
+                            self.console_box.print_console_message(
+                                "Successfully made monitor."
+                            )
                         else:
-                            self.console_box.print_console_message("Error! Could not make monitor.")
+                            self.console_box.print_console_message(
+                                "Error! Could not make monitor."
+                            )
                 self.canvas.draw_signal()
             dlg.Destroy()
         else:
@@ -350,9 +371,6 @@ class Gui(wx.Frame):
 
         self.canvas.update_monitors(self.monitors)
 
-
-
-
     # def on_zap_monitor(self):
     #     """Remove the specified monitor."""
     #     if self.is_parsed:
@@ -370,26 +388,29 @@ class Gui(wx.Frame):
 
     def get_switch_names(self):
         """switch_id_list : list of the switch ids
-            switch_names_list : list of switch names
-            switch_on_list : list of switch set to High
+        switch_names_list : list of switch names
+        switch_on_list : list of switch set to High
         """
         # Get switch ids for all devices present
         self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
-        self.switch_name_list = [self.names.get_name_string(x)
-                             for x in self.switch_id_list]
+        self.switch_name_list = [
+            self.names.get_name_string(x) for x in self.switch_id_list
+        ]
         for i in range(len(self.switch_id_list)):
             count, switch_id = self.switch_id_list[count]
             if self.devices.get_device(switch_id).switch_state == self.devices.HIGH:
                 # Add the position of the switch into the switch_on list
                 self.switch_on_list.append(count)
 
-
     def on_switch_button(self):
         """Set switch to desired state."""
         if self.is_parsed:
-            dlg = wx.MultiChoiceDialog(self,
-                                       "Choose the switches to be set to 1",
-                                       "Switch Settings", self.switch_name_list)
+            dlg = wx.MultiChoiceDialog(
+                self,
+                "Choose the switches to be set to 1",
+                "Switch Settings",
+                self.switch_name_list,
+            )
 
             # Set the dialogue default before the user chooses it.
             # dlg.SetSelections(self.switch_on_list)
@@ -411,7 +432,6 @@ class Gui(wx.Frame):
             # Show error if file was not parsed correctly
             text = "Cannot Show on Monitor. Please check your definition file.\n"
             self.console_box.print_console_message(text)
-
 
     def update_switches(self, switch_on_list):
         """Update states of the switches and redraw on canvas"""
@@ -684,17 +704,25 @@ class AboutMenu(wx.Menu):
 
 class ConsoleBox(wx.TextCtrl):
     """This class contains all the methods for creating the menu named 'File'
-        Public methods
-        --------------
-        on_init(self): Initialisation step
-        configure_style(self): Follow the stylesheet defined.
-        print_console_message(self, event): Print user message to console.
-        clear_console(self, event): Clear all console outputs.
-        """
+    Public methods
+    --------------
+    on_init(self): Initialisation step
+    configure_style(self): Follow the stylesheet defined.
+    print_console_message(self, event): Print user message to console.
+    clear_console(self, event): Clear all console outputs.
+    """
 
-    def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
+    def __init__(
+        self,
+        parent,
+        id=wx.ID_ANY,
+        label="",
+        pos=wx.DefaultPosition,
+        size=wx.DefaultSize,
+        style=0,
+    ):
         super(ConsoleBox, self).__init__(parent, id, label, pos, size, style)
-        self.token = 'console_box'
+        self.token = "console_box"
         if parent:
             self.token = parent.token + self.token
         self.style = wx.GetApp().stylesheet
@@ -721,15 +749,23 @@ class ConsoleBox(wx.TextCtrl):
 
 class CycleNumberText(wx.StaticText):
     """This class contains all the methods for displaying the static number of cycles
-        Public methods
-        --------------
-        configure_style(self): Follow the stylesheet defined.
+    Public methods
+    --------------
+    configure_style(self): Follow the stylesheet defined.
     """
 
-    def __init__(self, parent, id=wx.ID_ANY, label="", pos=wx.DefaultPosition, size=wx.DefaultSize, style=0,
-                 name=wx.StaticTextNameStr):
+    def __init__(
+        self,
+        parent,
+        id=wx.ID_ANY,
+        label="",
+        pos=wx.DefaultPosition,
+        size=wx.DefaultSize,
+        style=0,
+        name=wx.StaticTextNameStr,
+    ):
         super(CycleNumberText, self).__init__(parent, id, label, pos, size, style, name)
-        self.token = 'cycle_text'
+        self.token = "cycle_text"
         if parent:
             self.token = parent.token + self.token
         self.style = wx.GetApp().stylesheet
@@ -737,5 +773,3 @@ class CycleNumberText(wx.StaticText):
 
     def configure_style(self):
         self.style.apply_rules(self)
-
-
