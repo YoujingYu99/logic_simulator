@@ -29,6 +29,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
     draw_signal(self): Draw signals chosen.
+    update_switches(self): Update signals when switch states are changed.
+    update_monitors(self): Redraw signals when monitors are updated.
     """
 
     def __init__(self, parent, devices, monitors):
@@ -77,6 +79,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Set monitors to be drawn
         self.devices = devices
         self.monitors = monitors
+        self.switch_id_list = devices.find_devices(devices.SWITCH)
+        self.switch_name_list = [devices.get_signal_name(x, None)
+                             for x in self.switch_IDs]
         # Uncomment when all modules ready
         # [self.monitored_signal_list,
         #  self.non_monitored_signal_list] = self.monitors.get_signal_names()
@@ -283,3 +288,23 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                     GL.glVertex2f(x_end, y)
 
             GL.glEnd()
+
+
+    def update_switches(self, devices):
+        """Update signals when switches are changed."""
+        self.devices = devices
+        self.switch_id_list = devices.find_devices(devices.SWITCH)
+        self.switch_name_list = [devices.get_signal_name(x, None)
+                             for x in self.switch_IDs]
+
+
+    def update_monitors(self, monitors):
+        """Update monitors and redraw signal on canvas."""
+        self.monitors = monitors
+        # Uncomment when necessary
+        # [self.monitored_signal_list,
+        #     self.non_monitored_signal_list] = self.monitors.get_signal_names()
+
+        if not self.monitored_signal_list:
+            self.blank = True
+

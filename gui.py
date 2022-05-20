@@ -39,9 +39,10 @@ class Gui(wx.Frame):
     button.
     get_monitor_names(self): Return monitor_list and monitor_names_list.
     on_monitor_button(self): Event handler for when the user chooses a few monitors and draw the signals on canvas.
+    update_monitor(self): Event handler for when the monitor states are updated.
     get_switch_names(self): Return switch_name_list and switch_on_list.
-    on_monitor_button(self): Event handler for when the user chooses a few switches.
-
+    on_switch_button(self): Event handler for when the user chooses a few switches.
+    update_switches(self): Event handler for when the switch state changes
     """
 
     def __init__(self, title, path, names, devices, network, monitors):
@@ -215,6 +216,7 @@ class Gui(wx.Frame):
                     self.console_box.print_console_message("Error! Network oscillating.")
                     return False
             self.monitors.display_signals()
+            self.canvas.update_monitors(self.monitors)
             return True
         else:
             # Show error if file was not parsed correctly
@@ -232,6 +234,7 @@ class Gui(wx.Frame):
                     "".join(["Running for ", str(spin_value), " cycles"])
                 )
                 self.devices.cold_startup()
+                self.canvas.update_monitors(self.monitors)
                 if self.on_run_button(spin_value):
                     self.cycles_completed += spin_value
         else:
@@ -246,6 +249,7 @@ class Gui(wx.Frame):
                 if self.cycles_completed == 0:
                     self.console_box.print_console_message("Error! Nothing to continue. Run first.")
                 elif self.on_run_button(self.spin_value):
+                    self.canvas.update_monitors(self.monitors)
                     self.cycles_completed += self.spin_value
                     self.console_box.print_console_message(
                         " ".join(
@@ -317,6 +321,38 @@ class Gui(wx.Frame):
             text = "Cannot Show on Monitor. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
+    def update_monitors(self, monitors):
+        """Update signals to be monitored and redraw on canvas"""
+        self.monitors = monitors
+        self.canvas.update_monitors(self.monitors)
+        # Re-initialise monitor_list and monitor_names_list
+        self.monitor_list = []
+        self.monitor_names_list = []
+        for device in self.devices:
+            for output_id, output_signal in device.outputs.items():
+                # Append tuple of device_id and output_id, like a monitors dictionary
+                self.monitor_list.append((device.device_id, output_id))
+            # Outputs dictionary stores {output_id: output_signal}
+            # This returns the name of the signal, which can be monitored
+            monitor_name = self.devices.get_signal_name(
+                device.device_id, device.port_id
+            )
+            self.monitor_names_list.append(monitor_name)
+
+        # Re-initialise monitor selections
+        self.monitor_selected_list = []
+        for count in range(len(self.monitor_list)):
+            device_id, output_id = self.monitor_list[count]
+            # If signal exists
+            if self.monitors.get_monitor_signal((device_id, output_id)) is not None:
+                # Add to selected monitor list
+                self.monitor_selected_list.append(count)
+
+        self.canvas.update_monitors(self.monitors)
+
+
+
+
     # def on_zap_monitor(self):
     #     """Remove the specified monitor."""
     #     if self.is_parsed:
@@ -360,6 +396,8 @@ class Gui(wx.Frame):
 
             if dlg.ShowModal() == wx.ID_OK:
                 selections = dlg.GetSelections()
+                # Update switches
+                self.update_switches(selections)
 
                 for count in range(len(selections)):
                     switch_on_list = [self.switch_name_list[x] for x in selections]
@@ -374,6 +412,14 @@ class Gui(wx.Frame):
             text = "Cannot Show on Monitor. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
+
+    def update_switches(self, switch_on_list):
+        """Update states of the switches and redraw on canvas"""
+        # TODO: finish when the names module is ready.
+        for indiv_switch in switch_on_list:
+            pass
+
+        self.canvas.update_switches(self.devices)
 
 
 class FileMenu(wx.Menu):
