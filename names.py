@@ -70,7 +70,7 @@ class Names:
 
         returns: the ID for name_string
         """
-        if type(name_string) != "string":
+        if type(name_string) != str:
             raise TypeError
         if name_string in self._names_list:
             return self._names_list.index(name_string)
@@ -94,7 +94,7 @@ class Names:
             else:
                 self._names_list.append(name_string)
                 # can do this return as the append will always be on the end
-                results.apend(len(self._names_list) - 1)
+                results.append(len(self._names_list) - 1)
         return results
 
     def get_name_string(self, name_id:int) -> str:
@@ -108,4 +108,9 @@ class Names:
 
         returns: the name corresponding to the ID
         """
-        return self._names_list[name_id]
+        if type(name_id) != int:
+            raise TypeError
+        if name_id < len(self._names_list):
+            return self._names_list[name_id]
+        else:
+            return None
