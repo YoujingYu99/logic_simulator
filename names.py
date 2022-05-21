@@ -45,20 +45,19 @@ class Names:
     def __init__(self):
         """Initialise names list."""
         self.error_code_count = 0  # how many error codes have been declared
-        #initialise a private list to store names
+        # initialise a private list to store names
         self._names_list = []
 
     def unique_error_codes(self, num_error_codes: int) -> list[int]:
         """Return a list of unique integer error codes.
-           Args
-           num_error_codes - number of error codes present
-           
-           returns: list with unique integer error codes"""
+        Args
+        num_error_codes - number of error codes present
+
+        returns: list with unique integer error codes"""
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
         self.error_code_count += num_error_codes
-        return range(self.error_code_count - num_error_codes,
-                     self.error_code_count)
+        return range(self.error_code_count - num_error_codes, self.error_code_count)
 
     def query(self, name_string: str) -> int:
         """Return the corresponding name ID for name_string.
@@ -97,7 +96,7 @@ class Names:
                 results.append(len(self._names_list) - 1)
         return results
 
-    def get_name_string(self, name_id:int) -> str:
+    def get_name_string(self, name_id: int) -> str:
         """Return the corresponding name string for name_id.
 
         If the name_id is not an index in the names list, return None.
