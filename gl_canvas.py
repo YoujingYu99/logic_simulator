@@ -4,7 +4,6 @@ Classes:
 MyGLCanvas - handles all canvas drawing operations.
 """
 
-
 import wx
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
@@ -28,12 +27,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     on_mouse(self, event): Handles mouse events.
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
+    draw_grid(self, spin_value): Draw grid axes on the displayed signals.
     draw_signal(self): Draw signals chosen.
     update_switches(self): Update signals when switch states are changed.
     update_monitors(self): Redraw signals when monitors are updated.
     """
 
-    def __init__(self, parent, devices, monitors):
+    def __init__(self, parent, devices, monitors, spin_value):
         """Initialise canvas properties and useful variables."""
         super().__init__(
             parent,
@@ -66,6 +66,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.min_height = 0
 
         # Initialise variables for drawing signals
+        # grid starting point
+        self.grid_origin = 0
         # width, height
         canvas_width, canvas_height = self.GetClientSize()
         self.canvas_origin = [
@@ -75,6 +77,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.signal_height = 20
         self.signal_cycle_width = 15
         self.signal_y_distance = 3
+        self.x_axis_length = 200
+        self.y_axis_length = 50
+        self.tick_width = 3
 
         # Set monitors to be drawn
         self.devices = devices
@@ -91,6 +96,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         #  self.non_monitored_signal_list] = self.monitors.get_signal_names()
         self.monitored_signal_list = []
         self.non_monitored_signal_list = []
+        self.spin_value = spin_value
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -242,8 +248,61 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
 
+    def draw_grid(self, spin_value):
+        """Draw grid axes on the displayed signals"""
+        # Draw grid
+        GL.glColor3f(0, 0, 0)
+        # Interval for the vertical grid lines
+        grid_interval = self.signal_cycle_width
+
+        # Set x and y starting points
+        x_left = self.canvas_origin[0]
+        y_bottom = self.canvas_origin[1] + self.signal_y_distance * 1
+        y_top = self.canvas_origin[1] + self.signal_height + self.signal_y_distance * 2
+
+        # Draw y axis
+        GL.glVertex2f(x_left, y_bottom)
+        GL.glVertex2f(x_left, y_top)
+        GL.glEnd()
+
+        GL.glColor3f(0, 0, 0)
+        GL.glBegin(GL.GL_LINE_STRIP)
+        x_left = self.canvas_origin[0]
+        x_right = self.canvas_origin[0] + self.x_axis_length
+
+        # Draw x axis
+        GL.glVertex2f(x_left, y_bottom)
+        GL.glVertex2f(x_right, y_bottom)
+        GL.glEnd()
+
+        # Draw x grid ticks
+        # Interval for the vertical grid lines
+        x_grid_interval = self.signal_cycle_width
+        x_tick_x_list = [(index * x_grid_interval) + self.canvas_origin[0] for index in range(spin_value)]
+        x_tick_y_low = y_bottom - 1
+        x_tick_y_high = y_bottom + 1
+        for i in range(len(x_tick_x_list)):
+            GL.glColor3f(0, 0, 0)
+            GL.glVertex2f(x_tick_x_list[i], x_tick_y_low)
+            GL.glVertex2f(x_tick_x_list[i], x_tick_y_high)
+            GL.glEnd()
+
+        # Draw y grid ticks
+        # Interval for the vertical grid lines
+        y_grid_interval = self.signal_height
+        y_tick_left = x_left - 1
+        y_tick_right = x_left + 1
+
+        GL.glColor3f(0, 0, 0)
+        # grid at 0
+        GL.glVertex2f(y_tick_left, y_bottom + 1)
+        # grid at 1
+        GL.glVertex2f(y_tick_right, y_bottom + 1) + y_grid_interval
+        GL.glEnd()
+
     def draw_signal(self):
         """Draw signal traces for each monitor."""
+        self.draw_grid(spin_value=self.spin_value)
         for count in range(len(self.monitored_signal_list)):
             monitor_name = self.monitored_signal_list[count]
             # Find signal list for each monitor
@@ -269,7 +328,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GL.glBegin(GL.GL_LINE_STRIP)
 
             # Find starting y position
-            offset = count * (self.signal_height + self.signal_y_distance)
+            offset = count * (self.signal_height + self.signal_y_distance) + 1
 
             # Draw signal trace
             for index in range(len(signal_list)):

@@ -90,14 +90,15 @@ class Gui(wx.Frame):
         # Temporarily set file to be not parsed
         self.is_parsed = False
 
-        # Canvas for drawing signals
-        self.canvas = MyGLCanvas(self, devices, monitors)
-        # Get window size
-        self.window_size = self.GetClientSize()
 
         # configure initial parameters
         self.spin_value = 10
         self.cycles_completed = 0
+
+        # Canvas for drawing signals
+        self.canvas = MyGLCanvas(self, devices, monitors, spin_value=self.spin_value)
+        # Get window size
+        self.window_size = self.GetClientSize()
 
         # Set FileMenu
         fileMenu = FileMenu(parentFrame=self, main_canvas=self.canvas)
@@ -187,8 +188,8 @@ class Gui(wx.Frame):
         side_sizer.Add(function_sizer, 1, wx.EXPAND, 0)
 
         # side sizer configuration
-        simulation_setting_sizer.Add(self.text, 1, wx.TOP, 10)
-        simulation_setting_sizer.Add(self.spin, 1, wx.TOP, 5)
+        simulation_setting_sizer.Add(self.text, 1, wx.ALL, 10)
+        simulation_setting_sizer.Add(self.spin, 1, wx.ALL, 10)
         simulation_action_sizer.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
         simulation_action_sizer.Add(self.continue_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
         simulation_action_sizer.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
@@ -291,6 +292,7 @@ class Gui(wx.Frame):
         for device in self.devices:
             for output_id, output_signal in device.outputs.items():
                 # Append tuple of device_id and output_id, like a monitors dictionary
+                # Output id is the port id
                 self.monitor_list.append((device.device_id, output_id))
             # Outputs dictionary stores {output_id: output_signal}
             # This returns the name of the signal, which can be monitored
