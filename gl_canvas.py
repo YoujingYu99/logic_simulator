@@ -74,11 +74,18 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             (canvas_width - self.min_width) / 2,
             (canvas_height - self.min_height) / 2,
         ]
+        # Signal parameters
         self.signal_height = 20
         self.signal_cycle_width = 15
         self.signal_y_distance = 5
+        # Axis parameters
         self.x_axis_length = 200
+        self.y_axis_offset = 10
+        self.x_axis_offset = 10
+        self.x_grid_offset = 5
         self.y_axis_length = 50
+        self.y_grid_offset_lower = 5
+        self.y_grid_offset_upper = 5
         self.tick_width = 3
 
         # Set monitors to be drawn
