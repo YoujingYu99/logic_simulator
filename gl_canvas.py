@@ -87,7 +87,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.y_grid_offset_lower = 20
         self.y_grid_offset_upper = 20
         self.tick_width = 3
-        self.label_font = GLUT.GLUT_BITMAP_HELVETICA_12
+        self.label_font = GLUT.GLUT_STROKE_MONO_ROMAN
 
         # Set monitors to be drawn
         self.devices = devices
