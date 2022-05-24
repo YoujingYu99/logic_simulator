@@ -89,6 +89,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.tick_width = 3
         self.label_font = GLUT.GLUT_STROKE_MONO_ROMAN
 
+
         # Set monitors to be drawn
         self.devices = devices
         self.monitors = monitors
@@ -245,7 +246,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     def render_text(self, text, x_pos, y_pos):
         """Handle text drawing operations."""
-        GL.glColor3f(0.0, 0.0, 0.0)  # text is black
+        
+        GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos, y_pos)
         font = GLUT.GLUT_BITMAP_HELVETICA_12
 
@@ -285,7 +287,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GL.glEnd()
 
             # Label x axis
-            GL.glColor3f(0.0, 0.0, 0.0)
+            GL.glColor3f(0, 0, 0)
             x_pos = x_tick_x_list[i]
             y_pos = y_bottom + self.x_axis_offset/2
             GL.glRasterPos2f(x_pos, y_pos)
@@ -299,7 +301,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         font = self.label_font
         x_pos_x_label = x_right
         y_pos_x_label = y_bottom + self.x_axis_offset/2
-        GL.glColor3f(0.0, 0.0, 0.0)  # text is black
+        GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos_x_label, y_pos_x_label)
         for character in text:
             GLUT.glutBitmapCharacter(font, ord(character))
@@ -391,7 +393,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             font = self.label_font
             x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset/2
             y_pos_y_label = y_pos_1
-            GL.glColor3f(0.0, 0.0, 0.0)
+            GL.glColor3f(0, 0, 0)
             GL.glRasterPos2f(x_pos_y_label, y_pos_y_label)
             for character in text:
                 GLUT.glutBitmapCharacter(font, ord(character))
@@ -421,7 +423,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # GL.glEnd()
 
             # Signal trace is blue
-            GL.glColor3f(0.0, 0.0, 1.0)
+            GL.glColor3f(0, 0, 1)
             GL.glBegin(GL.GL_LINE_STRIP)
 
             # Find starting y position

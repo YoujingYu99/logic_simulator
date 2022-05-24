@@ -21,12 +21,6 @@ class LogicSimulatorApp(wx.App):
         self.on_init()
         self.stylesheet = stylesheet.WXStyleSheet(css_file)
 
-        # """Initialise variables."""
-        # self.names = names
-        # self.devices = devices
-        # self.monitors = monitors
-        # self.network = network
-
     def on_init(self):
         # # only uncomment when full code integratable
         # names = Names()
