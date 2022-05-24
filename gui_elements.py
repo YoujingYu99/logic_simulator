@@ -299,6 +299,7 @@ class ConsoleBox(wx.TextCtrl):
     configure_style(self): Follow the stylesheet defined.
     print_console_message(self, event): Print user message to console.
     clear_console(self, event): Clear all console outputs.
+    all_console_messages(self): Return all console messages in list.
     """
 
     def __init__(
@@ -324,9 +325,12 @@ class ConsoleBox(wx.TextCtrl):
     def configure_style(self):
         self.style.apply_rules(self)
 
-    def print_console_message(self, text):
+    def print_console_message(self, input_text, clear=False):
         """Print text to the console output."""
-        self.console_text += text
+        if clear:
+            self.console_text = input_text
+        else:
+            self.console_text += input_text
         self.SetValue(self.console_text)
         self.console_log.append(self.console_text)
 
@@ -336,10 +340,13 @@ class ConsoleBox(wx.TextCtrl):
 
     def clear_console(self):
         """Clear the console output."""
-        self.console_text = ""
-        self.SetValue(self.console_text)
+        # TODO: Not working atm
+        self.console_text = "New simulation!\n"
+        self.print_console_message(input_text=self.console_text, clear=True)
+
 
     def all_console_messages(self):
+        """Keep all console messages in list"""
         return self.console_log
 
 class CycleNumberText(wx.StaticText):

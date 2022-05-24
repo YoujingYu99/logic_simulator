@@ -91,7 +91,6 @@ class Gui(wx.Frame):
         # Temporarily set file to be not parsed
         self.is_parsed = False
 
-
         # configure initial parameters
         self.spin_value = 10
         self.cycles_completed = 0
@@ -102,7 +101,7 @@ class Gui(wx.Frame):
         self.window_size = self.GetClientSize()
 
         self.console_box = ConsoleBox(
-            self, id=wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE
+            self, id=wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE | wx.TE_RICH2
         )
         self.console_box.SetFont(self.console_font)
         self.console_box.SetBackgroundColour("white")
@@ -139,6 +138,7 @@ class Gui(wx.Frame):
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
         self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
+        self.clear_console_button = wx.Button(self, wx.ID_ANY, "Clear Console")
         # Monitor and Switch Buttons
         self.monitor_button = wx.Button(self, wx.ID_ANY, "Choose Monitor")
         self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
@@ -147,15 +147,16 @@ class Gui(wx.Frame):
         self.run_button.SetFont(self.run_font)
         self.rerun_button.SetFont(self.run_font)
         self.continue_button.SetFont(self.run_font)
+        self.clear_console_button.SetFont(self.run_font)
         self.monitor_button.SetFont(self.monitor_font)
         self.switch_button.SetFont(self.monitor_font)
-
 
         # Bind events to widgets
         # self.Bind(wx.EVT_MENU, self.on_menu)
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
         self.run_button.Bind(wx.EVT_BUTTON, self.on_run_button)
         self.rerun_button.Bind(wx.EVT_BUTTON, self.on_rerun_button)
+        self.clear_console_button.Bind(wx.EVT_BUTTON, self.on_clear_console_button())
 
         ## Uncomment when all modules ready
         # self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button())
@@ -192,6 +193,7 @@ class Gui(wx.Frame):
         simulation_action_sizer.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
         simulation_action_sizer.Add(self.continue_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
         simulation_action_sizer.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer.Add(self.clear_console_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
         simulation_sizer.Add(simulation_setting_sizer, 5, wx.ALL | wx.EXPAND, 5)
         simulation_sizer.Add(simulation_action_sizer, 5, wx.ALL | wx.EXPAND, 5)
 
@@ -283,6 +285,9 @@ class Gui(wx.Frame):
             # Show error if file was not parsed correctly
             text = "Cannot continue running simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
+
+    def on_clear_console_button(self):
+        self.console_box.clear_console()
 
     def get_monitor_names(self):
         """monitor_list : [(device_id, output_id)]
