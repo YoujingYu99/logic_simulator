@@ -101,6 +101,12 @@ class Gui(wx.Frame):
         # Get window size
         self.window_size = self.GetClientSize()
 
+        self.console_box = ConsoleBox(
+            self, id=wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE
+        )
+        self.console_box.SetFont(self.console_font)
+        self.console_box.SetBackgroundColour("white")
+
         # Set FileMenu
         fileMenu = FileMenu(parentFrame=self, main_canvas=self.canvas)
         # Set HelpMenu
@@ -144,14 +150,6 @@ class Gui(wx.Frame):
         self.monitor_button.SetFont(self.monitor_font)
         self.switch_button.SetFont(self.monitor_font)
 
-        # self.text_box = wx.TextCtrl(self, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
-        # self.console_box = wx.TextCtrl(
-        #     self, wx.ID_ANY, self.console_text, style=wx.TE_READONLY | wx.TE_MULTILINE
-        # )
-        self.console_box = ConsoleBox(
-            self, wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE
-        )
-        self.console_box.SetFont(self.console_font)
 
         # Bind events to widgets
         # self.Bind(wx.EVT_MENU, self.on_menu)
@@ -443,5 +441,3 @@ class Gui(wx.Frame):
             pass
 
         self.canvas.update_switches(self.devices)
-
-

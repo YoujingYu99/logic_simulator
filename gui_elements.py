@@ -16,7 +16,8 @@ class FileMenu(wx.Menu):
         self.on_init()
         self.parentFrame = parentFrame
         self.canvas = main_canvas
-        self.token = FileMenu
+        self.token = "FileMenu"
+
 
     def on_init(self):
         """Initialise menu and menu items"""
@@ -36,15 +37,25 @@ class FileMenu(wx.Menu):
         self.Bind(wx.EVT_MENU, handler=self.on_open, source=openItem)
         self.AppendSeparator()
 
-        saveItem = wx.MenuItem(
+        saveTraceItem = wx.MenuItem(
             parentMenu=self,
             id=wx.ID_SAVE,
-            text="&Save\tCtrl+S",
-            helpString="Save your file",
+            text="&Save Trace\tCtrl+S",
+            helpString="Save the Trace",
             kind=wx.ITEM_NORMAL,
         )
-        self.Append(saveItem)
-        self.Bind(wx.EVT_MENU, handler=self.on_save, source=saveItem)
+        self.Append(saveTraceItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_save_trace, source=saveTraceItem)
+
+        saveConsoleItem = wx.MenuItem(
+            parentMenu=self,
+            id=wx.ID_SAVE,
+            text="&Save Console\tCtrl+C",
+            helpString="Save the Console Output",
+            kind=wx.ITEM_NORMAL,
+        )
+        self.Append(saveConsoleItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_save_console, source=saveConsoleItem)
 
         # quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
@@ -77,7 +88,7 @@ class FileMenu(wx.Menu):
         dialog.Destroy()
 
     # possibly save file in the future
-    def on_save(self, event=None):
+    def on_save_trace(self, event=None):
         """Save screenshot of the App."""
         im = self.get_screenshot()
         save_dialog = wx.FileDialog(
@@ -114,6 +125,25 @@ class FileMenu(wx.Menu):
         memDC.SelectObject(wx.NullBitmap)
         im = bmp.ConvertToImage()
         return im
+
+    def on_save_console(self, event=None):
+        """ Capture the console messages in one txt file."""
+        dialog = wx.FileDialog(
+            self.parentFrame,
+            "Save your console output",
+            defaultFile="",
+            wildcard=".txt",
+            style=wx.FD_SAVE,
+        )
+
+        if dialog.ShowModal() == wx.ID_CANCEL:
+            return None
+
+        path = dialog.GetPath()
+        data = self.parentFrame.console_box.all_console_messages()
+        with open(path, "w+") as myfile:
+            for line in data:
+                myfile.write(str(line) + "\n")
 
     # def on_save(self, event):
     #     context = wx.ClientDC(self.main_panel)
@@ -279,6 +309,7 @@ class ConsoleBox(wx.TextCtrl):
         pos=wx.DefaultPosition,
         size=wx.DefaultSize,
         style=0,
+
     ):
         super(ConsoleBox, self).__init__(parent, id, label, pos, size, style)
         self.token = "console_box"
@@ -287,6 +318,8 @@ class ConsoleBox(wx.TextCtrl):
         self.style = wx.GetApp().stylesheet
         self.configure_style()
         self.console_text = ""
+        # Initialise a console log that contains all console messages
+        self.console_log = []
 
     def configure_style(self):
         self.style.apply_rules(self)
@@ -295,6 +328,7 @@ class ConsoleBox(wx.TextCtrl):
         """Print text to the console output."""
         self.console_text += text
         self.SetValue(self.console_text)
+        self.console_log.append(self.console_text)
 
         # Autoscroll to make last line visible
         pos = self.GetLastPosition()
@@ -305,6 +339,8 @@ class ConsoleBox(wx.TextCtrl):
         self.console_text = ""
         self.SetValue(self.console_text)
 
+    def all_console_messages(self):
+        return self.console_log
 
 class CycleNumberText(wx.StaticText):
     """This class contains all the methods for displaying the static number of cycles
