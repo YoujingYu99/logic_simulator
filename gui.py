@@ -156,7 +156,7 @@ class Gui(wx.Frame):
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
         self.run_button.Bind(wx.EVT_BUTTON, self.on_run_button)
         self.rerun_button.Bind(wx.EVT_BUTTON, self.on_rerun_button)
-        self.clear_console_button.Bind(wx.EVT_BUTTON, self.on_clear_console_button())
+        self.clear_console_button.Bind(wx.EVT_BUTTON, self.on_clear_console_button)
 
         ## Uncomment when all modules ready
         # self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button())
