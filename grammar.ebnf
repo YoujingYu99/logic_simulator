@@ -1,0 +1,66 @@
+system = 'DEVICES', '{', device, {device}, '}', 
+         'CONNECT', '{', wire, {wire} , '}', 
+         ['MONITOR','{', monitor_point,{monitor_point}, '}',]
+         'END';
+         
+monitor_point =  device_name,[ ".", output_pin], end_statement;
+
+wire = device_name, ['.' , output_pin] , '=>' ,
+    device_name , '.' ,input_pin ,  end_statement;
+
+device = clock_devices | switch_devices | dtype_devices| gate_devices;
+
+gate_devices = gatename, device_name, "(",
+              input_number, ")", {',' , device_name, "(",
+              input_number, ")"} end_statement;
+
+dtype_devices = "DTYPE", device_name, {',' , device_name}, end_statement;
+
+switch_devices = "SWITCH",  device_name,  "(", on_off, ")", 
+     {',' , device_name,  "(", on_off, ")"} ,end_statement;
+
+clock_devices = "CLOCK",  device_name, "(", ("0"| non_zero, {digit}), ")" ,
+       ,{ ',' , device_name, "(", ("0"| non_zero, {digit}), ")"},
+    end_statement;
+
+gatename = "AND" | "NAND" | "OR" | "NOR";
+
+output_pin = "Q" , ["BAR"];
+
+input_pin = "I"(input_number) | "DATA" | "CLK" | "SET" | "CLEAR";
+
+input_number = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" 
+              | "10" | "11" | "12" |"13" | "14" | "15" | "16";
+
+end_statement = ';';
+
+white_space = ? white space characters ? ;
+
+on_off = 0 | 1;
+
+device_name =  identifier - keyword;
+
+identifier = lower_letter , { letter | digit };
+
+keyword  = 'CLOCK' | 'SWITCH'| 'AND'| 'NAND'|'OR'| 'NOR'|'DTYPE'
+           |'XOR'| 'DEVICES'| 'CONNECT'| 'MONITOR'| 'END';
+
+character = letter | digit;
+
+non_zero = digit - "0";
+
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+       | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+       | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
+       | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+       | "j" | "k" | "l" | "m" | "n" | "o" | "p"
+       | "q" | "r" | "s" | "t" | "u" | "v" | "w"
+       | "x" | "y" | "z" ;
+
+lower_letter = "a" | "b" | "c" | "d" | "e" | "f" 
+       | "g" | "h" | "i" | "j" | "k" | "l" | "m" 
+       | "n" | "o" | "p" | "q" | "r" | "s" | "t"
+       | "u" | "v" | "w" | "x" | "y" | "z" ;
