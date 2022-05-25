@@ -1,6 +1,7 @@
 import wx
 import os
 
+
 class FileMenu(wx.Menu):
     """This class contains all the methods for creating the menu named 'File'
     Public methods
@@ -17,7 +18,6 @@ class FileMenu(wx.Menu):
         self.parentFrame = parentFrame
         self.canvas = main_canvas
         self.token = "FileMenu"
-
 
     def on_init(self):
         """Initialise menu and menu items"""
@@ -39,7 +39,7 @@ class FileMenu(wx.Menu):
 
         saveTraceItem = wx.MenuItem(
             parentMenu=self,
-            id=wx.ID_SAVE,
+            id=wx.ID_ANY,
             text="&Save Trace\tCtrl+S",
             helpString="Save the Trace",
             kind=wx.ITEM_NORMAL,
@@ -47,15 +47,18 @@ class FileMenu(wx.Menu):
         self.Append(saveTraceItem)
         self.Bind(wx.EVT_MENU, handler=self.on_save_trace, source=saveTraceItem)
 
+
         saveConsoleItem = wx.MenuItem(
             parentMenu=self,
-            id=wx.ID_SAVE,
+            id=wx.ID_ANY,
             text="&Save Console\tCtrl+C",
             helpString="Save the Console Output",
             kind=wx.ITEM_NORMAL,
         )
         self.Append(saveConsoleItem)
         self.Bind(wx.EVT_MENU, handler=self.on_save_console, source=saveConsoleItem)
+
+        self.AppendSeparator()
 
         # quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
@@ -107,6 +110,7 @@ class FileMenu(wx.Menu):
 
     def get_screenshot(self):
         """Capture a screenshot of the App."""
+        # TODO: not working atm
         screen = wx.ScreenDC()
 
         size = screen.GetSize()
@@ -303,13 +307,13 @@ class ConsoleBox(wx.TextCtrl):
     """
 
     def __init__(
-        self,
-        parent,
-        id=wx.ID_ANY,
-        label="",
-        pos=wx.DefaultPosition,
-        size=wx.DefaultSize,
-        style=0,
+            self,
+            parent,
+            id=wx.ID_ANY,
+            label="",
+            pos=wx.DefaultPosition,
+            size=wx.DefaultSize,
+            style=0,
 
     ):
         super(ConsoleBox, self).__init__(parent, id, label, pos, size, style)
@@ -340,14 +344,13 @@ class ConsoleBox(wx.TextCtrl):
 
     def clear_console(self):
         """Clear the console output."""
-        # TODO: Not working atm
         self.console_text = "New simulation!\n"
         self.print_console_message(input_text=self.console_text, clear=True)
-
 
     def all_console_messages(self):
         """Keep all console messages in list"""
         return self.console_log
+
 
 class CycleNumberText(wx.StaticText):
     """This class contains all the methods for displaying the static number of cycles
@@ -357,14 +360,14 @@ class CycleNumberText(wx.StaticText):
     """
 
     def __init__(
-        self,
-        parent,
-        id=wx.ID_ANY,
-        label="",
-        pos=wx.DefaultPosition,
-        size=wx.DefaultSize,
-        style=0,
-        name=wx.StaticTextNameStr,
+            self,
+            parent,
+            id=wx.ID_ANY,
+            label="",
+            pos=wx.DefaultPosition,
+            size=wx.DefaultSize,
+            style=0,
+            name=wx.StaticTextNameStr,
     ):
         super(CycleNumberText, self).__init__(parent, id, label, pos, size, style, name)
         self.token = "cycle_text"

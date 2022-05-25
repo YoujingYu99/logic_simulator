@@ -85,7 +85,9 @@ class Gui(wx.Frame):
         # self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
         self.switch_id_list = []
         # all switch names
-        self.switch_name_list = [self.names.get_name_string(x) for x in self.switch_id_list]
+        self.switch_name_list = [
+            self.names.get_name_string(x) for x in self.switch_id_list
+        ]
         self.switch_on_list = []
 
         # Temporarily set file to be not parsed
@@ -176,7 +178,9 @@ class Gui(wx.Frame):
         # Sidebar Sizers
         simulation_sizer = wx.StaticBoxSizer(wx.VERTICAL, self)
         simulation_setting_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        simulation_action_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        simulation_action_sizer = wx.BoxSizer(wx.VERTICAL)
+        simulation_action_sizer_1 = wx.BoxSizer(wx.HORIZONTAL)
+        simulation_action_sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         function_sizer = wx.StaticBoxSizer(wx.VERTICAL, self)
 
         # Box.Add(control, proportion, flag, border)
@@ -190,15 +194,23 @@ class Gui(wx.Frame):
         # side sizer configuration
         simulation_setting_sizer.Add(self.text, 1, wx.ALL, 10)
         simulation_setting_sizer.Add(self.spin, 1, wx.ALL, 10)
-        simulation_action_sizer.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        simulation_action_sizer.Add(self.continue_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        simulation_action_sizer.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        simulation_action_sizer.Add(self.clear_console_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer.Add(simulation_action_sizer_1, 1, wx.EXPAND, 0)
+        simulation_action_sizer.Add(simulation_action_sizer_2, 1, wx.EXPAND, 0)
+        simulation_action_sizer_1.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer_1.Add(self.continue_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer_2.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer_2.Add(
+            self.clear_console_button, 1, wx.LEFT | wx.RIGHT, 3, 5
+        )
+        # simulation_action_sizer.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        # simulation_action_sizer.Add(self.continue_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        # simulation_action_sizer.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        # simulation_action_sizer.Add(self.clear_console_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
         simulation_sizer.Add(simulation_setting_sizer, 5, wx.ALL | wx.EXPAND, 5)
         simulation_sizer.Add(simulation_action_sizer, 5, wx.ALL | wx.EXPAND, 5)
 
-        function_sizer.Add(self.monitor_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
-        function_sizer.Add(self.switch_button, 1, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        function_sizer.Add(self.monitor_button, 5, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        function_sizer.Add(self.switch_button, 5, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
 
         # side_sizer.Add(self.text_box, 1, wx.ALL, 5)
 
@@ -286,7 +298,7 @@ class Gui(wx.Frame):
             text = "Cannot continue running simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
-    def on_clear_console_button(self):
+    def on_clear_console_button(self, event):
         self.console_box.clear_console()
 
     def get_monitor_names(self):
