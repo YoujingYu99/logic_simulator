@@ -257,8 +257,7 @@ class Gui(wx.Frame):
             self.devices.cold_startup()
             if self.run_network(cycles):
                 self.cycles_completed += cycles
-                text = "".join([("Running for "), str(cycles),
-                                ("cycles.\n")])
+                text = "".join([("Running for "), str(cycles), ("cycles.\n")])
                 self.console_box.print_console_message(text)
 
                 # Update canvas information
@@ -285,8 +284,7 @@ class Gui(wx.Frame):
                 # If the network is successfully run.
                 elif self.run_network(cycles=cycles):
                     self.cycles_completed += cycles
-                    text = "".join([("Continuing for "), str(cycles),
-                                    ("cycles.\n")])
+                    text = "".join([("Continuing for "), str(cycles), ("cycles.\n")])
                     self.console_box.print_console_message(text)
 
                     # Update canvas information
@@ -314,7 +312,6 @@ class Gui(wx.Frame):
             text = "Cannot rerun simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
-
         # if self.is_parsed:
         #     if self.spin_value is not None:  # if the number of cycles provided is valid
         #         self.monitors.reset_monitors()
@@ -339,11 +336,9 @@ class Gui(wx.Frame):
                 # Append tuple of device_id and output_id, like a monitors dictionary
                 # Output id is the port id
                 self.monitor_list.append((device.device_id, output_id))
-            # Outputs dictionary stores {output_id: output_signal}
-            # This returns the name of the signal, which can be monitored
-                monitor_name = self.devices.get_signal_name(
-                    device.device_id, output_id
-                )
+                # Outputs dictionary stores {output_id: output_signal}
+                # This returns the name of the signal, which can be monitored
+                monitor_name = self.devices.get_signal_name(device.device_id, output_id)
                 self.monitor_names_list.append(monitor_name)
 
     def on_monitor_button(self):
@@ -402,9 +397,7 @@ class Gui(wx.Frame):
                 self.monitor_list.append((device.device_id, output_id))
                 # Outputs dictionary stores {output_id: output_signal}
                 # This returns the name of the signal, which can be monitored
-                monitor_name = self.devices.get_signal_name(
-                    device.device_id, output_id
-                )
+                monitor_name = self.devices.get_signal_name(device.device_id, output_id)
                 self.monitor_names_list.append(monitor_name)
 
         # Re-initialise monitor selections
