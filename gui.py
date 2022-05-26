@@ -341,10 +341,10 @@ class Gui(wx.Frame):
                 self.monitor_list.append((device.device_id, output_id))
             # Outputs dictionary stores {output_id: output_signal}
             # This returns the name of the signal, which can be monitored
-            monitor_name = self.devices.get_signal_name(
-                device.device_id, device.port_id
-            )
-            self.monitor_names_list.append(monitor_name)
+                monitor_name = self.devices.get_signal_name(
+                    device.device_id, output_id
+                )
+                self.monitor_names_list.append(monitor_name)
 
     def on_monitor_button(self):
         """Choose signals to monitor and draw."""
@@ -400,12 +400,12 @@ class Gui(wx.Frame):
             for output_id, output_signal in device.outputs.items():
                 # Append tuple of device_id and output_id, like a monitors dictionary
                 self.monitor_list.append((device.device_id, output_id))
-            # Outputs dictionary stores {output_id: output_signal}
-            # This returns the name of the signal, which can be monitored
-            monitor_name = self.devices.get_signal_name(
-                device.device_id, device.port_id
-            )
-            self.monitor_names_list.append(monitor_name)
+                # Outputs dictionary stores {output_id: output_signal}
+                # This returns the name of the signal, which can be monitored
+                monitor_name = self.devices.get_signal_name(
+                    device.device_id, output_id
+                )
+                self.monitor_names_list.append(monitor_name)
 
         # Re-initialise monitor selections
         self.monitor_selected_list = []
