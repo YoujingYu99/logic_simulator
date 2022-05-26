@@ -28,7 +28,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     on_mouse(self, event): Handles mouse events.
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
-    update_signal_history(self): Update signal history associated with each monitor.
     draw_grid(self, spin_value): Draw grid axes on the displayed signals.
     draw_signal(self): Draw signals chosen.
     update_switches(self): Update signals when switch states are changed.
@@ -108,9 +107,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.monitored_signal_list = []
         self.non_monitored_signal_list = []
         self.spin_value = spin_value
-        # signal_history
-        # {monitor_name: [(run_number, signal_list)]}
-        self.signal_history = collections.OrderedDict()
         self.total_cycles = 0
         self.run_number = 0
 
@@ -264,30 +260,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 GL.glRasterPos2f(x_pos, y_pos)
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
-
-    def update_signal_history(self):
-        """Add signals for each monitor from last run to signal history
-        dictionary. Necessary for on_continue_button operation
-        """
-
-        for count in range(len(self.monitored_signal_list)):
-            monitor_name = self.monitored_signal_list[count]
-            # Find signal list for each monitor
-            [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
-            signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
-
-            # Discard RISING and FALLING states for rendering
-            signal_list = [x for x in signal_list if x == self.devices.HIGH
-                           or x == self.devices.LOW or x == self.devices.BLANK]
-
-            # Add to signal history
-            # signal_history: {monitor_name: [(run_number, signal_list)]}
-            # If not in the dictionary, add
-            if monitor_name not in self.signal_history.keys() or not self.signal_history[monitor_name]:
-                self.signal_history[monitor_name] = {self.run_number: signal_list}
-            # If in the dictionary, update the value to new signal list
-            else:
-                self.signal_history[monitor_name][self.run_number] = signal_list
 
     def draw_grid(self, spin_value):
         """Draw grid axes on the displayed signals"""

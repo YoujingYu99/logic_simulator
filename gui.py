@@ -267,7 +267,6 @@ class Gui(wx.Frame):
                 self.canvas.update_monitors(self.monitors)
                 self.canvas.draw_signal()
                 self.canvas.total_cycles += cycles
-                self.canvas.update_signal_history()
 
         else:
             # Show error if file was not parsed correctly
@@ -296,7 +295,6 @@ class Gui(wx.Frame):
                     self.canvas.update_monitors(self.monitors)
                     self.canvas.draw_signal()
                     self.canvas.total_cycles += cycles
-                    self.canvas.update_signal_history()
 
         else:
             # Show error if file was not parsed correctly
@@ -446,7 +444,7 @@ class Gui(wx.Frame):
             self.names.get_name_string(x) for x in self.switch_id_list
         ]
         for i in range(len(self.switch_id_list)):
-            count, switch_id = self.switch_id_list[count]
+            count, switch_id = self.switch_id_list[i]
             if self.devices.get_device(switch_id).switch_state == self.devices.HIGH:
                 # Add the position of the switch into the switch_on list
                 self.switch_on_list.append(count)
