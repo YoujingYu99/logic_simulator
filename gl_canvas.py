@@ -7,6 +7,7 @@ MyGLCanvas - handles all canvas drawing operations.
 import wx
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
+import collections
 
 
 class MyGLCanvas(wxcanvas.GLCanvas):
@@ -27,6 +28,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     on_mouse(self, event): Handles mouse events.
     render_text(self, text, x_pos, y_pos): Handles text drawing
                                            operations.
+    update_signal_history(self): Update signal history associated with each monitor.
     draw_grid(self, spin_value): Draw grid axes on the displayed signals.
     draw_signal(self): Draw signals chosen.
     update_switches(self): Update signals when switch states are changed.
@@ -106,6 +108,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.monitored_signal_list = []
         self.non_monitored_signal_list = []
         self.spin_value = spin_value
+        # signal_history
+        # {monitor_name: [(run_number, signal_list)]}
+        self.signal_history = collections.OrderedDict()
+        self.total_cycles = 0
+        self.run_number = 0
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -258,6 +265,30 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             else:
                 GLUT.glutBitmapCharacter(font, ord(character))
 
+    def update_signal_history(self):
+        """Add signals for each monitor from last run to signal history
+        dictionary. Necessary for on_continue_button operation
+        """
+
+        for count in range(len(self.monitored_signal_list)):
+            monitor_name = self.monitored_signal_list[count]
+            # Find signal list for each monitor
+            [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
+            signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
+
+            # Discard RISING and FALLING states for rendering
+            signal_list = [x for x in signal_list if x == self.devices.HIGH
+                           or x == self.devices.LOW or x == self.devices.BLANK]
+
+            # Add to signal history
+            # signal_history: {monitor_name: [(run_number, signal_list)]}
+            # If not in the dictionary, add
+            if monitor_name not in self.signal_history.keys() or not self.signal_history[monitor_name]:
+                self.signal_history[monitor_name] = {self.run_number: signal_list}
+            # If in the dictionary, update the value to new signal list
+            else:
+                self.signal_history[monitor_name][self.run_number] = signal_list
+
     def draw_grid(self, spin_value):
         """Draw grid axes on the displayed signals"""
         # Draw x axis. Set x starting points
@@ -402,55 +433,57 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         """Draw signal traces for each monitor."""
         self.draw_grid(spin_value=self.spin_value)
         # Draw signals one on top of another.
-        for count in range(len(self.monitored_signal_list)):
-            monitor_name = self.monitored_signal_list[count]
-            # Find signal list for each monitor
-            [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
-            signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
+        if self.total_cycles > 0:
+            for count in range(len(self.monitored_signal_list)):
+                monitor_name = self.monitored_signal_list[count]
+                # Find signal list for each monitor
+                [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
+                signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
 
-            # Draw a sample signal trace
-            # GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
-            # GL.glBegin(GL.GL_LINE_STRIP)
-            # for i in range(10):
-            #     x = (i * 20) + 10
-            #     x_next = (i * 20) + 30
-            #     if i % 2 == 0:
-            #         y = 75
-            #     else:
-            #         y = 100
-            #     GL.glVertex2f(x, y)
-            #     GL.glVertex2f(x_next, y)
-            # GL.glEnd()
+                # Draw a sample signal trace
+                # GL.glColor3f(0.0, 0.0, 1.0)  # signal trace is blue
+                # GL.glBegin(GL.GL_LINE_STRIP)
+                # for i in range(10):
+                #     x = (i * 20) + 10
+                #     x_next = (i * 20) + 30
+                #     if i % 2 == 0:
+                #         y = 75
+                #     else:
+                #         y = 100
+                #     GL.glVertex2f(x, y)
+                #     GL.glVertex2f(x_next, y)
+                # GL.glEnd()
 
-            # Signal trace is blue
-            GL.glColor3f(0, 0, 1)
-            GL.glBegin(GL.GL_LINE_STRIP)
+                # Signal trace is blue
+                GL.glColor3f(0, 0, 1)
+                GL.glBegin(GL.GL_LINE_STRIP)
 
-            # Find starting y position
-            # y offset is half of tick_width
-            offset = count * (self.signal_height + self.signal_y_distance) + self.tick_width / 2 + self.label_width
+                # Find starting y position
+                # y offset is half of tick_width
+                offset = count * (self.signal_height + self.signal_y_distance) + self.tick_width / 2 + self.label_width
 
-            # Draw signal trace
-            for index in range(len(signal_list)):
-                indiv_signal = signal_list[index]
-                # horizontal start point of signal
-                x_start = (index * self.signal_cycle_width) + self.canvas_origin[0]
-                x_end = x_start + self.signal_cycle_width
+                # Draw signal trace
+                for index in range(len(signal_list)):
+                    indiv_signal = signal_list[index]
+                    # horizontal start point of signal
+                    x_start = (index * self.signal_cycle_width) + self.canvas_origin[0]
+                    x_end = x_start + self.signal_cycle_width
 
-                # If signal is high
-                if indiv_signal == self.devices.HIGH:
-                    # Add offset to y
-                    y = self.canvas_origin[1] + self.signal_height + offset
-                    GL.glVertex2f(x_start, y)
-                    GL.glVertex2f(x_end, y)
-                # If signal is low
-                if indiv_signal == self.devices.LOW:
-                    # Add offset to y
-                    y = self.canvas_origin[1] + offset
-                    GL.glVertex2f(x_start, y)
-                    GL.glVertex2f(x_end, y)
+                    # If signal is high
+                    if indiv_signal == self.devices.HIGH:
+                        # Add offset to y
+                        y = self.canvas_origin[1] + self.signal_height + offset
+                        GL.glVertex2f(x_start, y)
+                        GL.glVertex2f(x_end, y)
+                    # If signal is low
+                    if indiv_signal == self.devices.LOW:
+                        # Add offset to y
+                        y = self.canvas_origin[1] + offset
+                        GL.glVertex2f(x_start, y)
+                        GL.glVertex2f(x_end, y)
 
-            GL.glEnd()
+                GL.glEnd()
+
 
     def update_switches(self, devices):
         """Update signals when switches are changed."""
