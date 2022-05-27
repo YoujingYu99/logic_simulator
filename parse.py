@@ -323,3 +323,77 @@ class Parser:
         else:
             # error, not a valid gate name
             self.error()
+
+    def output_pin(self):
+        """
+        Method to parse output pins
+        """
+        if self.symbol == self.scanner.Q:
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        elif self.symbol == self.scanner.QBAR:
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        else:
+            # output pin specified but not describes
+            self.error()
+
+    def input_pin(self):
+        if self.symbol == self.scanner.I:
+            self.symbol = self.scanner.getsymbol()
+            self.input_number()
+            return 1
+        elif (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.DATA_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        elif (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.CLK_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        elif (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.SET_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        elif (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.CLEAR_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        else:
+            # unknown symbol or not specified
+            self.error()
+
+    def input_number(self):
+        input_num_list = [
+            self.scanner.ONE,
+            self.scanner.TWO,
+            self.scanner.THREE,
+            self.scanner.FOUR,
+            self.scanner.FIVE,
+            self.scanner.SIX,
+            self.scanner.SEVEN,
+            self.scanner.EIGHT,
+            self.scanner.NINE,
+            self.scanner.TEN,
+            self.scanner.ELEVEN,
+            self.scanner.TWELVE,
+            self.scanner.THIRTEEN,
+            self.scanner.FOURTEEN,
+            self.scanner.FIFTEEN,
+            self.scanner.SIXTEEN,
+        ]
+        # other ways to do it, depending on the scanner
+        if self.symbol.type in input_num_list:
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        else:
+            # error of invalid input
+            self.error()
