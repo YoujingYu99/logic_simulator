@@ -47,7 +47,6 @@ class FileMenu(wx.Menu):
         self.Append(saveTraceItem)
         self.Bind(wx.EVT_MENU, handler=self.on_save_trace, source=saveTraceItem)
 
-
         saveConsoleItem = wx.MenuItem(
             parentMenu=self,
             id=wx.ID_ANY,
@@ -81,12 +80,10 @@ class FileMenu(wx.Menu):
         path = dialog.GetPath()
         if os.path.exists(path):
             with open(path) as myfile:
-                for line in myfile:
-                    self.parentFrame.text.WriteText(line)
+                text = "Loading {file_name:}.".format(file_name=path)
+                self.parentFrame.console_box.print_console_message(text)
 
-        if dialog.ShowModal() == wx.ID_OK:
-            path = dialog.GetPath()
-            text = "Loading definition file:  " + str(path) + "\n"
+                # TODO: parse and scan the file
 
         dialog.Destroy()
 
@@ -112,9 +109,7 @@ class FileMenu(wx.Menu):
 
     def get_screenshot(self):
         """Capture a screenshot of the App."""
-        # TODO: not working atm
         screen = wx.WindowDC(self.canvas)
-
         size = self.canvas.GetSize()
         width = size.width
         height = size.height
@@ -134,7 +129,7 @@ class FileMenu(wx.Menu):
         return im
 
     def on_save_console(self, event=None):
-        """ Capture the console messages in one txt file."""
+        """Capture the console messages in one txt file."""
         dialog = wx.FileDialog(
             self.parentFrame,
             "Save your console output",
@@ -150,68 +145,6 @@ class FileMenu(wx.Menu):
         with open(path, "w+") as myfile:
             for line in data:
                 myfile.write(str(line) + "\n")
-
-    # def on_save(self, event):
-    #     context = wx.ClientDC(self.main_panel)
-    #     memory = wx.MemoryDC()
-    #     x, y = self.client_size
-    #     bitmap = wx.EmptyBitmap(x, y, -1)
-    #     memory.SelectObject(bitmap)
-    #     memory.Blit(0, 0, x, y, context, 0, 0)
-    #     memory.SelectObject(wx.NullBitmap)
-    #     bitmap.SaveFile('test.bmp', wx.BITMAP_TYPE_BMP)
-    # # def on_save(self, event):
-    #
-    #     # based largely on code posted to wxpython-users by Andrea Gavana 2006-11-08
-    #     size = dcSource.Size
-    #
-    #     # Create a Bitmap that will later on hold the screenshot image
-    #     # Note that the Bitmap must have a size big enough to hold the screenshot
-    #     # -1 means using the current default colour depth
-    #     bmp = wx.EmptyBitmap(size.width, size.height)
-    #
-    #     # Create a memory DC that will be used for actually taking the screenshot
-    #     memDC = wx.MemoryDC()
-    #
-    #     # Tell the memory DC to use our Bitmap
-    #     # all drawing action on the memory DC will go to the Bitmap now
-    #     memDC.SelectObject(bmp)
-    #
-    #     # Blit (in this case copy) the actual screen on the memory DC
-    #     # and thus the Bitmap
-    #     memDC.Blit(0,  # Copy to this X coordinate
-    #                0,  # Copy to this Y coordinate
-    #                size.width,  # Copy this width
-    #                size.height,  # Copy this height
-    #                dcSource,  # From where do we copy?
-    #                0,  # What's the X offset in the original DC?
-    #                0  # What's the Y offset in the original DC?
-    #                )
-    #
-    #     # Select the Bitmap out of the memory DC by selecting a new
-    #     # uninitialized Bitmap
-    #     memDC.SelectObject(wx.NullBitmap)
-    #
-    #     img = bmp.ConvertToImage()
-    #     img.SaveFile('saved.png', wx.BITMAP_TYPE_PNG)
-    # dialog = wx.FileDialog(
-    #     self.parentFrame,
-    #     message="Save your data",
-    #     defaultFile="Untitled.txt",
-    #     style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
-    # )
-    #
-    # if dialog.ShowModal() == wx.ID_CANCEL:
-    #     return None
-    #
-    # path = dialog.GetPath()
-    # data = self.parentFrame.text.GetValue()
-    # print(data)
-    # data = data.split("\n")
-    # print(data)
-    # with open(path, "w+") as myfile:
-    #     for line in data:
-    #         myfile.write(line + "\n")
 
     def on_quit(self, event):
         """Quit the system."""
@@ -244,7 +177,7 @@ class HelpMenu(wx.Menu):
 
         # about information on project
         documentationItem = wx.MenuItem(
-            parentMenu=self, id=wx.ID_ANY, text="&Documetation\tCtrl+A"
+            parentMenu=self, id=wx.ID_ANY, text="&Documetation\tCtrl+D"
         )
         self.Append(documentationItem)
         self.Bind(wx.EVT_MENU, handler=self.on_documentation, source=documentationItem)
@@ -309,14 +242,13 @@ class ConsoleBox(wx.TextCtrl):
     """
 
     def __init__(
-            self,
-            parent,
-            id=wx.ID_ANY,
-            label="",
-            pos=wx.DefaultPosition,
-            size=wx.DefaultSize,
-            style=0,
-
+        self,
+        parent,
+        id=wx.ID_ANY,
+        label="",
+        pos=wx.DefaultPosition,
+        size=wx.DefaultSize,
+        style=0,
     ):
         super(ConsoleBox, self).__init__(parent, id, label, pos, size, style)
         self.token = "console_box"
@@ -362,14 +294,14 @@ class CycleNumberText(wx.StaticText):
     """
 
     def __init__(
-            self,
-            parent,
-            id=wx.ID_ANY,
-            label="",
-            pos=wx.DefaultPosition,
-            size=wx.DefaultSize,
-            style=0,
-            name=wx.StaticTextNameStr,
+        self,
+        parent,
+        id=wx.ID_ANY,
+        label="",
+        pos=wx.DefaultPosition,
+        size=wx.DefaultSize,
+        style=0,
+        name=wx.StaticTextNameStr,
     ):
         super(CycleNumberText, self).__init__(parent, id, label, pos, size, style, name)
         self.token = "cycle_text"

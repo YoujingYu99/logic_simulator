@@ -7,7 +7,6 @@ MyGLCanvas - handles all canvas drawing operations.
 import wx
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
-import collections
 
 
 class MyGLCanvas(wxcanvas.GLCanvas):
@@ -30,8 +29,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                                            operations.
     draw_grid(self, spin_value): Draw grid axes on the displayed signals.
     draw_signal(self): Draw signals chosen.
-    update_switches(self): Update signals when switch states are changed.
-    update_monitors(self): Redraw signals when monitors are updated.
     """
 
     def __init__(self, parent, devices, monitors, spin_value):
@@ -90,25 +87,18 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.tick_width = 3
         self.label_font = GLUT.GLUT_BITMAP_HELVETICA_12
 
-
         # Set monitors to be drawn
         self.devices = devices
         self.monitors = monitors
-        # All switch IDs. Only uncomment when other modules ready
-        # self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
-        # self.switch_name_list = [
-        #     self.devices.get_signal_name(x, None) for x in self.switch_IDs
-        # ]
-        self.switch_id_list = []
-        self.switch_name_list = []
         # Uncomment when all modules ready
         # [self.monitored_signal_list,
         #  self.non_monitored_signal_list] = self.monitors.get_signal_names()
         self.monitored_signal_list = []
         self.non_monitored_signal_list = []
+        # The number of values to be run input by the user
         self.spin_value = spin_value
+        # Cycles already run in total
         self.total_cycles = 0
-        self.run_number = 0
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -249,7 +239,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     def render_text(self, text, x_pos, y_pos):
         """Handle text drawing operations."""
-        
+
         GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos, y_pos)
         font = GLUT.GLUT_BITMAP_HELVETICA_12
@@ -279,7 +269,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Interval for the vertical grid lines
         x_grid_interval = self.signal_cycle_width
         x_grid_start = self.canvas_origin[0] + self.x_axis_offset + self.y_axis_offset
-        x_tick_x_list = [(index * x_grid_interval) + x_grid_start for index in range(spin_value)]
+        x_tick_x_list = [
+            (index * x_grid_interval) + x_grid_start for index in range(spin_value)
+        ]
         x_tick_y_low = y_bottom + self.x_axis_offset - self.tick_width / 2
         x_tick_y_high = y_bottom + self.x_axis_offset + self.tick_width / 2
         for i in range(len(x_tick_x_list)):
@@ -292,7 +284,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # Label x axis
             GL.glColor3f(0, 0, 0)
             x_pos = x_tick_x_list[i]
-            y_pos = y_bottom + self.x_axis_offset/2
+            y_pos = y_bottom + self.x_axis_offset / 2
             GL.glRasterPos2f(x_pos, y_pos)
             font = self.label_font
             label = str(i)
@@ -303,7 +295,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         text = "No. of Cycles"
         font = self.label_font
         x_pos_x_label = x_right
-        y_pos_x_label = y_bottom + self.x_axis_offset/2
+        y_pos_x_label = y_bottom + self.x_axis_offset / 2
         GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos_x_label, y_pos_x_label)
         for character in text:
@@ -341,7 +333,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         # Draw y axis. Set y starting points
         x_left = self.canvas_origin[0] + self.y_axis_offset
-        y_height_needed = len(self.monitored_signal_list) * (self.x_axis_offset + self.y_grid_offset_lower + self.signal_height + self.y_grid_offset_upper + self.signal_y_distance)
+        y_height_needed = len(self.monitored_signal_list) * (
+            self.x_axis_offset
+            + self.y_grid_offset_lower
+            + self.signal_height
+            + self.y_grid_offset_upper
+            + self.signal_y_distance
+        )
         y_top = y_bottom + y_height_needed
 
         # Draw y axis
@@ -358,7 +356,12 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         for count in range(num_signals):
             # Draw y grid ticks
             # grid at 0
-            zero_pos = y_bottom + self.x_axis_offset + self.y_grid_offset_lower + count*(self.signal_y_distance + self.signal_height)
+            zero_pos = (
+                y_bottom
+                + self.x_axis_offset
+                + self.y_grid_offset_lower
+                + count * (self.signal_y_distance + self.signal_height)
+            )
             GL.glColor3f(0, 0, 0)
             GL.glBegin(GL.GL_LINE_STRIP)
             GL.glVertex2f(y_tick_left, zero_pos)
@@ -373,14 +376,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             for character in label:
                 GLUT.glutBitmapCharacter(font, ord(character))
 
-
             # grid at 1
             GL.glColor3f(0, 0, 0)
             GL.glBegin(GL.GL_LINE_STRIP)
-            GL.glVertex2f(y_tick_left,
-                          zero_pos + self.signal_height)
-            GL.glVertex2f(y_tick_right,
-                          zero_pos + self.signal_height)
+            GL.glVertex2f(y_tick_left, zero_pos + self.signal_height)
+            GL.glVertex2f(y_tick_right, zero_pos + self.signal_height)
             GL.glEnd()
             # Label 1
             x_pos_1 = y_tick_left - self.label_size
@@ -394,7 +394,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # Label y axis
             text = "Monitor Name"
             font = self.label_font
-            x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset/2
+            x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset / 2
             y_pos_y_label = y_pos_1
             GL.glColor3f(0, 0, 0)
             GL.glRasterPos2f(x_pos_y_label, y_pos_y_label)
@@ -407,7 +407,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Draw signals one on top of another.
         if self.total_cycles > 0:
             for count in range(len(self.monitored_signal_list)):
-                monitor_name = self.monitored_signal_list[count]
+                monitor_name = self.monitored_signal_list
                 # Find signal list for each monitor
                 [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
                 signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
@@ -432,7 +432,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
                 # Find starting y position
                 # y offset is half of tick_width
-                offset = count * (self.signal_height + self.signal_y_distance) + self.tick_width / 2 + self.label_width
+                offset = (
+                    count * (self.signal_height + self.signal_y_distance)
+                    + self.tick_width / 2
+                    + self.label_width
+                )
 
                 # Draw signal trace
                 for index in range(len(signal_list)):
@@ -455,22 +459,3 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                         GL.glVertex2f(x_end, y)
 
                 GL.glEnd()
-
-
-    def update_switches(self, devices):
-        """Update signals when switches are changed."""
-        self.devices = devices
-        self.switch_id_list = devices.find_devices(devices.SWITCH)
-        self.switch_name_list = [
-            devices.get_signal_name(x, None) for x in self.switch_IDs
-        ]
-
-    def update_monitors(self, monitors):
-        """Update monitors and redraw signal on canvas."""
-        self.monitors = monitors
-        # Uncomment when necessary
-        # [self.monitored_signal_list,
-        #     self.non_monitored_signal_list] = self.monitors.get_signal_names()
-
-        if not self.monitored_signal_list:
-            self.blank = True

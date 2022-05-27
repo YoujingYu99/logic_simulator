@@ -75,25 +75,31 @@ class Gui(wx.Frame):
             12, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
         )
 
-        # Monitor names list with two sublists: list of signal monitored and list of signal not monitored
+        # monitor_names_list contains all the signals that can be monitored
         self.monitor_names_list = []
+        # monitor_list: [(device_id, output_id)]
         self.monitor_list = []
         self.monitor_selected_list = []
+        # Uncomment when all modules ready
+        # self.get_monitor_names()
 
         # Switch names and IDs
-        # All switch IDs. Only uncomment when other modules ready
-        # self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
+        # all switch ids. Set to empty initially
         self.switch_id_list = []
-        # all switch names
+        # all switch names. Set to empty initially
         self.switch_name_list = [
             self.names.get_name_string(x) for x in self.switch_id_list
         ]
         self.switch_on_list = []
+        self.switch_off_list = []
+        # Uncomment when all modules ready
+        # self.get_switch_names()
 
         # Temporarily set file to be not parsed
         self.is_parsed = False
 
         # configure initial parameters
+        # Set default spin value
         self.spin_value = 10
         self.cycles_completed = 0
 
@@ -202,17 +208,11 @@ class Gui(wx.Frame):
         simulation_action_sizer_2.Add(
             self.clear_console_button, 1, wx.LEFT | wx.RIGHT, 3, 5
         )
-        # simulation_action_sizer.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        # simulation_action_sizer.Add(self.continue_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        # simulation_action_sizer.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        # simulation_action_sizer.Add(self.clear_console_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
         simulation_sizer.Add(simulation_setting_sizer, 5, wx.ALL | wx.EXPAND, 5)
         simulation_sizer.Add(simulation_action_sizer, 5, wx.ALL | wx.EXPAND, 5)
 
         function_sizer.Add(self.monitor_button, 5, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
         function_sizer.Add(self.switch_button, 5, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
-
-        # side_sizer.Add(self.text_box, 1, wx.ALL, 5)
 
         # console sizer configuration
         console_sizer.Add(self.console_box, 5, wx.EXPAND | wx.ALL, 5)
@@ -249,21 +249,20 @@ class Gui(wx.Frame):
         # text = "Run button pressed."
         # self.canvas.render(text)
         if self.is_parsed:
-            # Reset the number of cycles
+            # Reset the number of cycles for the canvas
             self.canvas.total_cycles = 0
             cycles = self.spin_value
 
             self.monitors.reset_monitors()
             self.devices.cold_startup()
+            # If successfully run
             if self.run_network(cycles):
                 self.cycles_completed += cycles
-                text = "".join([("Running for "), str(cycles), ("cycles.\n")])
+                text = "Now running for {no_cycles:.}!".format(no_cycles=str(cycles))
                 self.console_box.print_console_message(text)
 
                 # Update canvas information
-                # Add one to the number of cycles run
-                self.canvas.run_number += 1
-                self.canvas.update_monitors(self.monitors)
+                # Add to the number of cycles run
                 self.canvas.draw_signal()
                 self.canvas.total_cycles += cycles
 
@@ -284,13 +283,12 @@ class Gui(wx.Frame):
                 # If the network is successfully run.
                 elif self.run_network(cycles=cycles):
                     self.cycles_completed += cycles
-                    text = "".join([("Continuing for "), str(cycles), ("cycles.\n")])
+                    text = "Now continuing for {no_cycles:.}!".format(
+                        no_cycles=str(cycles)
+                    )
                     self.console_box.print_console_message(text)
-
                     # Update canvas information
-                    # Add one to the number of cycles run
-                    self.canvas.run_number += 1
-                    self.canvas.update_monitors(self.monitors)
+                    # Add to the number of cycles run
                     self.canvas.draw_signal()
                     self.canvas.total_cycles += cycles
 
@@ -311,21 +309,6 @@ class Gui(wx.Frame):
         else:
             text = "Cannot rerun simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
-
-        # if self.is_parsed:
-        #     if self.spin_value is not None:  # if the number of cycles provided is valid
-        #         self.monitors.reset_monitors()
-        #         self.console_box.print_console_message(
-        #             "".join(["Running for ", str(self.spin_value), " cycles"])
-        #         )
-        #         self.devices.cold_startup()
-        #         self.canvas.update_monitors(self.monitors)
-        #         if self.on_run_button():
-        #             self.cycles_completed += self.spin_value
-        # else:
-        #     # Show error if file was not parsed correctly
-        #     text = "Cannot rerun simulation. Please check your definition file.\n"
-        #     self.console_box.print_console_message(text)
 
     def get_monitor_names(self):
         """monitor_list : [(device_id, output_id)]
@@ -352,84 +335,50 @@ class Gui(wx.Frame):
                 "Monitored Signals",
                 self.monitor_names_list,
             )
-
             # # Set the dialog default before the user sets it
             # dlg.GetSelections(self.monitor_selected_list)
 
             if dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
                 selections = dlg.GetSelections()
 
-                # Set monitors selected by user
-                self.monitor_selected_list = selections
-                for count in range(len(self.monitor_list)):
-                    device_id, output_id = self.monitor_list[count]
-                    # If the monitor is selected by user
-                    if count in self.monitor_selected_list:
-                        # Make monitor
-                        monitor_error = self.monitors.make_monitor(
-                            device_id, output_id, self.cycles_completed
-                        )
-                        if monitor_error == self.monitors.NO_ERROR:
-                            self.console_box.print_console_message(
-                                "Successfully made monitor."
-                            )
-                        else:
-                            self.console_box.print_console_message(
-                                "Error! Could not make monitor."
-                            )
-                self.canvas.draw_signal()
+                # Update monitor names selected by user
+                self.update_monitors(selections)
+
             dlg.Destroy()
         else:
             # Show error if file was not parsed correctly
             text = "Cannot Show on Monitor. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
-    def update_monitors(self, monitors):
+    def update_monitors(self, selections):
         """Update signals to be monitored and redraw on canvas"""
-        self.monitors = monitors
-        self.canvas.update_monitors(self.monitors)
-        # Re-initialise monitor_list and monitor_names_list
-        self.monitor_list = []
-        self.monitor_names_list = []
-        for device in self.devices:
-            for output_id, output_signal in device.outputs.items():
-                # Append tuple of device_id and output_id, like a monitors dictionary
-                self.monitor_list.append((device.device_id, output_id))
-                # Outputs dictionary stores {output_id: output_signal}
-                # This returns the name of the signal, which can be monitored
-                monitor_name = self.devices.get_signal_name(device.device_id, output_id)
-                self.monitor_names_list.append(monitor_name)
-
-        # Re-initialise monitor selections
         self.monitor_selected_list = []
-        for count in range(len(self.monitor_list)):
+        for count in range(len(selections)):
             device_id, output_id = self.monitor_list[count]
-            # If signal exists
-            if self.monitors.get_monitor_signal((device_id, output_id)) is not None:
-                # Add to selected monitor list
-                self.monitor_selected_list.append(count)
-
-        self.canvas.update_monitors(self.monitors)
-
-    # def on_zap_monitor(self):
-    #     """Remove the specified monitor."""
-    #     if self.is_parsed:
-    #         monitor = self.read_signal_name()
-    #         if monitor is not None:
-    #             [device, port] = monitor
-    #             if self.monitors.remove_monitor(device, port):
-    #                 print("Successfully zapped monitor")
-    #             else:
-    #                 print("Error! Could not zap monitor.")
-    #     else:
-    #         # Show error if file was not parsed correctly
-    #         text = "Cannot choose a Monitor. Please check your definition file.\n"
-    #         self.console_box.print_console_message(text)
+            # If the index is selected by the user
+            if count in self.monitor_selected_list:
+                # Make monitor
+                monitor_error = self.monitors.make_monitor(
+                    device_id, output_id, self.cycles_completed
+                )
+                if monitor_error == self.monitors.NO_ERROR:
+                    self.console_box.print_console_message("Successfully made monitor.")
+                    # Append the name of the monitor into monitor_selected_list
+                    self.monitor_selected_list.append(self.monitor_names_list[count])
+                else:
+                    self.console_box.print_console_message(
+                        "Error! Could not make monitor."
+                    )
+        # pass the chosen monitors into the monitored_signal_list
+        self.canvas.monitored_signal_list = self.monitor_selected_list
+        self.canvas.update_monitors()
+        self.canvas.draw_signal()
 
     def get_switch_names(self):
         """switch_id_list : list of the switch ids
         switch_names_list : list of switch names
-        switch_on_list : list of switch set to High
+        switch_on_list : list of switch names for switches set to High
         """
         # Get switch ids for all devices present
         self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
@@ -439,8 +388,8 @@ class Gui(wx.Frame):
         for i in range(len(self.switch_id_list)):
             count, switch_id = self.switch_id_list[i]
             if self.devices.get_device(switch_id).switch_state == self.devices.HIGH:
-                # Add the position of the switch into the switch_on list
-                self.switch_on_list.append(count)
+                # Add the name of the switch into the switch_on list
+                self.switch_on_list.append(self.switch_name_list[count])
 
     def on_switch_button(self):
         """Set switch to desired state."""
@@ -459,13 +408,6 @@ class Gui(wx.Frame):
                 selections = dlg.GetSelections()
                 # Update switches
                 self.update_switches(selections)
-
-                for count in range(len(selections)):
-                    switch_on_list = [self.switch_name_list[x] for x in selections]
-                    # switch_off_list = [self.switch_name_list[x] for x in range(
-                    #     0, len(self.switch_name_list)) if x not in selections]
-                self.switch_on_list = switch_on_list
-                self.canvas.draw_signal()
             dlg.Destroy()
 
         else:
@@ -473,10 +415,28 @@ class Gui(wx.Frame):
             text = "Cannot Show on Monitor. Please check your definition file.\n"
             self.console_box.print_console_message(text)
 
-    def update_switches(self, switch_on_list):
+    def update_switches(self, selections):
         """Update states of the switches and redraw on canvas"""
-        # TODO: finish when the names module is ready.
-        for indiv_switch in switch_on_list:
-            pass
+        self.switch_on_list = []
+        self.switch_off_list = []
 
-        self.canvas.update_switches(self.devices)
+        for count in range(len(selections)):
+            if count in self.switch_on_list:
+                # Append the name of the switch into switch_on_list
+                self.switch_on_list.append(self.switch_name_list[count])
+            else:
+                self.console_box.print_console_message("Error! Could not set switch.")
+        # pass the chosen monitors into the monitored_signal_list
+        self.switch_on_list.append(self.switch_name_list[count])
+        self.switch_off_list = [
+            x for x in self.switch_name_list if x not in self.switch_on_list
+        ]
+        for switch in self.switch_on_list:
+            switch_id = self.names.query(switch)
+            # Set selected switches to be high
+            self.devices.set_switch(switch_id, self.devices.HIGH)
+
+        for switch in self.switch_off_list:
+            switch_id = self.names.query(switch)
+            # Set unselected switches to be low
+            self.devices.set_switch(switch_id, self.devices.LOW)
