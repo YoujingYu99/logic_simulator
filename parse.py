@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from scanner import Symbol
 
 #########
-
+## TODO: implement errors and returns from them
 
 """Parse the definition file and build the logic network.
 
@@ -98,23 +98,228 @@ class Parser:
         else:
             self.error()
 
-        def make_monitor(self):
-            """
-            Fucntion to parse the monitor line as per the EBNF spec
-            """
-            self.device_name()
-            if self.symbol.type == self.__scanner.DOT:
-                self.output_pin()
+    def make_monitor(self):
+        """
+        Fucntion to parse the monitor line as per the EBNF spec
+        """
+        self.device_name()
+        if self.symbol.type == self.scanner.DOT:
+            self.output_pin()
+        self.symbol = self.scanner.getsymbol()
+        if self.symbol.type == self.scanner.SEMICOLON:
+            # TODO decide how ot do return properly
             self.symbol = self.scanner.getsymbol()
-            if self.symbol.type == self.scanner.SEMICOLON:
-                # TODO decide how ot do return properly
+            return 1
+        else:
+            # TODO sort out proper error handling and display
+            self.error()
+
+    def create_conn(self):
+        """
+        Method to parse connection creation as per EBNF spec
+        """
+        self.device_name()
+        if self.symbol == self.scanner.DOT:
+            self.output_pin()
+        if self.symbol == self.scanner.CONN:
+            self.symbol = self.scanner.getsymbol()
+            if self.symbol == self.scanner.DOT:
+                self.input_pin()
+            else:
+                # error due to lack of input reference
+                self.error()
+            if self.symbol == self.scanner.SEMICOLON:
                 self.symbol = self.scanner.getsymbol()
                 return 1
             else:
-                # TODO sort out proper error handling and display
+                # line non terminated error
+                self.error()
+        else:
+            # error: connection symbol expected
+            self.error()
+
+    def device(self):
+        """
+        Method to parse devices
+        TODO this
+        """
+
+    def gate_devices(self):
+        """
+        Method to parse gates
+        """
+        self.gatename()
+        self.device_name()
+        if self.symbol == self.scanner.LEFTBRACK:
+            self.input_number()
+        else:
+            # syntax error, "(" expected
+            self.error()
+        if self.symbol == self.scanner.RIGHTBRACK:
+            self.symbol = self.scanner.getsymbol()
+        else:
+            # syntax error
+            self.error()
+        while self.symbol == self.scanner.COMA:
+            # same code as above, just repeated
+            self.symbol = self.scanner.getsymbol()
+            self.device_name()
+            if self.symbol == self.scanner.LEFTBRACK:
+                self.input_number()
+            else:
+                # syntax error, "(" expected
+                self.error()
+            if self.symbol == self.scanner.RIGHTBRACK:
+                self.symbol = self.scanner.getsymbol()
+            else:
+                # syntax error
+                self.error()
+        if self.symbol == self.scanner.SEMICOLON:
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        else:
+            self.error()
+
+    def dtype_devices(self):
+        """
+        Method to parse dtype latches
+        """
+        if (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.DTYPE_ID
+        ):
+            self.device_name()
+            while self.symbol == self.scanner.COMA:
+                self.symbol = self.scanner.getsymbol()
+                self.device_name()
+            if self.symbol == self.scanner.SEMICOLON:
+                self.symbol = self.scanner.getsymbol()
+                return 1
+            else:
+                # error, semicolon expected
+                self.error()
+        else:
+            # error, codeword DTYPE expected
+            self.error()
+
+    def switch_devices(self):
+        """
+        Method to parse switch defenitions
+        """
+        if (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.SWITCH_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            self.device_name()
+            if self.symbol == self.scanner.LEFTBRACK:
+                self.symbol = self.scanner.getsymbol()
+            else:
+                # syntax error, missing braket
+                self.error()
+            self.on_off()
+            if self.symbol == self.scanner.RIGHTBRACK:
+                self.symbol = self.scanner.getsymbol()
+            else:
+                # syntax error
+                self.error()
+            while self.symbol == self.scanner.COMA:
+                self.symbol = self.scanner.getsymbol()
+                self.device_name()
+                if self.symbol == self.scanner.LEFTBRACK:
+                    self.symbol = self.scanner.getsymbol()
+                else:
+                    # syntax error, missing braket
+                    self.error()
+                self.on_off()
+                if self.symbol == self.scanner.RIGHTBRACK:
+                    self.symbol = self.scanner.getsymbol()
+                else:
+                    # syntax error
+                    self.error()
+            else:
+                # error, no codeword
                 self.error()
 
-        def create_conn():
-            """
-            Function to parse connection creation as per EBNF spec
-            """
+    def clock_devices(self):
+        """
+        Method to parse clock devices
+        """
+        if (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.CLOCK_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            self.device_name()
+
+            if self.symbol == self.scanner.LEFTBRACK:
+                self.symbol = self.scanner.getsymbol()
+            else:
+                # error, backet expected
+                self.error()
+            self.non_zero()
+            while self.symbol != self.scanner.LEFTBRACK:
+                self.digit()
+            if self.symbol == self.scanner.LEFTBRACK:
+                self.symbol = self.scanner.getsymbol()
+            else:
+                # error, bracket not closed
+                self.error()
+
+            while self.symbol == self.scanner.COMA:
+                self.symbol = self.getsymbol()
+
+                self.device_name()
+
+                if self.symbol == self.scanner.LEFTBRACK:
+                    self.symbol = self.scanner.getsymbol()
+                else:
+                    # error, backet expected
+                    self.error()
+                self.non_zero()
+                while self.symbol != self.scanner.LEFTBRACK:
+                    self.digit()
+                if self.symbol == self.scanner.LEFTBRACK:
+                    self.symbol = self.scanner.getsymbol()
+                else:
+                    # error, bracket not closed
+                    self.error()
+
+            if self.symbol == self.scanner.SEMICOLON:
+                self.symbol = self.scanner.getsymbol()
+                return 1
+            else:
+                # error, semicolon expected
+                self.error()
+
+    def gatename(self):
+        """
+        Method to parse gate name titles
+        """
+        if (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.AND_ID
+        ):
+            self.symbol = self.getsymbol()
+            return 1
+        elif (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.NAND_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        elif (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.OR_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        elif (
+            self.symbol.type == self.scanner.KEYWORDS
+            and self.symbol.id == self.scanner.NOR_ID
+        ):
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        else:
+            # error, not a valid gate name
+            self.error()
