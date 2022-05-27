@@ -66,10 +66,10 @@ class Gui(wx.Frame):
             11, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
         )
         self.monitor_font = wx.Font(
-            14, wx.FONTFAMILY_ROMAN, 0, 90, underline=False, faceName=""
+            14, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
         )
         self.run_font = wx.Font(
-            12, wx.FONTFAMILY_ROMAN, 0, 90, underline=False, faceName=""
+            12, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
         )
         self.console_font = wx.Font(
             12, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
