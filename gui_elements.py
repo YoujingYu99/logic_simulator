@@ -98,25 +98,28 @@ class FileMenu(wx.Menu):
             self.parentFrame,
             "Save file as ...",
             defaultFile="",
-            wildcard="*.png",
+            wildcard=".png",
             style=wx.FD_SAVE,
         )
         # GetPath fails to get actual path
-        path = save_dialog.GetPath()
+        # save_dialog.ShowModal()
+        # import pdb; pdb.set_trace()
         if save_dialog.ShowModal() == wx.ID_OK:
+            path = save_dialog.GetPath()
             if not (path[-4:].lower() == ".png"):
                 path = path + ".png"
-                im.SaveFile(path)
+            im.SaveFile(path)
 
     def get_screenshot(self):
         """Capture a screenshot of the App."""
         # TODO: not working atm
-        screen = wx.ScreenDC()
+        screen = wx.WindowDC(self.canvas)
 
-        size = screen.GetSize()
+        size = self.canvas.GetSize()
         width = size.width
         height = size.height
         bmp = wx.Bitmap(width, height)
+        # import pdb; pdb.set_trace()
 
         # Create a memory DC that will be used for actually taking the screenshot
         memDC = wx.MemoryDC()
@@ -142,7 +145,6 @@ class FileMenu(wx.Menu):
 
         if dialog.ShowModal() == wx.ID_CANCEL:
             return None
-
         path = dialog.GetPath()
         data = self.parentFrame.console_box.all_console_messages()
         with open(path, "w+") as myfile:
