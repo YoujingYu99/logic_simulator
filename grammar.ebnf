@@ -40,7 +40,7 @@ on_off = 0 | 1;
 
 device_name =  identifier - keyword;
 
-identifier = lower_letter , { letter | digit };
+identifier = lower_letter , {character};
 
 keyword  = 'CLOCK' | 'SWITCH'| 'AND'| 'NAND'|'OR'| 'NOR'|'DTYPE'
            |'XOR'| 'DEVICES'| 'CONNECT'| 'MONITOR'| 'END';

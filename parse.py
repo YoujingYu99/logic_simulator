@@ -47,7 +47,6 @@ class Parser:
         self.scanner = scanner
         self.success = 1
 
-    # note, this is yet to be tested in combination with the scanner, mocking is used for symbols atm
     def parse_network(self):
         """Parse the circuit definition file."""
         # For now just return True, so that userint and gui can run in the
@@ -372,28 +371,46 @@ class Parser:
             self.error()
 
     def input_number(self):
-        input_num_list = [
-            self.scanner.ONE,
-            self.scanner.TWO,
-            self.scanner.THREE,
-            self.scanner.FOUR,
-            self.scanner.FIVE,
-            self.scanner.SIX,
-            self.scanner.SEVEN,
-            self.scanner.EIGHT,
-            self.scanner.NINE,
-            self.scanner.TEN,
-            self.scanner.ELEVEN,
-            self.scanner.TWELVE,
-            self.scanner.THIRTEEN,
-            self.scanner.FOURTEEN,
-            self.scanner.FIFTEEN,
-            self.scanner.SIXTEEN,
-        ]
-        # other ways to do it, depending on the scanner
-        if self.symbol.type in input_num_list:
+        if self.symbol.type in self.scaner.INPUTNUM:
             self.symbol = self.scanner.getsymbol()
             return 1
         else:
             # error of invalid input
             self.error()
+
+    def on_off(self):
+        """
+        Method to parse on/off parameter
+        """
+        if self.symbol == self.scanner.ZERO:
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        elif self.symol == self.scanner.ONE:
+            self.symbol = self.scanner.getsymbol()
+            return 1
+        else:
+            # error: 0 or 1 expected
+            self.error()
+
+    def device_name(self):
+        """
+        Method to parse device names
+        """
+        if self.symbol.type == self.scanner.KEYWORDS:
+            # error ketword cannon be an indentifier
+            self.error()
+        else:
+            self.identifier()
+
+    def identifier(self):
+        if self.symbol[0] != self.scanner.LOWERLETTER:
+            # error idenitifies myst start with a lowercase lower_letter
+            self.error()
+        elif any(
+            char not in self.scanner.LETTER or char not in self.scanner.DIGIT
+            for char in self.symbol
+        ):
+            # error unexpected symbol
+            self.error()
+        else:
+            return 1
