@@ -2,3 +2,4 @@
 /PyOpenGL_accelerate-3.1.6-cp38-cp38-win_amd64.whl
 /.idea
 .vscode/settings.json
+__pycache__/names.cpython-39.pyc
