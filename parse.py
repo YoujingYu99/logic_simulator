@@ -95,7 +95,8 @@ class Parser:
         ):
             return 1 if self.success else 0
         else:
-            self.error()
+            # issue in network syntax, double check the file
+            self.error("NETWORK_SYNTAX_ERROR")
 
     def make_monitor(self):
         """
@@ -110,8 +111,8 @@ class Parser:
             self.symbol = self.scanner.getsymbol()
             return 1
         else:
-            # TODO sort out proper error handling and display
-            self.error()
+            # error, semicolon expected to end statement
+            self.error("SEMICOLON_EXPECTED_AT_LINE_END")
 
     def create_conn(self):
         """
@@ -126,16 +127,16 @@ class Parser:
                 self.input_pin()
             else:
                 # error due to lack of input reference
-                self.error()
+                self.error("NO_INPUT_REFERENCE")
             if self.symbol == self.scanner.SEMICOLON:
                 self.symbol = self.scanner.getsymbol()
                 return 1
             else:
                 # line non terminated error
-                self.error()
+                self.error("SEMICOLON_EXPECTED_AT_LINE_END")
         else:
             # error: connection symbol expected
-            self.error()
+            self.error("CONNECTION_SYMBOL_EXPECTED")
 
     def device(self):
         """
@@ -153,12 +154,12 @@ class Parser:
             self.input_number()
         else:
             # syntax error, "(" expected
-            self.error()
+            self.error("LEFTBRACKET_EXPECTED")
         if self.symbol == self.scanner.RIGHTBRACK:
             self.symbol = self.scanner.getsymbol()
         else:
             # syntax error
-            self.error()
+            self.error("RIGHTBRACKET_EXPECTED")
         while self.symbol == self.scanner.COMA:
             # same code as above, just repeated
             self.symbol = self.scanner.getsymbol()
@@ -167,17 +168,18 @@ class Parser:
                 self.input_number()
             else:
                 # syntax error, "(" expected
-                self.error()
+                self.error("LEFTBRACKET_EXPECTED")
             if self.symbol == self.scanner.RIGHTBRACK:
                 self.symbol = self.scanner.getsymbol()
             else:
                 # syntax error
-                self.error()
+                self.error("RIGHTBRACKET_EXPECTED")
         if self.symbol == self.scanner.SEMICOLON:
             self.symbol = self.scanner.getsymbol()
             return 1
         else:
-            self.error()
+            # error: semicolon expected
+            self.error("SEMICOLON_EXPECTED_AT_LINE_END")
 
     def dtype_devices(self):
         """
@@ -196,10 +198,10 @@ class Parser:
                 return 1
             else:
                 # error, semicolon expected
-                self.error()
+                self.error("SEMICOLON_EXPECTED_AT_LINE_END")
         else:
             # error, codeword DTYPE expected
-            self.error()
+            self.error("CODEWORD_EXPECTED")
 
     def switch_devices(self):
         """
@@ -215,13 +217,13 @@ class Parser:
                 self.symbol = self.scanner.getsymbol()
             else:
                 # syntax error, missing braket
-                self.error()
+                self.error("LEFTBRACKET_EXPECTED")
             self.on_off()
             if self.symbol == self.scanner.RIGHTBRACK:
                 self.symbol = self.scanner.getsymbol()
             else:
                 # syntax error
-                self.error()
+                self.error("RIGHTBRACKET_EXPECTED")
             while self.symbol == self.scanner.COMA:
                 self.symbol = self.scanner.getsymbol()
                 self.device_name()
@@ -229,16 +231,16 @@ class Parser:
                     self.symbol = self.scanner.getsymbol()
                 else:
                     # syntax error, missing braket
-                    self.error()
+                    self.error("LEFTBRACKET_EXPECTED")
                 self.on_off()
                 if self.symbol == self.scanner.RIGHTBRACK:
                     self.symbol = self.scanner.getsymbol()
                 else:
                     # syntax error
-                    self.error()
+                    self.error("RIGHTBRACKET_EXPECTED")
             else:
                 # error, no codeword
-                self.error()
+                self.error("CODEWORD_EXPECTED")
 
     def clock_devices(self):
         """
@@ -255,7 +257,7 @@ class Parser:
                 self.symbol = self.scanner.getsymbol()
             else:
                 # error, backet expected
-                self.error()
+                self.error("LEFTBRACKET_EXPECTED")
             self.non_zero()
             while self.symbol != self.scanner.LEFTBRACK:
                 self.digit()
@@ -263,7 +265,7 @@ class Parser:
                 self.symbol = self.scanner.getsymbol()
             else:
                 # error, bracket not closed
-                self.error()
+                self.error("RIGHTBRACKET_EXPECTED")
 
             while self.symbol == self.scanner.COMA:
                 self.symbol = self.getsymbol()
@@ -274,22 +276,22 @@ class Parser:
                     self.symbol = self.scanner.getsymbol()
                 else:
                     # error, backet expected
-                    self.error()
+                    self.error("RIGHTBRACKET_EXPECTED")
                 self.non_zero()
-                while self.symbol != self.scanner.LEFTBRACK:
+                while self.symbol != self.scanner.RIGHTBRACK:
                     self.digit()
-                if self.symbol == self.scanner.LEFTBRACK:
+                if self.symbol == self.scanner.RIGHTBRACK:
                     self.symbol = self.scanner.getsymbol()
                 else:
                     # error, bracket not closed
-                    self.error()
+                    self.error("RIGHTBRACKET_EXPECTED")
 
             if self.symbol == self.scanner.SEMICOLON:
                 self.symbol = self.scanner.getsymbol()
                 return 1
             else:
                 # error, semicolon expected
-                self.error()
+                self.error("SEMICOLON_EXPECTED_AT_LINE_END")
 
     def gatename(self):
         """
@@ -321,7 +323,7 @@ class Parser:
             return 1
         else:
             # error, not a valid gate name
-            self.error()
+            self.error("GATE_NAME_INVALID")
 
     def output_pin(self):
         """
@@ -335,7 +337,7 @@ class Parser:
             return 1
         else:
             # output pin specified but not describes
-            self.error()
+            self.error("OUTPUT_PIN_NOT_DESCRIBED")
 
     def input_pin(self):
         if self.symbol == self.scanner.I:
@@ -368,7 +370,7 @@ class Parser:
             return 1
         else:
             # unknown symbol or not specified
-            self.error()
+            self.error("UNKOWN_SYMBOL")
 
     def input_number(self):
         if self.symbol.type in self.scaner.INPUTNUM:
@@ -376,7 +378,7 @@ class Parser:
             return 1
         else:
             # error of invalid input
-            self.error()
+            self.error("NUMBER_OF_INPUTS_INVALID")
 
     def on_off(self):
         """
@@ -390,7 +392,7 @@ class Parser:
             return 1
         else:
             # error: 0 or 1 expected
-            self.error()
+            self.error("0_OR_1_EXPECTED")
 
     def device_name(self):
         """
@@ -398,19 +400,25 @@ class Parser:
         """
         if self.symbol.type == self.scanner.KEYWORDS:
             # error ketword cannon be an indentifier
-            self.error()
+            self.error("KEYWORD_CANNOT_BE_IDENTIFIER")
         else:
             self.identifier()
 
     def identifier(self):
+        """
+        Function to handle parseing of identifiers
+        """
         if self.symbol[0] != self.scanner.LOWERLETTER:
             # error idenitifies myst start with a lowercase lower_letter
-            self.error()
+            self.error("IDENTIFIERS_START_WITH_LOWERCASE")
         elif any(
             char not in self.scanner.LETTER or char not in self.scanner.DIGIT
             for char in self.symbol
         ):
             # error unexpected symbol
-            self.error()
+            self.error("UNEXPECTED_SYMBOL")
         else:
             return 1
+
+    def error(self, error_type):
+        self.error_cound += 1
