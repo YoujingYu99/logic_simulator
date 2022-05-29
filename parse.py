@@ -1,7 +1,8 @@
 #########
 # these are temp imports for development
 from unittest.mock import Mock
-from scanner import Symbol
+from scanner import Symbol, Scanner
+from names import Names
 
 #########
 ## TODO: implement errors and returns from them
@@ -40,12 +41,14 @@ class Parser:
     --------------
     parse_network(self): Parses the circuit definition file.
     """
-
-    def __init__(self, names, devices, network, monitors, scanner):
+    # def __init__(self, names, devices, network, monitors, scanner):
+    def __init__(self, names, scanner):
         """Initialise constants."""
         self.__names = names
         self.scanner = scanner
         self.success = 1
+        self.symbol  = ""
+        self.error_count = 0
 
     def parse_network(self):
         """Parse the circuit definition file."""
@@ -53,16 +56,31 @@ class Parser:
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
 
+        # Read first character
+        self.scanner.advance()
+
+        # Run to parse whole file and print outputs
+        # for i in range(70):
+        #     symbol1 = self.scanner.get_symbol()
+        #     if symbol1.type == 15:
+        #         break
+        #     print("ID, string")
+        #     print(symbol1.type)
+        #     print("---")
+
+        self.symbol = self.scanner.get_symbol()
         if (
-            self.symbol.type == self.scanner.KEYWORDS
+            self.symbol.type == self.scanner.KEYWORD
             and self.symbol.id == self.scanner.DEVICES_ID
         ):
-            self.symbol = self.scanner.getsymbol()
             self.device()
             while self.symbol.type != self.scanner.ENDBRACK:
                 self.symbol = self.scanner.getsymbol()
                 self.device()
             self.symbol = self.scanner.getsymbol()
+
+        """
+
 
         elif (
             self.symbol.type == self.scanner.KEYWORDS
@@ -97,6 +115,7 @@ class Parser:
         else:
             # issue in network syntax, double check the file
             self.error("NETWORK_SYNTAX_ERROR")
+        """
 
     def make_monitor(self):
         """
@@ -143,6 +162,39 @@ class Parser:
         Method to parse devices
         TODO this
         """
+        # TODO: complete this 
+        self.symbol = self.scanner.get_symbol()
+        
+        if (self.symbol.type == self.scanner.CURLY_BRACKET 
+            and self.symbol.id == self.scanner.LEFT_CURLY_BRACKET_ID
+        ):
+            pass
+
+        self.symbol = self.scanner.get_symbol()
+
+        if self.symbol.id == self.scanner.CLOCK_ID:
+            self.clock_devices()
+        elif self.symbol.id == self.scanner.SWITCH_ID:
+            self.switch_devices()
+        elif self.symbol.id == self.scanner.DTYPE_ID:
+            print('pass')
+            self.dtype_devices()
+        elif self.symbol.id == (self.gate_devices or
+            self.AND_ID or
+            self.NAND_ID or
+            self.OR_ID or
+            self.NOR_ID or
+            self.DTYPE_ID or
+            self.XOR_ID):
+            self.gate_devices()
+
+
+        
+        
+        
+
+
+        
 
     def gate_devices(self):
         """
@@ -185,10 +237,12 @@ class Parser:
         """
         Method to parse dtype latches
         """
+        self.symbol = self.scanner.get_symbol()
         if (
-            self.symbol.type == self.scanner.KEYWORDS
+            self.symbol.type == self.scanner.GATE_NAME
             and self.symbol.id == self.scanner.DTYPE_ID
         ):
+            print('pass 2')
             self.device_name()
             while self.symbol == self.scanner.COMA:
                 self.symbol = self.scanner.getsymbol()
@@ -422,3 +476,14 @@ class Parser:
 
     def error(self, error_type):
         self.error_cound += 1
+
+
+path_definition = "definitions/circuit.def"
+
+names_instance = Names()
+
+scanner_instance = Scanner(path_definition, names_instance)
+
+parser_1 = Parser(names_instance, scanner_instance)
+
+a = parser_1.parse_network()
