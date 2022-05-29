@@ -255,7 +255,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         """Draw grid axes on the displayed signals"""
         # Draw x axis. Set x starting points
         x_left = self.canvas_origin[0]
-        x_right = self.canvas_origin[0] + self.x_axis_length
+        x_right = (
+            self.canvas_origin[0]
+            + spin_value * self.signal_cycle_width
+            + x_left
+            + self.x_axis_offset
+            + self.y_axis_offset
+        )
         y_bottom = self.canvas_origin[1]
 
         # Draw x axis
@@ -288,8 +294,16 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GL.glRasterPos2f(x_pos, y_pos)
             font = self.label_font
             label = str(i)
-            for character in label:
-                GLUT.glutBitmapCharacter(font, ord(character))
+            # If less than or equal to 10 cycles
+            if spin_value <= 10:
+                for character in label:
+                    GLUT.glutBitmapCharacter(font, ord(character))
+            # If more than 10 cycles, only label every 5 cycles
+            else:
+                if i % 5 == 0:
+                    for character in label:
+                        GLUT.glutBitmapCharacter(font, ord(character))
+
 
         # Label x axis
         text = "No. of Cycles"
@@ -349,7 +363,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glVertex2f(x_left, y_top)
         GL.glEnd()
 
-        # Draw y grid for may signals
+        # Draw y grid for many signals
         num_signals = len(self.monitored_signal_list)
         y_tick_left = x_left + self.y_axis_offset - self.tick_width / 2
         y_tick_right = x_left + self.y_axis_offset + self.tick_width / 2
@@ -372,9 +386,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             y_pos_0 = zero_pos
             GL.glRasterPos2f(x_pos_0, y_pos_0)
             font = self.font
-            label = str(count)
-            for character in label:
-                GLUT.glutBitmapCharacter(font, ord(character))
+            label_zero = '0'
+            GLUT.glutBitmapCharacter(font, ord(label_zero))
 
             # grid at 1
             GL.glColor3f(0, 0, 0)
@@ -387,9 +400,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             y_pos_1 = zero_pos + self.signal_height
             GL.glRasterPos2f(x_pos_1, y_pos_1)
             font = self.font
-            label = str(i)
-            for character in label:
-                GLUT.glutBitmapCharacter(font, ord(character))
+            label_one = '1'
+            GLUT.glutBitmapCharacter(font, ord(label_one))
 
             # Label y axis
             text = "Monitor Name"
