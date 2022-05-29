@@ -10,7 +10,6 @@ Names - maps variable names and string names to unique integers.
 
 
 from typing import Type
-from unicodedata import name
 
 
 class Names:
@@ -46,7 +45,7 @@ class Names:
         """Initialise names list."""
         self.error_code_count = 0  # how many error codes have been declared
         # initialise a private list to store names
-        self._names_list = []
+        self.__names_list = []
 
     def unique_error_codes(self, num_error_codes: int) -> list[int]:
         """Return a list of unique integer error codes.
@@ -71,8 +70,8 @@ class Names:
         """
         if type(name_string) != str:
             raise TypeError
-        if name_string in self._names_list:
-            return self._names_list.index(name_string)
+        if name_string in self.__names_list:
+            return self.__names_list.index(name_string)
         else:
             return None
 
@@ -88,12 +87,12 @@ class Names:
         """
         results = []
         for name_string in name_string_list:
-            if name_string in self._names_list:
-                results.append(self._names_list.index(name_string))
+            if name_string in self.__names_list:
+                results.append(self.__names_list.index(name_string))
             else:
-                self._names_list.append(name_string)
+                self.__names_list.append(name_string)
                 # can do this return as the append will always be on the end
-                results.append(len(self._names_list) - 1)
+                results.append(len(self.__names_list) - 1)
         return results
 
     def get_name_string(self, name_id: int) -> str:
@@ -109,7 +108,7 @@ class Names:
         """
         if type(name_id) != int:
             raise TypeError
-        if name_id < len(self._names_list):
-            return self._names_list[name_id]
+        if name_id < len(self.__names_list):
+            return self.__names_list[name_id]
         else:
             return None
