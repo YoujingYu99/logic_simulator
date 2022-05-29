@@ -426,8 +426,7 @@ class Gui(wx.Frame):
                 self.switch_on_list.append(self.switch_name_list[count])
             else:
                 self.console_box.print_console_message("Error! Could not set switch.")
-        # pass the chosen monitors into the monitored_signal_list
-        self.switch_on_list.append(self.switch_name_list[count])
+        # Unchosen switches in switch_off_list
         self.switch_off_list = [
             x for x in self.switch_name_list if x not in self.switch_on_list
         ]

@@ -1,6 +1,16 @@
 import wx
 import os
 
+"""Define the graphical user interface elements for the Logic Simulator.
+Used in the Gui class to enable the user to perform functions and view console output
+Classes:
+--------
+FileMenu - handles all menu items under 'File' menu
+HelpMenu - handles all menu items under 'Help' menu
+AboutMenu - handles all menu items under 'About' menu
+ConsoleBox - handles all console items in which the user views the messages
+"""
+
 
 class FileMenu(wx.Menu):
     """This class contains all the methods for creating the menu named 'File'
