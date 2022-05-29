@@ -18,7 +18,8 @@ class FileMenu(wx.Menu):
     --------------
     on_init(self): Initialisation step
     on_open(self, event): Open definition file.
-    on_save(self, event): Save a screenshot of the whole window.
+    on_save_trace(self, event): Save a screenshot of the canvas as picture.
+    on_save_console(self, event): Save the console output to a text file.
     on_quit(self, event): Quit system.
     """
 

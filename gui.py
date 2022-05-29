@@ -4,7 +4,6 @@ or adjust the network properties.
 Classes:
 --------
 Gui - configures the main window and all the widgets.
-FileMenu - handles all menu items under 'File' menu
 """
 import os
 import wx
