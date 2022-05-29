@@ -1,12 +1,12 @@
 DEVICES{ 
     DTYPE dtype;
-    SWITCH SW1(0), SW2(1), SW3(1);
+    SWITCH sw1(0), sw2(1), sw3(1);
     CLOCK clock(10);
 } 
 CONNECT{ 
-    SW1 => dtype.SET;
-    SW2 => dtype.CLK;
-    SW3 => dtype.RESET;
+    sw1 => dtype.SET;
+    sw2 => dtype.CLK;
+    sw3 => dtype.RESET;
     clock => dtype.DATA;
 }
 MONITOR{
