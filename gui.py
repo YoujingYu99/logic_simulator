@@ -369,9 +369,8 @@ class Gui(wx.Frame):
                     self.console_box.print_console_message(
                         "Error! Could not make monitor."
                     )
-        # pass the chosen monitors into the monitored_signal_list
+        # Update the monitored_signal_list in the canvas element
         self.canvas.monitored_signal_list = self.monitor_selected_list
-        self.canvas.update_monitors()
         self.canvas.draw_signal()
 
     def get_switch_names(self):
@@ -438,3 +437,6 @@ class Gui(wx.Frame):
             switch_id = self.names.query(switch)
             # Set unselected switches to be low
             self.devices.set_switch(switch_id, self.devices.LOW)
+
+        # Update devices in the canvas element
+        self.canvas.devices = self.devices
