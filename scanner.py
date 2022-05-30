@@ -297,7 +297,7 @@ class Scanner:
             symbol.type = self.EOF
         else:  # not a valid character
             self.advance()
-
+        print(symbol.type, self.names.get_name_string(symbol.id))
         return symbol
 
 
