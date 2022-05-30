@@ -67,8 +67,9 @@ class Parser:
                 self.symbol.type != self.scanner.CURLY_BRACKET
                 and self.symbol.id != self.scanner.LEFT_CURLY_BRACKET_ID
             ):
-                self.error("CURLY_BRACE_EXPECTED")
-            self.symbol = self.scanner.get_symbol()
+                self.error("LEFT_CURLY_BRACE_EXPECTED")
+            else:
+                self.symbol = self.scanner.get_symbol()
             self.device()
             self.symbol = self.scanner.get_symbol()
 
@@ -81,7 +82,7 @@ class Parser:
                 self.device()
                 self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.KEYWORD:
-                self.error("CURLY_BRACE_EXPECTED")
+                self.error("RIGHT_CURLY_BRACE_EXPECTED")
 
         self.symbol = self.scanner.get_symbol()
         if (
@@ -94,7 +95,7 @@ class Parser:
                 self.symbol.type != self.scanner.CURLY_BRACKET
                 and self.symbol.id != self.scanner.LEFT_CURLY_BRACKET_ID
             ):
-                self.error("CURLY_BRACE_EXPECTED")
+                self.error("LEFT_CURLY_BRACE_EXPECTED")
 
             self.logger.debug("-Start first connection")
             self.symbol = self.scanner.get_symbol()
@@ -110,7 +111,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
 
             if self.symbol.type == self.scanner.KEYWORD:
-                self.error("CURLY_BRACE_EXPECTED")
+                self.error("RIGHT_CURLY_BRACE_EXPECTED")
 
         self.symbol = self.scanner.get_symbol()
         if (
@@ -123,7 +124,7 @@ class Parser:
                 self.symbol.type != self.scanner.CURLY_BRACKET
                 and self.symbol.id != self.scanner.LEFT_CURLY_BRACKET_ID
             ):
-                self.error("CURLY_BRACE_EXPECTED")
+                self.error("LEFT_CURLY_BRACE_EXPECTED")
 
             self.symbol = self.scanner.get_symbol()
             self.logger.debug("-Start first monitor point")
@@ -142,7 +143,7 @@ class Parser:
             self.symbol.type == self.scanner.KEYWORD
             and self.symbol.id != self.scanner.END_ID
         ):
-            self.error("CURLY_BRACE_EXPECTED")
+            self.error("RIGHT_CURLY_BRACE_EXPECTED")
 
         elif self.symbol.id == None:
             self.error("MISSING_END_KEYWORD")
@@ -290,8 +291,6 @@ class Parser:
         """
         Method to parse dtype latches
         """
-        if not self.symbol.id == self.scanner.DTYPE_ID:
-            self.error("DEVICE_TYPE_NOT_DECLARED")
         self.device_name()
         self.symbol = self.scanner.get_symbol()
         while self.symbol.type == self.scanner.COMMA:
@@ -480,8 +479,16 @@ class Parser:
             self.error("DEVICE_NAME_EXPECTED")
 
     def error(self, error_type):
+        """
+        Method to handle errors and skip to next appropriate symbol"
+        """
         self.error_count += 1
         self.logger.error(error_type)
+
+        if error_type == "LEFT_CURLY_BRACE_EXPECTED":
+            print("Missing '{'")
+        else:
+            raise NotImplementedError
 
 
 path_definition = "definitions/circuit.def"
