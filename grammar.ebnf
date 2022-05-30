@@ -23,7 +23,7 @@ clock_devices = "CLOCK",  device_name, "(", ("0"| non_zero, {digit}), ")" ,
        ,{ ',' , device_name, "(", ("0"| non_zero, {digit}), ")"},
     end_statement;
 
-gatename = "AND" | "NAND" | "OR" | "NOR";
+gatename = "AND" | "NAND" | "OR" | "NOR" | "XOR";
 
 output_pin = "Q" , ["BAR"];
 

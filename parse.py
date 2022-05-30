@@ -59,15 +59,6 @@ class Parser:
         # Read first character
         self.scanner.advance()
 
-        # Run to parse whole file and print outputs
-        # for i in range(70):
-        #     symbol1 = self.scanner.get_symbol()
-        #     if symbol1.type == 15:
-        #         break
-        #     print("ID, string")
-        #     print(symbol1.type)
-        #     print("---")
-
         self.symbol = self.scanner.get_symbol()
         if (
             self.symbol.type == self.scanner.KEYWORD
@@ -127,7 +118,6 @@ class Parser:
             ):
                 pass
             
-            
             self.symbol = self.scanner.get_symbol()
             print('-Start first monitor point')
             self.make_monitor()
@@ -144,42 +134,6 @@ class Parser:
             and self.symbol.id == self.scanner.END_ID):
             print('<--- End of file found --->')
 
-
-        """
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.CONNECT_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-            self.make_connection()
-            while self.symbol.type != self.scanner.ENDBRACK:
-                self.symbol = self.scanner.getsymbol()
-                self.scanner.make_connection()
-            self.symbol = self.scanner.getsymbol()
-
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.MONITOR_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-            self.make_monitor()
-            while self.symbol.type != self.scanner.ENDBRACK:
-                self.symbol = self.scanner.getsymbol()
-                self.make_monitor()
-            self.symbol - self.scanner.getsymbol()
-
-        elif self.symbol.type == self.scanner.ENDBRACK:
-            self.symbol = self.scanner.getsymbol()
-
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.END
-        ):
-            return 1 if self.success else 0
-        else:
-            # issue in network syntax, double check the file
-            self.error("NETWORK_SYNTAX_ERROR")
-        """
 
     def make_monitor(self):
         """
@@ -198,14 +152,6 @@ class Parser:
             pass
         print('-Monitor point ended')
         
-
-        # if self.symbol.type == self.scanner.SEMICOLON:
-        #     # TODO decide how ot do return properly
-        #     self.symbol = self.scanner.getsymbol()
-        #     return 1
-        # else:
-        #     # error, semicolon expected to end statement
-        #     self.error("SEMICOLON_EXPECTED_AT_LINE_END")
 
     def create_conn(self):
         """
@@ -238,25 +184,6 @@ class Parser:
             pass
         print('-Connection Ended')
 
-        # if self.symbol == self.scanner.DOT:
-        #     self.output_pin()
-        # if self.symbol == self.scanner.CONN:
-        #     self.symbol = self.scanner.getsymbol()
-        #     if self.symbol == self.scanner.DOT:
-        #         self.input_pin()
-        #     else:
-        #         # error due to lack of input reference
-        #         self.error("NO_INPUT_REFERENCE")
-        #     if self.symbol == self.scanner.SEMICOLON:
-        #         self.symbol = self.scanner.getsymbol()
-        #         return 1
-        #     else:
-        #         # line non terminated error
-        #         self.error("SEMICOLON_EXPECTED_AT_LINE_END")
-        # else:
-        #     # error: connection symbol expected
-        #     self.error("CONNECTION_SYMBOL_EXPECTED")
-
     def device(self):
         """
         Method to parse devices
@@ -284,14 +211,12 @@ class Parser:
         else: 
             pass
 
+
     def gate_devices(self):
         """
         Method to parse gates
         """
-        self.symbol = self.scanner.get_symbol()
-
-        if (self.symbol.type == self.scanner.DEVICE_NAME):
-            pass
+        self.device_name()
         
         self.symbol = self.scanner.get_symbol()
         if (self.symbol.type == self.scanner.BRACKET 
@@ -309,19 +234,13 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
-                self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.DEVICE_NAME):
-                    pass
+                self.device_name()
                 self.symbol = self.scanner.get_symbol()
                 if (self.symbol.type == self.scanner.BRACKET 
                     and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
                     pass
                 self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.NUMBER
-                    and (self.symbol.id in range(1,17))
-                ):
-                    pass
-                self.symbol = self.scanner.get_symbol()
+                self.input_number()
                 if (self.symbol.type == self.scanner.BRACKET 
                     and self.symbol.id == self.scanner.RIGHT_BRACKET_ID):
                     pass
@@ -332,38 +251,6 @@ class Parser:
 
         print('-End of GATE statement')
 
-        # self.gatename()
-        # self.device_name()
-        # if self.symbol == self.scanner.LEFTBRACK:
-        #     self.input_number()
-        # else:
-        #     # syntax error, "(" expected
-        #     self.error("LEFTBRACKET_EXPECTED")
-        # if self.symbol == self.scanner.RIGHTBRACK:
-        #     self.symbol = self.scanner.getsymbol()
-        # else:
-        #     # syntax error
-        #     self.error("RIGHTBRACKET_EXPECTED")
-        # while self.symbol == self.scanner.COMA:
-        #     # same code as above, just repeated
-        #     self.symbol = self.scanner.getsymbol()
-        #     self.device_name()
-        #     if self.symbol == self.scanner.LEFTBRACK:
-        #         self.input_number()
-        #     else:
-        #         # syntax error, "(" expected
-        #         self.error("LEFTBRACKET_EXPECTED")
-        #     if self.symbol == self.scanner.RIGHTBRACK:
-        #         self.symbol = self.scanner.getsymbol()
-        #     else:
-        #         # syntax error
-        #         self.error("RIGHTBRACKET_EXPECTED")
-        # if self.symbol == self.scanner.SEMICOLON:
-        #     self.symbol = self.scanner.getsymbol()
-        #     return 1
-        # else:
-        #     # error: semicolon expected
-        #     self.error("SEMICOLON_EXPECTED_AT_LINE_END")
 
     def dtype_devices(self):
         """
@@ -371,42 +258,21 @@ class Parser:
         """
         if self.symbol.id == self.scanner.DTYPE_ID:
             pass
-        self.symbol = self.scanner.get_symbol()
-        if (
-            self.symbol.type == self.scanner.DEVICE_NAME
-        ):
-            pass
+        self.device_name()
         self.symbol = self.scanner.get_symbol()
         while self.symbol.type == self.scanner.COMMA:
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.DEVICE_NAME:
-                pass
+            self.device_name()
             self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.SEMICOLON:
             print('-End of DTYPE statement')
             pass
 
-        #     while self.symbol == self.scanner.COMA:
-        #         self.symbol = self.scanner.getsymbol()
-        #         self.device_name()
-        #     if self.symbol == self.scanner.SEMICOLON:
-        #         self.symbol = self.scanner.getsymbol()
-        #         return 1
-        #     else:
-        #         # error, semicolon expected
-        #         self.error("SEMICOLON_EXPECTED_AT_LINE_END")
-        # else:
-        #     # error, codeword DTYPE expected
-        #     self.error("CODEWORD_EXPECTED")
 
     def switch_devices(self):
         """
         Method to parse switch defenitions
         """
-        self.symbol = self.scanner.get_symbol()
-
-        if (self.symbol.type == self.scanner.DEVICE_NAME):
-            pass
+        self.device_name()
         
         self.symbol = self.scanner.get_symbol()
         if (self.symbol.type == self.scanner.BRACKET 
@@ -424,9 +290,7 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
-                self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.DEVICE_NAME):
-                    pass
+                self.device_name()
                 self.symbol = self.scanner.get_symbol()
                 if (self.symbol.type == self.scanner.BRACKET 
                     and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
@@ -447,49 +311,12 @@ class Parser:
             
         print('-End of SWITCH statement')
 
-        # if (
-        #     self.symbol.type == self.scanner.KEYWORDS
-        #     and self.symbol.id == self.scanner.SWITCH_ID
-        # ):
-        #     self.symbol = self.scanner.getsymbol()
-        #     self.device_name()
-        #     if self.symbol == self.scanner.LEFTBRACK:
-        #         self.symbol = self.scanner.getsymbol()
-        #     else:
-        #         # syntax error, missing braket
-        #         self.error("LEFTBRACKET_EXPECTED")
-        #     self.on_off()
-        #     if self.symbol == self.scanner.RIGHTBRACK:
-        #         self.symbol = self.scanner.getsymbol()
-        #     else:
-        #         # syntax error
-        #         self.error("RIGHTBRACKET_EXPECTED")
-        #     while self.symbol == self.scanner.COMA:
-        #         self.symbol = self.scanner.getsymbol()
-        #         self.device_name()
-        #         if self.symbol == self.scanner.LEFTBRACK:
-        #             self.symbol = self.scanner.getsymbol()
-        #         else:
-        #             # syntax error, missing braket
-        #             self.error("LEFTBRACKET_EXPECTED")
-        #         self.on_off()
-        #         if self.symbol == self.scanner.RIGHTBRACK:
-        #             self.symbol = self.scanner.getsymbol()
-        #         else:
-        #             # syntax error
-        #             self.error("RIGHTBRACKET_EXPECTED")
-        #     else:
-        #         # error, no codeword
-        #         self.error("CODEWORD_EXPECTED")
 
     def clock_devices(self):
         """
         Method to parse clock devices
         """
-        self.symbol = self.scanner.get_symbol()
-
-        if (self.symbol.type == self.scanner.DEVICE_NAME):
-            pass
+        self.device_name()
         
         self.symbol = self.scanner.get_symbol()
         if (self.symbol.type == self.scanner.BRACKET 
@@ -507,9 +334,7 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
-                self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.DEVICE_NAME):
-                    pass
+                self.device_name()
                 self.symbol = self.scanner.get_symbol()
                 if (self.symbol.type == self.scanner.BRACKET 
                     and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
@@ -529,84 +354,6 @@ class Parser:
             pass
 
         print('-End of CLOCK statement')
-        # if (
-        #     self.symbol.type == self.scanner.KEYWORDS
-        #     and self.symbol.id == self.scanner.CLOCK_ID
-        # ):
-        #     self.symbol = self.scanner.getsymbol()
-        #     self.device_name()
-
-        #     if self.symbol == self.scanner.LEFTBRACK:
-        #         self.symbol = self.scanner.getsymbol()
-        #     else:
-        #         # error, backet expected
-        #         self.error("LEFTBRACKET_EXPECTED")
-        #     self.non_zero()
-        #     while self.symbol != self.scanner.LEFTBRACK:
-        #         self.digit()
-        #     if self.symbol == self.scanner.LEFTBRACK:
-        #         self.symbol = self.scanner.getsymbol()
-        #     else:
-        #         # error, bracket not closed
-        #         self.error("RIGHTBRACKET_EXPECTED")
-
-        #     while self.symbol == self.scanner.COMA:
-        #         self.symbol = self.getsymbol()
-
-        #         self.device_name()
-
-        #         if self.symbol == self.scanner.LEFTBRACK:
-        #             self.symbol = self.scanner.getsymbol()
-        #         else:
-        #             # error, backet expected
-        #             self.error("RIGHTBRACKET_EXPECTED")
-        #         self.non_zero()
-        #         while self.symbol != self.scanner.RIGHTBRACK:
-        #             self.digit()
-        #         if self.symbol == self.scanner.RIGHTBRACK:
-        #             self.symbol = self.scanner.getsymbol()
-        #         else:
-        #             # error, bracket not closed
-        #             self.error("RIGHTBRACKET_EXPECTED")
-
-        #     if self.symbol == self.scanner.SEMICOLON:
-        #         self.symbol = self.scanner.getsymbol()
-        #         return 1
-        #     else:
-        #         # error, semicolon expected
-        #         self.error("SEMICOLON_EXPECTED_AT_LINE_END")
-
-    def gatename(self):
-        """
-        Method to parse gate name titles
-        """
-        if (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.AND_ID
-        ):
-            self.symbol = self.getsymbol()
-            return 1
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.NAND_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-            return 1
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.OR_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-            return 1
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.NOR_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-            return 1
-        else:
-            # error, not a valid gate name
-            self.error("GATE_NAME_INVALID")
 
     def output_pin(self):
         """
@@ -656,9 +403,10 @@ class Parser:
             self.error("UNKOWN_SYMBOL")
 
     def input_number(self):
-        if self.symbol.type in self.scaner.INPUTNUM:
-            self.symbol = self.scanner.getsymbol()
-            return 1
+        if (self.symbol.type == self.scanner.NUMBER
+                    and (self.symbol.id in range(1,17))
+        ):
+            self.symbol = self.scanner.get_symbol()
         else:
             # error of invalid input
             self.error("NUMBER_OF_INPUTS_INVALID")
@@ -681,30 +429,17 @@ class Parser:
         """
         Method to parse device names
         """
-        if self.symbol.type == self.scanner.KEYWORDS:
-            # error ketword cannon be an indentifier
-            self.error("KEYWORD_CANNOT_BE_IDENTIFIER")
+        # Identifier EBNF statement implicity defined by DEVICE_NAME type
+        self.symbol = self.scanner.get_symbol()
+        if (self.symbol.type == self.scanner.DEVICE_NAME):
+            pass
         else:
-            self.identifier()
+            self.error("DEVICE_NAME_EXPECTED")
 
-    def identifier(self):
-        """
-        Function to handle parseing of identifiers
-        """
-        if self.symbol[0] != self.scanner.LOWERLETTER:
-            # error idenitifies myst start with a lowercase lower_letter
-            self.error("IDENTIFIERS_START_WITH_LOWERCASE")
-        elif any(
-            char not in self.scanner.LETTER or char not in self.scanner.DIGIT
-            for char in self.symbol
-        ):
-            # error unexpected symbol
-            self.error("UNEXPECTED_SYMBOL")
-        else:
-            return 1
+
 
     def error(self, error_type):
-        self.error_cound += 1
+        self.error_count += 1
 
 
 path_definition = "definitions/circuit.def"
