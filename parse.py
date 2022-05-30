@@ -1,11 +1,6 @@
-#########
-# these are temp imports for development
-from unittest.mock import Mock
 from scanner import Symbol, Scanner
 from names import Names
-
-#########
-## TODO: implement errors and returns from them
+import logging
 
 """Parse the definition file and build the logic network.
 
@@ -41,14 +36,16 @@ class Parser:
     --------------
     parse_network(self): Parses the circuit definition file.
     """
+
     # def __init__(self, names, devices, network, monitors, scanner):
-    def __init__(self, names, scanner):
+    def __init__(self, names, scanner, logger):
         """Initialise constants."""
         self.names = names
         self.scanner = scanner
         self.success = 1
-        self.symbol  = ""
+        self.symbol = ""
         self.error_count = 0
+        self.logger = logger
 
     def parse_network(self):
         """Parse the circuit definition file."""
@@ -64,9 +61,10 @@ class Parser:
             self.symbol.type == self.scanner.KEYWORD
             and self.symbol.id == self.scanner.DEVICES_ID
         ):
-            print('<--- Find DEVICES --->')
+            self.logger.debug("<--- Find DEVICES --->")
             self.symbol = self.scanner.get_symbol()
-            if (self.symbol.type == self.scanner.CURLY_BRACKET 
+            if (
+                self.symbol.type == self.scanner.CURLY_BRACKET
                 and self.symbol.id == self.scanner.LEFT_CURLY_BRACKET_ID
             ):
                 pass
@@ -74,35 +72,35 @@ class Parser:
             self.device()
             self.symbol = self.scanner.get_symbol()
 
-            while (self.symbol.type != 
-                self.scanner.CURLY_BRACKET ) and   (self.symbol.id != 
-                self.scanner.RIGHT_CURLY_BRACKET_ID):
-                print('-- Another device found')
+            while (self.symbol.type != self.scanner.CURLY_BRACKET) and (
+                self.symbol.id != self.scanner.RIGHT_CURLY_BRACKET_ID
+            ):
+                self.logger.debug("-- Another device found")
                 self.device()
                 self.symbol = self.scanner.get_symbol()
 
-        
         self.symbol = self.scanner.get_symbol()
         if (
             self.symbol.type == self.scanner.KEYWORD
             and self.symbol.id == self.scanner.CONNECT_ID
         ):
-            print('<--- Find CONNECT --->')
+            self.logger.debug("<--- Find CONNECT --->")
             self.symbol = self.scanner.get_symbol()
-            if (self.symbol.type == self.scanner.CURLY_BRACKET 
+            if (
+                self.symbol.type == self.scanner.CURLY_BRACKET
                 and self.symbol.id == self.scanner.LEFT_CURLY_BRACKET_ID
             ):
                 pass
-            
-            print('-Start first connection')
+
+            self.logger.debug("-Start first connection")
             self.symbol = self.scanner.get_symbol()
             self.create_conn()
             self.symbol = self.scanner.get_symbol()
 
-            while (self.symbol.type != 
-                self.scanner.CURLY_BRACKET ) and   (self.symbol.id != 
-                self.scanner.RIGHT_CURLY_BRACKET_ID):
-                print('-- Another connection found')
+            while (self.symbol.type != self.scanner.CURLY_BRACKET) and (
+                self.symbol.id != self.scanner.RIGHT_CURLY_BRACKET_ID
+            ):
+                self.logger.debug("-- Another connection found")
                 self.create_conn()
                 self.symbol = self.scanner.get_symbol()
 
@@ -111,29 +109,32 @@ class Parser:
             self.symbol.type == self.scanner.KEYWORD
             and self.symbol.id == self.scanner.MONITOR_ID
         ):
-            print('<--- Find MONITOR --->')
+            self.logger.debug("<--- Find MONITOR --->")
             self.symbol = self.scanner.get_symbol()
-            if (self.symbol.type == self.scanner.CURLY_BRACKET 
+            if (
+                self.symbol.type == self.scanner.CURLY_BRACKET
                 and self.symbol.id == self.scanner.LEFT_CURLY_BRACKET_ID
             ):
                 pass
-            
+
             self.symbol = self.scanner.get_symbol()
-            print('-Start first monitor point')
+            self.logger.debug("-Start first monitor point")
             self.make_monitor()
             self.symbol = self.scanner.get_symbol()
 
-            while (int(self.symbol.id) != 
-                self.scanner.RIGHT_CURLY_BRACKET_ID):
-                print('-- Another monitor point found')
+            while int(self.symbol.id) != self.scanner.RIGHT_CURLY_BRACKET_ID:
+                self.logger.debug("-- Another monitor point found")
                 self.make_monitor()
                 self.symbol = self.scanner.get_symbol()
         self.symbol = self.scanner.get_symbol()
-        print(self.symbol.type, self.names.get_name_string(self.symbol.id))
-        if (self.symbol.type == self.scanner.KEYWORD
-            and self.symbol.id == self.scanner.END_ID):
-            print('<--- End of file found --->')
-
+        self.logger.debug(
+            f"{self.symbol.type}, {self.names.get_name_string(self.symbol.id)}"
+        )
+        if (
+            self.symbol.type == self.scanner.KEYWORD
+            and self.symbol.id == self.scanner.END_ID
+        ):
+            self.logger.debug("<--- End of file found --->")
 
     def make_monitor(self):
         """
@@ -147,11 +148,10 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.OUTPUT_PIN:
                 self.symbol = self.scanner.get_symbol()
-        
+
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
-        print('-Monitor point ended')
-        
+        self.logger.debug("-Monitor point ended")
 
     def create_conn(self):
         """
@@ -173,16 +173,17 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.DOT:
             pass
-        
+
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.INPUT_NUMBER 
-                or self.symbol.type == self.scanner.INPUT_PIN
-            ):
-                pass
-        self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.SEMICOLON):
+        if (
+            self.symbol.type == self.scanner.INPUT_NUMBER
+            or self.symbol.type == self.scanner.INPUT_PIN
+        ):
             pass
-        print('-Connection Ended')
+        self.symbol = self.scanner.get_symbol()
+        if self.symbol.type == self.scanner.SEMICOLON:
+            pass
+        self.logger.debug("-Connection Ended")
 
     def device(self):
         """
@@ -191,66 +192,73 @@ class Parser:
         """
 
         if self.symbol.id == self.scanner.CLOCK_ID:
-            print('-CLOCK found, start to parse CLOCK')
+            self.logger.debug("-CLOCK found, start to parse CLOCK")
             self.clock_devices()
         elif self.symbol.id == self.scanner.SWITCH_ID:
-            print('-SWITCH found, start to parse SWITCH')
+            self.logger.debug("-SWITCH found, start to parse SWITCH")
             self.switch_devices()
         elif self.symbol.id == self.scanner.DTYPE_ID:
-            print('-DTYPE found, start to parse DTYPE')
+            self.logger.debug("-DTYPE found, start to parse DTYPE")
             self.dtype_devices()
-        elif self.symbol.id == (self.gate_devices or
-            self.AND_ID or
-            self.NAND_ID or
-            self.OR_ID or
-            self.NOR_ID or
-            self.DTYPE_ID or
-            self.XOR_ID):
-            print('-GATE found, start to parse GATE')
+        elif self.symbol.id == (
+            self.gate_devices
+            or self.AND_ID
+            or self.NAND_ID
+            or self.OR_ID
+            or self.NOR_ID
+            or self.DTYPE_ID
+            or self.XOR_ID
+        ):
+            self.logger.debug("-GATE found, start to parse GATE")
             self.gate_devices()
-        else: 
+        else:
             pass
-
 
     def gate_devices(self):
         """
         Method to parse gates
         """
         self.device_name()
-        
+
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.BRACKET 
-            and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
+        if (
+            self.symbol.type == self.scanner.BRACKET
+            and self.symbol.id == self.scanner.LEFT_BRACKET_ID
+        ):
             pass
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.NUMBER 
-                and (self.symbol.id in range(1,17))):
+        if self.symbol.type == self.scanner.NUMBER and (self.symbol.id in range(1, 17)):
             pass
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.BRACKET 
-            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID):
+        if (
+            self.symbol.type == self.scanner.BRACKET
+            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+        ):
             pass
-        
+
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
                 self.device_name()
                 self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.BRACKET 
-                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
+                if (
+                    self.symbol.type == self.scanner.BRACKET
+                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID
+                ):
                     pass
                 self.symbol = self.scanner.get_symbol()
                 self.input_number()
-                if (self.symbol.type == self.scanner.BRACKET 
-                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID):
+                if (
+                    self.symbol.type == self.scanner.BRACKET
+                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+                ):
                     pass
-                self.symbol = self.scanner.get_symbol() # comma check
-        
+                self.symbol = self.scanner.get_symbol()  # comma check
+
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
 
-        print('-End of GATE statement')
-
+        self.logger.debug("-End of GATE statement")
 
     def dtype_devices(self):
         """
@@ -264,96 +272,106 @@ class Parser:
             self.device_name()
             self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.SEMICOLON:
-            print('-End of DTYPE statement')
+            self.logger.debug("-End of DTYPE statement")
             pass
-
 
     def switch_devices(self):
         """
         Method to parse switch defenitions
         """
         self.device_name()
-        
+
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.BRACKET 
-            and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
+        if (
+            self.symbol.type == self.scanner.BRACKET
+            and self.symbol.id == self.scanner.LEFT_BRACKET_ID
+        ):
             pass
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.NUMBER  
-                and self.symbol.id in range(0,2)):
+        if self.symbol.type == self.scanner.NUMBER and self.symbol.id in range(0, 2):
             pass
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.BRACKET 
-            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID):
+        if (
+            self.symbol.type == self.scanner.BRACKET
+            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+        ):
             pass
-        
+
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
                 self.device_name()
                 self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.BRACKET 
-                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
-                    pass
-                self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.NUMBER
-                    and (self.symbol.id in range(0,2))
+                if (
+                    self.symbol.type == self.scanner.BRACKET
+                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID
                 ):
                     pass
                 self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.BRACKET 
-                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID):
+                if self.symbol.type == self.scanner.NUMBER and (
+                    self.symbol.id in range(0, 2)
+                ):
                     pass
-                self.symbol = self.scanner.get_symbol() # comma check
-        
+                self.symbol = self.scanner.get_symbol()
+                if (
+                    self.symbol.type == self.scanner.BRACKET
+                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+                ):
+                    pass
+                self.symbol = self.scanner.get_symbol()  # comma check
+
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
-            
-        print('-End of SWITCH statement')
 
+        self.logger.debug("-End of SWITCH statement")
 
     def clock_devices(self):
         """
         Method to parse clock devices
         """
         self.device_name()
-        
+
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.BRACKET 
-            and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
+        if (
+            self.symbol.type == self.scanner.BRACKET
+            and self.symbol.id == self.scanner.LEFT_BRACKET_ID
+        ):
             pass
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.NUMBER 
-            and int(self.symbol.id) > 0):
+        if self.symbol.type == self.scanner.NUMBER and int(self.symbol.id) > 0:
             pass
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.BRACKET 
-            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID):
+        if (
+            self.symbol.type == self.scanner.BRACKET
+            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+        ):
             pass
-        
+
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
                 self.device_name()
                 self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.BRACKET 
-                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID):
-                    pass
-                self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.NUMBER
-                    and int(self.symbol.id) > 0
+                if (
+                    self.symbol.type == self.scanner.BRACKET
+                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID
                 ):
                     pass
                 self.symbol = self.scanner.get_symbol()
-                if (self.symbol.type == self.scanner.BRACKET 
-                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID):
+                if self.symbol.type == self.scanner.NUMBER and int(self.symbol.id) > 0:
                     pass
-                self.symbol = self.scanner.get_symbol() # comma check
-        
+                self.symbol = self.scanner.get_symbol()
+                if (
+                    self.symbol.type == self.scanner.BRACKET
+                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+                ):
+                    pass
+                self.symbol = self.scanner.get_symbol()  # comma check
+
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
 
-        print('-End of CLOCK statement')
+        self.logger.debug("-End of CLOCK statement")
 
     def output_pin(self):
         """
@@ -403,9 +421,7 @@ class Parser:
             self.error("UNKOWN_SYMBOL")
 
     def input_number(self):
-        if (self.symbol.type == self.scanner.NUMBER
-                    and (self.symbol.id in range(1,17))
-        ):
+        if self.symbol.type == self.scanner.NUMBER and (self.symbol.id in range(1, 17)):
             self.symbol = self.scanner.get_symbol()
         else:
             # error of invalid input
@@ -431,12 +447,10 @@ class Parser:
         """
         # Identifier EBNF statement implicity defined by DEVICE_NAME type
         self.symbol = self.scanner.get_symbol()
-        if (self.symbol.type == self.scanner.DEVICE_NAME):
+        if self.symbol.type == self.scanner.DEVICE_NAME:
             pass
         else:
             self.error("DEVICE_NAME_EXPECTED")
-
-
 
     def error(self, error_type):
         self.error_count += 1
@@ -444,10 +458,13 @@ class Parser:
 
 path_definition = "definitions/circuit.def"
 
+scanner_logger = logging.getLogger("scanner")
+parser_logger = logging.getLogger("parser")
+logging.basicConfig(level=logging.DEBUG)
 names_instance = Names()
 
-scanner_instance = Scanner(path_definition, names_instance)
+scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
 
-parser_1 = Parser(names_instance, scanner_instance)
+parser_1 = Parser(names_instance, scanner_instance, parser_logger)
 
 a = parser_1.parse_network()
