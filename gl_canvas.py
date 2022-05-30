@@ -304,7 +304,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                     for character in label:
                         GLUT.glutBitmapCharacter(font, ord(character))
 
-
         # Label x axis
         text = "No. of Cycles"
         font = self.label_font
@@ -314,36 +313,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glRasterPos2f(x_pos_x_label, y_pos_x_label)
         for character in text:
             GLUT.glutBitmapCharacter(font, ord(character))
-        # # Draw y grid ticks if only one signal to be displayed each time
-        # Draw y axis. Set y starting points
-        # x_left = self.canvas_origin[0] + self.y_axis_offset
-        # y_top = y_bottom + self.x_axis_offset + self.y_grid_offset_lower + self.signal_height + self.y_grid_offset_upper
-        #
-        # # Draw y axis
-        # GL.glColor3f(0, 0, 0)
-        # GL.glBegin(GL.GL_LINE_STRIP)
-        # GL.glVertex2f(x_left, y_bottom)
-        # GL.glVertex2f(x_left, y_top)
-        # GL.glEnd()
-        # # Interval for the vertical grid lines
-        # y_grid_interval = self.signal_height
-        # y_tick_left = x_left + self.y_axis_offset - self.tick_width / 2
-        # y_tick_right = x_left + self.y_axis_offset + self.tick_width / 2
-        #
-        # # grid at 0
-        # GL.glColor3f(0, 0, 0)
-        # GL.glBegin(GL.GL_LINE_STRIP)
-        # GL.glVertex2f(y_tick_left, y_bottom + self.x_axis_offset + self.y_grid_offset_lower)
-        # GL.glVertex2f(y_tick_right, y_bottom + self.x_axis_offset + self.y_grid_offset_lower)
-        # GL.glEnd()
-        # # grid at 1
-        # GL.glColor3f(0, 0, 0)
-        # GL.glBegin(GL.GL_LINE_STRIP)
-        # GL.glVertex2f(y_tick_left,
-        #               y_bottom + self.x_axis_offset + self.y_grid_offset_lower + self.signal_height) + y_grid_interval
-        # GL.glVertex2f(y_tick_right,
-        #               y_bottom + self.x_axis_offset + self.y_grid_offset_lower + self.signal_height) + y_grid_interval
-        # GL.glEnd()
 
         # Draw y axis. Set y starting points
         x_left = self.canvas_origin[0] + self.y_axis_offset
@@ -386,7 +355,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             y_pos_0 = zero_pos
             GL.glRasterPos2f(x_pos_0, y_pos_0)
             font = self.font
-            label_zero = '0'
+            label_zero = "0"
             GLUT.glutBitmapCharacter(font, ord(label_zero))
 
             # grid at 1
@@ -400,26 +369,52 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             y_pos_1 = zero_pos + self.signal_height
             GL.glRasterPos2f(x_pos_1, y_pos_1)
             font = self.font
-            label_one = '1'
+            label_one = "1"
             GLUT.glutBitmapCharacter(font, ord(label_one))
 
-            # Label y axis
-            text = "Monitor Name"
-            font = self.label_font
-            x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset / 2
-            y_pos_y_label = y_pos_1
-            GL.glColor3f(0, 0, 0)
-            GL.glRasterPos2f(x_pos_y_label, y_pos_y_label)
-            for character in text:
-                GLUT.glutBitmapCharacter(font, ord(character))
+        # Label y axis
+        text = "Monitor Name"
+        font = self.label_font
+        x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset / 2
+        y_pos_y_label = (
+            self.canvas_origin[1]
+            + self.x_axis_offset
+            + self.y_grid_offset_lower
+            + num_signals * (self.signal_y_distance + self.signal_height)
+            + self.signal_height
+        )
+        GL.glColor3f(0, 0, 0)
+        GL.glRasterPos2f(x_pos_y_label, y_pos_y_label)
+        for character in text:
+            GLUT.glutBitmapCharacter(font, ord(character))
 
     def draw_signal(self):
         """Draw signal traces for each monitor."""
         self.draw_grid(spin_value=self.spin_value)
         # Draw signals one on top of another.
         if self.total_cycles > 0:
+            # Draw all signals selected
             for count in range(len(self.monitored_signal_list)):
                 monitor_name = self.monitored_signal_list
+                # Add the label of monitor
+                text = str(monitor_name)
+                font = self.label_font
+                # Put label slighly to the right
+                x_pos_y_label = (
+                    self.canvas_origin[0] + self.y_axis_offset + self.x_grid_offset
+                )
+                # grid at 0
+                zero_pos = (
+                    self.canvas_origin[1]
+                    + self.x_axis_offset
+                    + self.y_grid_offset_lower
+                    + count * (self.signal_y_distance + self.signal_height)
+                )
+                y_pos_y_label = zero_pos + self.signal_height
+                GL.glColor3f(0, 0, 0)
+                GL.glRasterPos2f(x_pos_y_label, y_pos_y_label)
+                for character in text:
+                    GLUT.glutBitmapCharacter(font, ord(character))
                 # Find signal list for each monitor
                 [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
                 signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
