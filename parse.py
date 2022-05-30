@@ -133,19 +133,19 @@ class Parser:
             self.make_monitor()
             self.symbol = self.scanner.get_symbol()
 
-            print(self.symbol.id)
-            print(self.scanner.RIGHT_CURLY_BRACKET_ID)
             while (int(self.symbol.id) != 
                 self.scanner.RIGHT_CURLY_BRACKET_ID):
                 print('-- Another monitor point found')
                 self.make_monitor()
                 self.symbol = self.scanner.get_symbol()
-
+        self.symbol = self.scanner.get_symbol()
+        print(self.symbol.type, self.names.get_name_string(self.symbol.id))
+        if (self.symbol.type == self.scanner.KEYWORD
+            and self.symbol.id == self.scanner.END_ID):
+            print('<--- End of file found --->')
 
 
         """
-
-
         elif (
             self.symbol.type == self.scanner.KEYWORDS
             and self.symbol.id == self.scanner.CONNECT_ID
@@ -187,13 +187,12 @@ class Parser:
         """
         if self.symbol.type == self.scanner.DEVICE_NAME:
             pass
-        self.symbol == self.scanner.get_symbol()
-        print(self.symbol.type)
+        self.symbol = self.scanner.get_symbol()
+
         if int(self.symbol.type) == self.scanner.DOT:
-            self.symbol == self.scanner.get_symbol()
+            self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.OUTPUT_PIN:
                 self.symbol = self.scanner.get_symbol()
-        print('--')
         
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
