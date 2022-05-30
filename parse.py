@@ -73,22 +73,75 @@ class Parser:
             self.symbol.type == self.scanner.KEYWORD
             and self.symbol.id == self.scanner.DEVICES_ID
         ):
+            print('<--- Find DEVICES --->')
             self.symbol = self.scanner.get_symbol()
             if (self.symbol.type == self.scanner.CURLY_BRACKET 
                 and self.symbol.id == self.scanner.LEFT_CURLY_BRACKET_ID
             ):
                 pass
-
+            self.symbol = self.scanner.get_symbol()
             self.device()
-            print('---')
-            print(self.symbol.type, self.names.get_name_string(self.symbol.id))
+            self.symbol = self.scanner.get_symbol()
 
             while (self.symbol.type != 
                 self.scanner.CURLY_BRACKET ) and   (self.symbol.id != 
-                self.scanner.LEFT_CURLY_BRACKET_ID):
-
-                self.symbol = self.scanner.getsymbol()
+                self.scanner.RIGHT_CURLY_BRACKET_ID):
+                print('-- Another device found')
                 self.device()
+                self.symbol = self.scanner.get_symbol()
+
+        
+        self.symbol = self.scanner.get_symbol()
+        if (
+            self.symbol.type == self.scanner.KEYWORD
+            and self.symbol.id == self.scanner.CONNECT_ID
+        ):
+            print('<--- Find CONNECT --->')
+            self.symbol = self.scanner.get_symbol()
+            if (self.symbol.type == self.scanner.CURLY_BRACKET 
+                and self.symbol.id == self.scanner.LEFT_CURLY_BRACKET_ID
+            ):
+                pass
+            
+            print('-Start first connection')
+            self.symbol = self.scanner.get_symbol()
+            self.create_conn()
+            self.symbol = self.scanner.get_symbol()
+
+            while (self.symbol.type != 
+                self.scanner.CURLY_BRACKET ) and   (self.symbol.id != 
+                self.scanner.RIGHT_CURLY_BRACKET_ID):
+                print('-- Another connection found')
+                self.create_conn()
+                self.symbol = self.scanner.get_symbol()
+
+        self.symbol = self.scanner.get_symbol()
+        if (
+            self.symbol.type == self.scanner.KEYWORD
+            and self.symbol.id == self.scanner.MONITOR_ID
+        ):
+            print('<--- Find MONITOR --->')
+            self.symbol = self.scanner.get_symbol()
+            if (self.symbol.type == self.scanner.CURLY_BRACKET 
+                and self.symbol.id == self.scanner.LEFT_CURLY_BRACKET_ID
+            ):
+                pass
+            
+            
+            self.symbol = self.scanner.get_symbol()
+            print('-Start first monitor point')
+            self.make_monitor()
+            self.symbol = self.scanner.get_symbol()
+
+            print(self.symbol.id)
+            print(self.scanner.RIGHT_CURLY_BRACKET_ID)
+            while (int(self.symbol.id) != 
+                self.scanner.RIGHT_CURLY_BRACKET_ID):
+                print('-- Another monitor point found')
+                self.make_monitor()
+                self.symbol = self.scanner.get_symbol()
+
+
 
         """
 
@@ -132,55 +185,93 @@ class Parser:
         """
         Fucntion to parse the monitor line as per the EBNF spec
         """
-        self.device_name()
-        if self.symbol.type == self.scanner.DOT:
-            self.output_pin()
-        self.symbol = self.scanner.getsymbol()
+        if self.symbol.type == self.scanner.DEVICE_NAME:
+            pass
+        self.symbol == self.scanner.get_symbol()
+        print(self.symbol.type)
+        if int(self.symbol.type) == self.scanner.DOT:
+            self.symbol == self.scanner.get_symbol()
+            if self.symbol.type == self.scanner.OUTPUT_PIN:
+                self.symbol = self.scanner.get_symbol()
+        print('--')
+        
         if self.symbol.type == self.scanner.SEMICOLON:
-            # TODO decide how ot do return properly
-            self.symbol = self.scanner.getsymbol()
-            return 1
-        else:
-            # error, semicolon expected to end statement
-            self.error("SEMICOLON_EXPECTED_AT_LINE_END")
+            pass
+        print('-Monitor point ended')
+        
+
+        # if self.symbol.type == self.scanner.SEMICOLON:
+        #     # TODO decide how ot do return properly
+        #     self.symbol = self.scanner.getsymbol()
+        #     return 1
+        # else:
+        #     # error, semicolon expected to end statement
+        #     self.error("SEMICOLON_EXPECTED_AT_LINE_END")
 
     def create_conn(self):
         """
         Method to parse connection creation as per EBNF spec
         """
-        self.device_name()
-        if self.symbol == self.scanner.DOT:
-            self.output_pin()
-        if self.symbol == self.scanner.CONN:
-            self.symbol = self.scanner.getsymbol()
-            if self.symbol == self.scanner.DOT:
-                self.input_pin()
-            else:
-                # error due to lack of input reference
-                self.error("NO_INPUT_REFERENCE")
-            if self.symbol == self.scanner.SEMICOLON:
-                self.symbol = self.scanner.getsymbol()
-                return 1
-            else:
-                # line non terminated error
-                self.error("SEMICOLON_EXPECTED_AT_LINE_END")
-        else:
-            # error: connection symbol expected
-            self.error("CONNECTION_SYMBOL_EXPECTED")
+        if self.symbol.type == self.scanner.DEVICE_NAME:
+            pass
+        self.symbol = self.scanner.get_symbol()
+
+        if self.symbol.type == self.scanner.DOT:
+            self.symbol = self.scanner.get_symbol()
+            if self.symbol.type == self.output_pin:
+                pass
+
+        self.symbol = self.scanner.get_symbol()
+        if self.symbol.type == self.scanner.RIGHT_ARROW:
+            pass
+
+        self.symbol = self.scanner.get_symbol()
+        if self.symbol.type == self.scanner.DOT:
+            pass
+        
+        self.symbol = self.scanner.get_symbol()
+        if (self.symbol.type == self.scanner.INPUT_NUMBER 
+                or self.symbol.type == self.scanner.INPUT_PIN
+            ):
+                pass
+        self.symbol = self.scanner.get_symbol()
+        if (self.symbol.type == self.scanner.SEMICOLON):
+            pass
+        print('-Connection Ended')
+
+        # if self.symbol == self.scanner.DOT:
+        #     self.output_pin()
+        # if self.symbol == self.scanner.CONN:
+        #     self.symbol = self.scanner.getsymbol()
+        #     if self.symbol == self.scanner.DOT:
+        #         self.input_pin()
+        #     else:
+        #         # error due to lack of input reference
+        #         self.error("NO_INPUT_REFERENCE")
+        #     if self.symbol == self.scanner.SEMICOLON:
+        #         self.symbol = self.scanner.getsymbol()
+        #         return 1
+        #     else:
+        #         # line non terminated error
+        #         self.error("SEMICOLON_EXPECTED_AT_LINE_END")
+        # else:
+        #     # error: connection symbol expected
+        #     self.error("CONNECTION_SYMBOL_EXPECTED")
 
     def device(self):
         """
         Method to parse devices
         TODO this
         """
-        self.symbol = self.scanner.get_symbol()
 
         if self.symbol.id == self.scanner.CLOCK_ID:
+            print('-CLOCK found, start to parse CLOCK')
             self.clock_devices()
         elif self.symbol.id == self.scanner.SWITCH_ID:
+            print('-SWITCH found, start to parse SWITCH')
             self.switch_devices()
         elif self.symbol.id == self.scanner.DTYPE_ID:
-            print('pass')
+            print('-DTYPE found, start to parse DTYPE')
             self.dtype_devices()
         elif self.symbol.id == (self.gate_devices or
             self.AND_ID or
@@ -189,6 +280,7 @@ class Parser:
             self.NOR_ID or
             self.DTYPE_ID or
             self.XOR_ID):
+            print('-GATE found, start to parse GATE')
             self.gate_devices()
         else: 
             pass
@@ -239,6 +331,8 @@ class Parser:
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
 
+        print('-End of GATE statement')
+
         # self.gatename()
         # self.device_name()
         # if self.symbol == self.scanner.LEFTBRACK:
@@ -283,16 +377,14 @@ class Parser:
             self.symbol.type == self.scanner.DEVICE_NAME
         ):
             pass
-        while self.symbol.type == self.scanner.DEVICE_NAME:
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.COMMA:
-                pass
-
+        self.symbol = self.scanner.get_symbol()
+        while self.symbol.type == self.scanner.COMMA:
             self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.DEVICE_NAME:
                 pass
-        self.symbol = self.scanner.get_symbol()
+            self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.SEMICOLON:
+            print('-End of DTYPE statement')
             pass
 
         #     while self.symbol == self.scanner.COMA:
@@ -353,6 +445,8 @@ class Parser:
         
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
+            
+        print('-End of SWITCH statement')
 
         # if (
         #     self.symbol.type == self.scanner.KEYWORDS
@@ -404,7 +498,7 @@ class Parser:
             pass
         self.symbol = self.scanner.get_symbol()
         if (self.symbol.type == self.scanner.NUMBER 
-            and self.symbol.id > 0):
+            and int(self.symbol.id) > 0):
             pass
         self.symbol = self.scanner.get_symbol()
         if (self.symbol.type == self.scanner.BRACKET 
@@ -423,7 +517,7 @@ class Parser:
                     pass
                 self.symbol = self.scanner.get_symbol()
                 if (self.symbol.type == self.scanner.NUMBER
-                    and self.symbol.id > 0
+                    and int(self.symbol.id) > 0
                 ):
                     pass
                 self.symbol = self.scanner.get_symbol()
@@ -435,6 +529,7 @@ class Parser:
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
 
+        print('-End of CLOCK statement')
         # if (
         #     self.symbol.type == self.scanner.KEYWORDS
         #     and self.symbol.id == self.scanner.CLOCK_ID
