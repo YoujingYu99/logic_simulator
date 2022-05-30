@@ -73,6 +73,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             (canvas_height - self.min_height) / 2,
         ]
         # Signal parameters
+        # Blue, red, black colours for signals
+        self.signal_colours = [(0, 0, 1), (1, 0, 0), (0, 0, 0)]
         self.signal_height = 20
         self.signal_cycle_width = 15
         self.signal_y_distance = 5
@@ -433,8 +435,28 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 #     GL.glVertex2f(x_next, y)
                 # GL.glEnd()
 
-                # Signal trace is blue
-                GL.glColor3f(0, 0, 1)
+                # Signal trace depends on the signal count
+                if count % 3 == 1:
+                    # Blue
+                    GL.glColor3f(
+                        self.signal_colours[0][0],
+                        self.signal_colours[0][1],
+                        self.signal_colours[0][2],
+                    )
+                elif count % 3 == 2:
+                    # Red
+                    GL.glColor3f(
+                        self.signal_colours[1][0],
+                        self.signal_colours[1][1],
+                        self.signal_colours[1][2],
+                    )
+                else:
+                    # Black
+                    GL.glColor3f(
+                        self.signal_colours[2][0],
+                        self.signal_colours[2][1],
+                        self.signal_colours[2][2],
+                    )
                 GL.glBegin(GL.GL_LINE_STRIP)
 
                 # Find starting y position
