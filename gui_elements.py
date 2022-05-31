@@ -112,7 +112,7 @@ class FileMenu(wx.Menu):
                     # update names, networks etc modules
                     self.parentFrame.names = names
                     self.parentFrame.network = network
-                    self.parentFrames.devices = devices
+                    self.parentFrame.devices = devices
                     self.parentFrame.monitors = monitors
                 else:
                     self.parentFrame.console_box.print_console_message(

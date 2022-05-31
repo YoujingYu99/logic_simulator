@@ -1,7 +1,7 @@
 import wx
 from gui import Gui
 import builtins
-import stylesheet
+# import stylesheet
 from names import Names
 from devices import Devices
 from network import Network
@@ -19,7 +19,7 @@ class LogicSimulatorApp(wx.App):
     def __init__(self, css_file):
         super().__init__()
         self.on_init()
-        self.stylesheet = stylesheet.WXStyleSheet(css_file)
+        # self.stylesheet = stylesheet.WXStyleSheet(css_file)
 
     def on_init(self):
         # # only uncomment when full code integratable
