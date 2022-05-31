@@ -100,16 +100,24 @@ class FileMenu(wx.Menu):
                 text = "Loading {file_name:}.".format(file_name=path)
                 self.parentFrame.console_box.print_console_message(text)
 
-                # TODO: parse and scan the file
-                #
-                #
-                #
-                #
-                #
-                # names = Names()
-                # devices = Devices(names)
-                # network = Network(names, devices)
-                # monitors = Monitors(names, devices, network)
+                names = Names()
+                devices = Devices(names)
+                network = Network(names, devices)
+                monitors = Monitors(names, devices, network)
+                scanner = Scanner(myfile, names)
+                parser = Parser(names, devices, network, monitors, scanner)
+                if parser.parse_network():
+                    # Set successfully parsed
+                    self.parentFrame.is_parsed = True
+                    # update names, networks etc modules
+                    self.parentFrame.names = names
+                    self.parentFrame.network = network
+                    self.parentFrames.devices = devices
+                    self.parentFrame.monitors = monitors
+                else:
+                    self.parentFrame.console_box.print_console_message(
+                        text="File cannot be parsed. Please check your definition file."
+                    )
 
         dialog.Destroy()
 
