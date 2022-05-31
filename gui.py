@@ -54,8 +54,8 @@ class Gui(wx.Frame):
         self.names = names
         self.devices = devices
         self.monitors = monitors
-        self.style = wx.GetApp().stylesheet
-        self.configure_style()
+        # self.style = wx.GetApp().stylesheet
+        # self.configure_style()
 
         # Set parameters
         self.cycle_text_colour = (0, 0, 0)

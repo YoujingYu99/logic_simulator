@@ -286,8 +286,8 @@ class ConsoleBox(wx.TextCtrl):
         self.token = "console_box"
         if parent:
             self.token = parent.token + self.token
-        self.style = wx.GetApp().stylesheet
-        self.configure_style()
+        # self.style = wx.GetApp().stylesheet
+        # self.configure_style()
         self.console_text = ""
         # Initialise a console log that contains all console messages
         self.console_log = []
@@ -339,8 +339,8 @@ class CycleNumberText(wx.StaticText):
         self.token = "cycle_text"
         if parent:
             self.token = parent.token + self.token
-        self.style = wx.GetApp().stylesheet
-        self.configure_style()
+        # self.style = wx.GetApp().stylesheet
+        # self.configure_style()
 
     def configure_style(self):
         self.style.apply_rules(self)
