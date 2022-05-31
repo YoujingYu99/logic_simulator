@@ -61,16 +61,16 @@ class Gui(wx.Frame):
         self.cycle_text_colour = (0, 0, 0)
         # Set fonts
         self.cycle_font = wx.Font(
-            11, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
+            11, wx.DEFAULT, 0, 90, underline=False, faceName=""
         )
         self.monitor_font = wx.Font(
-            14, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
+            14, wx.DEFAULT, 0, 90, underline=False, faceName=""
         )
         self.run_font = wx.Font(
-            12, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
+            12, wx.DEFAULT, 0, 90, underline=False, faceName=""
         )
         self.console_font = wx.Font(
-            12, wx.FONTFAMILY_SWISS, 0, 90, underline=False, faceName=""
+            12, wx.DEFAULT, 0, 90, underline=False, faceName=""
         )
 
         # monitor_names_list contains all the signals that can be monitored
