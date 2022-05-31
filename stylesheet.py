@@ -1,4 +1,3 @@
-import tinycss
 import wx
 
 """Applying css rules to wxpython widgets.
@@ -28,6 +27,7 @@ class WXStyleSheet:
         }
 
     def parse_source(self):
+        import tinycss
         if self.source != None:
             parser = tinycss.make_parser("page3")
             self.stylesheet = parser.parse_stylesheet_file(self.source)
