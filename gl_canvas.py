@@ -346,6 +346,16 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glVertex2f(x_left, y_top)
         GL.glEnd()
 
+        # Draw y_grid for signal cycles
+        for i in range(len(x_tick_x_list)):
+            # Grey gridlines
+            GL.glColor3f(0.5, 0.5, 0.5)
+            GL.glBegin(GL.GL_LINE_STRIP)
+            GL.glVertex2f(x_tick_x_list[i], x_tick_y_low)
+            GL.glVertex2f(x_tick_x_list[i], y_top)
+            GL.glEnd()
+
+
         # Draw y grid for many signals
         num_signals = len(self.monitored_signal_list)
         y_tick_left = x_left + self.y_axis_offset - self.tick_width / 2

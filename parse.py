@@ -166,7 +166,7 @@ class Parser:
 
     def make_monitor(self):
         """
-        Fucntion to parse the monitor line as per the EBNF spec
+        Function to parse the monitor line as per the EBNF spec
         """
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
