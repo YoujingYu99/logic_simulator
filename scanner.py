@@ -145,17 +145,17 @@ class Scanner:
         self.logger.info("\nNow reading file...")
         self.logger.info("File name:  " + self.file.name)
 
-    def advance(self) -> None:
+    def advance(self):
         """Read next character and update current character."""
         self.current_character = self.file.read(1)
 
-    def skip_spaces(self) -> None:
+    def skip_spaces(self):
         """Assign next non whitespace character to current character."""
         self.advance()
         while self.current_character.isspace():
             self.advance()
 
-    def get_device_name(self) -> tuple[str, str]:
+    def get_device_name(self):
         """Extract the device name in the following seq of characters.
 
         Assumes that the initial character is a lower case character. Then
@@ -174,7 +174,7 @@ class Scanner:
             else:
                 return (name_string, char)
 
-    def get_capital_name(self) -> tuple[str, str]:
+    def get_capital_name(self):
         """Extract name in sequence of capital characters.
 
         Assumes that the initial character is an upper case character. Then
@@ -193,7 +193,7 @@ class Scanner:
             else:
                 return (name_string, char)
 
-    def get_number(self) -> tuple[str, str]:
+    def get_number(self):
         """Extract number in the next sequence of characters.
 
         Assumes current character is a number. Finds the whole number.
