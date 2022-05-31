@@ -77,6 +77,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.signal_cycle_width = 15
         self.signal_y_distance = 5
         # Axis parameters
+        self.num_period_display = 8
         self.y_axis_offset = 10
         self.x_axis_offset = 10
         self.x_grid_offset = 5
@@ -247,15 +248,28 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     def draw_grid(self, spin_value):
         """Draw grid axes on the displayed signals"""
+        # Period of cycles
+        cycle_period = spin_value // (self.num_period_display - 1)
+
         # Draw x axis. Set x starting points
         x_left = self.canvas_origin[0]
-        x_right = (
-            self.canvas_origin[0]
-            + spin_value * self.signal_cycle_width
-            + x_left
-            + self.x_axis_offset
-            + self.y_axis_offset
-        )
+        if spin_value < 10:
+            x_right = (
+                self.canvas_origin[0]
+                + spin_value * self.signal_cycle_width
+                + x_left
+                + self.x_axis_offset
+                + self.y_axis_offset
+            )
+        else:
+            x_right = (
+                    self.canvas_origin[0]
+                    + self.num_period_display * self.signal_cycle_width
+                    + x_left
+                    + self.x_axis_offset
+                    + self.y_axis_offset
+            )
+
         y_bottom = self.canvas_origin[1]
 
         # Draw x axis
@@ -269,9 +283,17 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Interval for the vertical grid lines
         x_grid_interval = self.signal_cycle_width
         x_grid_start = self.canvas_origin[0] + self.x_axis_offset + self.y_axis_offset
-        x_tick_x_list = [
-            (index * x_grid_interval) + x_grid_start for index in range(spin_value)
-        ]
+        if spin_value < 10:
+            # Positions of x ticks
+            x_tick_x_list = [
+                (index * x_grid_interval) + x_grid_start for index in range(spin_value)
+            ]
+        else:
+            # Only show 8 ticks if spin value greater than 10
+            tick_list = cycle_period * list(range(1, self.num_period_display))
+            x_tick_x_list = [
+                (i * x_grid_interval) + x_grid_start for i in tick_list
+            ]
         x_tick_y_low = y_bottom + self.x_axis_offset - self.tick_width / 2
         x_tick_y_high = y_bottom + self.x_axis_offset + self.tick_width / 2
         for i in range(len(x_tick_x_list)):
@@ -287,17 +309,14 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             y_pos = y_bottom + self.x_axis_offset / 2
             GL.glRasterPos2f(x_pos, y_pos)
             font = self.label_font
-            label = str(i)
-            # If less than or equal to 10 cycles
-            if spin_value <= 10:
-                for character in label:
-                    GLUT.glutBitmapCharacter(font, ord(character))
-            # If more than 10 cycles, only label so that 7 labels show up
+            if spin_value < 10:
+                label = str(i)
             else:
-                cycle_period = spin_value // 7
-                if i % cycle_period == 0:
-                    for character in label:
-                        GLUT.glutBitmapCharacter(font, ord(character))
+                label = str(tick_list[i])
+            for character in label:
+                GLUT.glutBitmapCharacter(font, ord(character))
+
+
 
         # Label x axis
         text = "No. of Cycles"
@@ -386,6 +405,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     def draw_signal(self):
         """Draw signal traces for each monitor."""
         self.draw_grid(spin_value=self.spin_value)
+        cycle_period = self.spin_value // (self.num_period_display - 1)
         # Draw signals one on top of another.
         if self.total_cycles > 0:
             # Draw all signals selected
@@ -394,7 +414,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 # Add the label of monitor
                 text = str(monitor_name)
                 font = self.label_font
-                # Put label slighly to the right
+                # Put label slightly to the right
                 x_pos_y_label = (
                     self.canvas_origin[0] + self.y_axis_offset + self.x_grid_offset
                 )
@@ -464,20 +484,40 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(len(signal_list)):
                     indiv_signal = signal_list[index]
                     # horizontal start point of signal
-                    x_start = (index * self.signal_cycle_width) + self.canvas_origin[0]
-                    x_end = x_start + self.signal_cycle_width
+                    if self.spin_value < 10:
+                        normal_cycle_width = self.signal_cycle_width
+                        x_start = (index * normal_cycle_width) + self.canvas_origin[0]
+                        x_end = x_start + normal_cycle_width
 
-                    # If signal is high
-                    if indiv_signal == self.devices.HIGH:
-                        # Add offset to y
-                        y = self.canvas_origin[1] + self.signal_height + offset
-                        GL.glVertex2f(x_start, y)
-                        GL.glVertex2f(x_end, y)
-                    # If signal is low
-                    if indiv_signal == self.devices.LOW:
-                        # Add offset to y
-                        y = self.canvas_origin[1] + offset
-                        GL.glVertex2f(x_start, y)
-                        GL.glVertex2f(x_end, y)
+                        # If signal is high
+                        if indiv_signal == self.devices.HIGH:
+                            # Add offset to y
+                            y = self.canvas_origin[1] + self.signal_height + offset
+                            GL.glVertex2f(x_start, y)
+                            GL.glVertex2f(x_end, y)
+                        # If signal is low
+                        if indiv_signal == self.devices.LOW:
+                            # Add offset to y
+                            y = self.canvas_origin[1] + offset
+                            GL.glVertex2f(x_start, y)
+                            GL.glVertex2f(x_end, y)
+                    else:
+                        # Squeeze cycles together if too many cycles chosen
+                        short_cycle_width = self.signal_cycle_width / cycle_period
+                        x_start = (index * short_cycle_width) + self.canvas_origin[0]
+                        x_end = x_start + short_cycle_width
+
+                        # If signal is high
+                        if indiv_signal == self.devices.HIGH:
+                            # Add offset to y
+                            y = self.canvas_origin[1] + self.signal_height + offset
+                            GL.glVertex2f(x_start, y)
+                            GL.glVertex2f(x_end, y)
+                        # If signal is low
+                        if indiv_signal == self.devices.LOW:
+                            # Add offset to y
+                            y = self.canvas_origin[1] + offset
+                            GL.glVertex2f(x_start, y)
+                            GL.glVertex2f(x_end, y)
 
                 GL.glEnd()

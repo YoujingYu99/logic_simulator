@@ -102,7 +102,7 @@ class Gui(wx.Frame):
         self.spin_value = 10
         self.cycles_completed = 0
 
-        # Canvas for drawing signals
+        # Canvas for drawing signals; Input the spin value here
         self.canvas = MyGLCanvas(self, devices, monitors, spin_value=self.spin_value)
         # Pass the monitor names list into monitored_signal_list attribute of canvas
         self.canvas.monitored_signal_list = self.monitor_names_list
@@ -142,7 +142,7 @@ class Gui(wx.Frame):
             str(self.spin_value),
             style=wx.SP_ARROW_KEYS,
             min=0,
-            max=100,
+            max=1000,
         )
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
@@ -230,7 +230,23 @@ class Gui(wx.Frame):
         """Handle the event when the user changes the spin control value."""
         spin_value = self.spin.GetValue()
         text = "".join(["New spin control value: ", str(spin_value)])
+        # Update spin values in frame and canvas
         self.canvas.render(text)
+        if spin_value > 100:
+            dlg = wx.MessageDialog(
+                self,
+                "More than 100 cycles set to be run! Are you sure you want to continue?",'Warning',
+                wx.OK | wx.ICON_WARNING,
+            )
+            dlg.ShowModal()
+            if dlg == wx.OK:
+                self.spin_value = spin_value
+                self.canvas.spin_value = spin_value
+            dlg.Destroy()
+
+        else:
+            self.spin_value = spin_value
+            self.canvas.spin_value = spin_value
 
     def run_network(self, cycles):
         """Run the network for the specified number of simulation cycles.
