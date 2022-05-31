@@ -200,7 +200,7 @@ class Parser:
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
         first_device_id = self.symbol.id
-
+        first_port_id = None
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.DOT:
             self.symbol = self.scanner.get_symbol()
@@ -568,3 +568,10 @@ parser_1 = Parser(names_instance, device_instance, network_instance,
     monitor_instance, scanner_instance, parser_logger)
 
 a = parser_1.parse_network()
+
+print(parser_1.devices.find_devices())
+
+# This is the DTYPE device
+print(parser_1.devices.get_device(27).inputs)
+
+print(parser_1.network.check_network())

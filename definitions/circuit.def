@@ -2,7 +2,6 @@ DEVICES{
     DTYPE dtype;
     SWITCH sw1(0), sw2(1), sw3(1);
     CLOCK clock(10);
-    AND and(10), and(4);
 }
 CONNECT{
     sw1 => dtype.SET;
