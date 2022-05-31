@@ -32,12 +32,10 @@ def main(arg_list):
     Run either the command line user interface, the graphical user interface,
     or display the usage message.
     """
-    usage_message = (
-        "Usage:\n"
-        "Show help: logsim.py -h\n"
-        "Command line user interface: logsim.py -c <file path>\n"
-        "Graphical user interface: logsim.py <file path>"
-    )
+    usage_message = ("Usage:\n"
+                     "Show help: logsim.py -h\n"
+                     "Command line user interface: logsim.py -c <file path>\n"
+                     "Graphical user interface: logsim.py <file path>")
     try:
         options, arguments = getopt.getopt(arg_list, "hc:")
     except getopt.GetoptError:
@@ -54,7 +52,6 @@ def main(arg_list):
     devices = None
     network = None
     monitors = None
-    path = None
 
     for option, path in options:
         if option == "-h":  # print the usage message
@@ -68,20 +65,24 @@ def main(arg_list):
                 userint = UserInterface(names, devices, network, monitors)
                 userint.command_interface()
 
-    # no options, use GUI
-    if not options:
 
-        # if arguments were given
-        if arguments:
-            print("Error: No input should be given for Graphic User Interface\n")
+    if not options:  # no option given, use the graphical user interface
+
+        if len(arguments) != 1:  # wrong number of arguments
+            print("Error: one file path required\n")
             print(usage_message)
             sys.exit()
 
-        # Initialise an instance of the LogicSimulatorApp class
-        app = LogicSimulatorApp('./style.css')
-        gui = Gui("Logic Simulator", path, names, devices, network, monitors)
-        gui.Show(True)
-        app.MainLoop()
+        [path] = arguments
+        scanner = Scanner(path, names)
+        parser = Parser(names, devices, network, monitors, scanner)
+        if parser.parse_network():
+            # Initialise an instance of the LogicSimulatorApp class
+            app = wx.App()
+            gui = Gui("Logic Simulator", path, names, devices, network,
+                      monitors)
+            gui.Show(True)
+            app.MainLoop()
 
 
 if __name__ == "__main__":
