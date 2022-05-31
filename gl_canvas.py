@@ -58,8 +58,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.zoom = 1
 
         # Initialise variables for diagram dimensions
-        self.x_axis_length = 300
-        self.y_axis_length = 1
         self.min_width = 0
         self.min_height = 0
 
@@ -79,11 +77,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.signal_cycle_width = 15
         self.signal_y_distance = 5
         # Axis parameters
-        self.x_axis_length = 200
         self.y_axis_offset = 10
         self.x_axis_offset = 10
         self.x_grid_offset = 5
-        self.y_axis_length = 50
         self.y_grid_offset_lower = 20
         self.y_grid_offset_upper = 20
         self.tick_width = 3
@@ -92,11 +88,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Set monitors to be drawn
         self.devices = devices
         self.monitors = monitors
-        # Uncomment when all modules ready
-        # [self.monitored_signal_list,
-        #  self.non_monitored_signal_list] = self.monitors.get_signal_names()
         self.monitored_signal_list = []
-        self.non_monitored_signal_list = []
         # The number of values to be run input by the user
         self.spin_value = spin_value
         # Cycles already run in total
@@ -289,7 +281,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GL.glVertex2f(x_tick_x_list[i], x_tick_y_high)
             GL.glEnd()
 
-            # Label x axis
+            # Label x axis(cycle number)
             GL.glColor3f(0, 0, 0)
             x_pos = x_tick_x_list[i]
             y_pos = y_bottom + self.x_axis_offset / 2
@@ -300,9 +292,10 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             if spin_value <= 10:
                 for character in label:
                     GLUT.glutBitmapCharacter(font, ord(character))
-            # If more than 10 cycles, only label every 5 cycles
+            # If more than 10 cycles, only label so that 7 labels show up
             else:
-                if i % 5 == 0:
+                cycle_period = spin_value // 7
+                if i % cycle_period == 0:
                     for character in label:
                         GLUT.glutBitmapCharacter(font, ord(character))
 

@@ -192,7 +192,6 @@ class HelpMenu(wx.Menu):
         )
         self.Append(documentationItem)
         self.Bind(wx.EVT_MENU, handler=self.on_documentation, source=documentationItem)
-        self.AppendSeparator()
 
     def on_info(self, event):
         """Display Basic Help information"""
@@ -229,7 +228,6 @@ class AboutMenu(wx.Menu):
         aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
         self.Append(aboutItem)
         self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
-        self.AppendSeparator()
 
     def on_about(self, event):
         """Display about information"""

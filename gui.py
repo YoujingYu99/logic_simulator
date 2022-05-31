@@ -104,6 +104,8 @@ class Gui(wx.Frame):
 
         # Canvas for drawing signals
         self.canvas = MyGLCanvas(self, devices, monitors, spin_value=self.spin_value)
+        # Pass the monitor names list into monitored_signal_list attribute of canvas
+        self.canvas.monitored_signal_list = self.monitor_names_list
         # Get window size
         self.window_size = self.GetClientSize()
 
