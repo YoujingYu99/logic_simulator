@@ -69,17 +69,16 @@ class Scanner:
             self.OUTPUT_PIN,
             self.INPUT_PIN,
             self.INPUT_NUMBER,
-            self.CLOCK_CYCLES,
             self.NUMBER,
             self.KEYWORD,
             self.GATE_NAME,
             self.DEVICE_NAME,
             self.ERROR,
             self.EOF,
-        ] = range(16)
+        ] = range(15)
 
         # <--- Define Symbols Within Types --->
-        self.punctuation_list = [",", ";", ".", "=", "=>"]
+        self.punctuation_list = [",", ";", ".", "=>"]
 
         self.keywords_list = ["DEVICES", "CONNECT", "MONITOR", "END"]
 
@@ -107,12 +106,15 @@ class Scanner:
             self.COMMA_ID,
             self.SEMICOLON_ID,
             self.DOT_ID,
-            self.EQUALS_ID,
             self.RIGHT_ARROW_ID,
         ] = self.names.lookup(self.punctuation_list)
 
         [self.LEFT_BRACKET_ID, self.RIGHT_BRACKET_ID] = self.names.lookup(
             self.bracket_list
+        )
+
+        [self.LEFT_CURLY_BRACKET_ID, self.RIGHT_CURLY_BRACKET_ID] = self.names.lookup(
+            self.curly_bracket_list
         )
 
         [
@@ -139,9 +141,7 @@ class Scanner:
 
         [self.Q_ID, self.BAR_ID] = self.names.lookup(self.output_pin_list)
 
-        [self.LEFT_CURLY_BRACKET_ID, self.RIGHT_CURLY_BRACKET_ID] = self.names.lookup(
-            self.curly_bracket_list
-        )
+        
 
         self.current_character = ""
 
@@ -151,7 +151,7 @@ class Scanner:
         self.logger.info("\nNow reading file...")
         self.logger.info("File name:  " + self.file.name)
 
-    def advance(self) -> None:
+    def advance(self):
         """Read next character and update current character."""
         self.current_character = self.file.read(1)
         self.current_col += 1
@@ -160,13 +160,15 @@ class Scanner:
                 self.current_line += 1
                 self.current_col = 0
 
-    def skip_spaces(self) -> None:
+        
+
+    def skip_spaces(self):
         """Assign next non whitespace character to current character."""
         self.advance()
         while self.current_character.isspace():
             self.advance()
 
-    def get_device_name(self) -> tuple[str, str]:
+    def get_device_name(self):
         """Extract the device name in the following seq of characters.
 
         Assumes that the initial character is a lower case character. Then
@@ -185,7 +187,7 @@ class Scanner:
             else:
                 return (name_string, char)
 
-    def get_capital_name(self) -> tuple[str, str]:
+    def get_capital_name(self):
         """Extract name in sequence of capital characters.
 
         Assumes that the initial character is an upper case character. Then
@@ -204,7 +206,7 @@ class Scanner:
             else:
                 return (name_string, char)
 
-    def get_number(self) -> tuple[str, str]:
+    def get_number(self):
         """Extract number in the next sequence of characters.
 
         Assumes current character is a number. Finds the whole number.
@@ -265,12 +267,12 @@ class Scanner:
             self.advance()
             if self.current_character.isdigit():
                 symbol.type = self.INPUT_NUMBER
-                symbol.id = self.get_number()[0]
+                symbol.id = int(self.get_number()[0])
             else:
                 symbol.type = self.ERROR
 
         elif self.current_character.isdigit():
-            symbol.id = self.get_number()[0]
+            symbol.id = int(self.get_number()[0])
             symbol.type = self.NUMBER
 
         # punctuation
@@ -326,17 +328,18 @@ class Scanner:
 
 
 # Run file and simple test
-names_instance = Names()
+# names_instance = Names()
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-scanner_logger = logging.getLogger("scanner")
-path_definition = "definitions/circuit.def"
-a_scanner = Scanner(path_definition, names_instance, scanner_logger)
-sym_id = 1
-for i in range(80):
-    if sym_id == a_scanner.END_ID:
-        break
-    symbol1 = a_scanner.get_symbol()
-    sym_id = symbol1.id
+# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+# scanner_logger = logging.getLogger("scanner")
+# path_definition = "definitions/circuit.def"
+# a_scanner = Scanner(path_definition, names_instance, scanner_logger)
+# sym_id = 1
+# for i in range(80):
+#     if sym_id == a_scanner.END_ID:
+#         break
+#     symbol1 = a_scanner.get_symbol()
+#     sym_id = symbol1.id
+
     
 
