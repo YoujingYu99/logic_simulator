@@ -293,6 +293,7 @@ class ConsoleBox(wx.TextCtrl):
         self.console_log = []
 
     def configure_style(self):
+        """Configure the CSS stylesheet in the element"""
         self.style.apply_rules(self)
 
     def print_console_message(self, input_text, clear=False):
@@ -343,4 +344,5 @@ class CycleNumberText(wx.StaticText):
         self.configure_style()
 
     def configure_style(self):
+        """Configure the CSS stylesheet in the element"""
         self.style.apply_rules(self)

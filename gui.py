@@ -61,16 +61,32 @@ class Gui(wx.Frame):
         self.cycle_text_colour = (0, 0, 0)
         # Set fonts
         self.cycle_font = wx.Font(
-            11, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, underline=False
+            11,
+            wx.FONTFAMILY_SWISS,
+            wx.FONTSTYLE_NORMAL,
+            wx.FONTWEIGHT_NORMAL,
+            underline=False,
         )
         self.monitor_font = wx.Font(
-            14, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, underline=False
+            14,
+            wx.FONTFAMILY_SWISS,
+            wx.FONTSTYLE_NORMAL,
+            wx.FONTWEIGHT_NORMAL,
+            underline=False,
         )
         self.run_font = wx.Font(
-            12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, underline=False
+            12,
+            wx.FONTFAMILY_SWISS,
+            wx.FONTSTYLE_NORMAL,
+            wx.FONTWEIGHT_NORMAL,
+            underline=False,
         )
         self.console_font = wx.Font(
-            12, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, underline=False
+            12,
+            wx.FONTFAMILY_SWISS,
+            wx.FONTSTYLE_NORMAL,
+            wx.FONTWEIGHT_NORMAL,
+            underline=False,
         )
 
         # monitor_names_list contains all the signals that can be monitored
@@ -223,6 +239,7 @@ class Gui(wx.Frame):
         self.SetSizer(top_level_sizer)
 
     def configure_style(self):
+        """Configure the CSS stylesheet in the element"""
         self.style.apply_rules(self)
 
     def on_spin(self, event):
@@ -274,7 +291,9 @@ class Gui(wx.Frame):
             # If successfully run
             if self.run_network(self.spin_value):
                 self.cycles_completed += self.spin_value
-                text = "Now running for {no_cycles:.}!".format(no_cycles=str(self.spin_value))
+                text = "Now running for {no_cycles:.}!".format(
+                    no_cycles=str(self.spin_value)
+                )
                 self.console_box.print_console_message(text)
 
                 # Update canvas information
@@ -313,6 +332,7 @@ class Gui(wx.Frame):
             self.console_box.print_console_message(text)
 
     def on_clear_console_button(self, event):
+        """Clear the entire console output."""
         self.console_box.clear_console()
 
     def on_rerun_button(self, event):
@@ -356,7 +376,6 @@ class Gui(wx.Frame):
             if dlg.ShowModal() == wx.ID_OK:
                 # Return indexes selected by the user
                 selections = dlg.GetSelections()
-
                 # Update monitor names selected by user
                 self.update_monitors(selections)
 
@@ -370,6 +389,7 @@ class Gui(wx.Frame):
         """Update signals to be monitored and redraw on canvas"""
         self.monitor_selected_list = []
         for count in range(len(selections)):
+            # Get the device_id and output_id tuple by index
             device_id, output_id = self.monitor_list[count]
             # If the index is selected by the user
             if count in self.monitor_selected_list:
@@ -400,10 +420,12 @@ class Gui(wx.Frame):
             self.names.get_name_string(x) for x in self.switch_id_list
         ]
         for i in range(len(self.switch_id_list)):
-            count, switch_id = self.switch_id_list[i]
+            switch_id = self.switch_id_list[i]
+            switch_name = self.switch_name_list[i]
+            # If the state of the switch is HIGH
             if self.devices.get_device(switch_id).switch_state == self.devices.HIGH:
                 # Add the name of the switch into the switch_on list
-                self.switch_on_list.append(self.switch_name_list[count])
+                self.switch_on_list.append(switch_name)
 
     def on_switch_button(self):
         """Set switch to desired state."""
@@ -430,7 +452,8 @@ class Gui(wx.Frame):
             self.console_box.print_console_message(text)
 
     def update_switches(self, selections):
-        """Update states of the switches and redraw on canvas"""
+        """Update states of the switches in devices and pass into canvas element."""
+        # Reinitialise the list of switches on
         self.switch_on_list = []
         self.switch_off_list = []
 
