@@ -9,7 +9,7 @@ Names - maps variable names and string names to unique integers.
 """
 
 
-from typing import Type
+from typing import Type, List
 
 
 class Names:
@@ -47,7 +47,7 @@ class Names:
         # initialise a private list to store names
         self.__names_list = []
 
-    def unique_error_codes(self, num_error_codes: int) -> list[int]:
+    def unique_error_codes(self, num_error_codes: int) -> list:
         """Return a list of unique integer error codes.
         Args
         num_error_codes - number of error codes present
@@ -75,7 +75,7 @@ class Names:
         else:
             return None
 
-    def lookup(self, name_string_list: list[str]) -> list[int]:
+    def lookup(self, name_string_list: list[str]) -> list:
         """Return a list of name IDs for each name string in name_string_list.
 
         If the name string is not present in the names list, add it.
