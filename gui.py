@@ -7,7 +7,6 @@ Gui - configures the main window and all the widgets.
 """
 import os
 import wx
-from wx import html2
 
 from names import Names
 from devices import Devices
@@ -235,7 +234,8 @@ class Gui(wx.Frame):
         if spin_value > 100:
             dlg = wx.MessageDialog(
                 self,
-                "More than 100 cycles set to be run! Are you sure you want to continue?",'Warning',
+                "More than 100 cycles set to be run! Are you sure you want to continue?",
+                "Warning",
                 wx.OK | wx.ICON_WARNING,
             )
             dlg.ShowModal()
@@ -268,20 +268,19 @@ class Gui(wx.Frame):
         if self.is_parsed:
             # Reset the number of cycles for the canvas
             self.canvas.total_cycles = 0
-            cycles = self.spin_value
 
             self.monitors.reset_monitors()
             self.devices.cold_startup()
             # If successfully run
-            if self.run_network(cycles):
-                self.cycles_completed += cycles
-                text = "Now running for {no_cycles:.}!".format(no_cycles=str(cycles))
+            if self.run_network(self.spin_value):
+                self.cycles_completed += self.spin_value
+                text = "Now running for {no_cycles:.}!".format(no_cycles=str(self.spin_value))
                 self.console_box.print_console_message(text)
 
                 # Update canvas information
                 # Add to the number of cycles run
                 self.canvas.draw_signal()
-                self.canvas.total_cycles += cycles
+                self.canvas.total_cycles += self.spin_value
 
         else:
             # Show error if file was not parsed correctly
@@ -291,23 +290,22 @@ class Gui(wx.Frame):
     def on_continue_button(self, event):
         """Continue a previously run simulation."""
         if self.is_parsed:
-            cycles = self.spin_value
-            if cycles is not None:  # if the number of cycles provided is valid
+            if self.spin_value is not None:  # if the number of cycles provided is valid
                 if self.cycles_completed == 0:
                     self.console_box.print_console_message(
                         "Error! No previous simulation. Please run first."
                     )
                 # If the network is successfully run.
-                elif self.run_network(cycles=cycles):
-                    self.cycles_completed += cycles
+                elif self.run_network(cycles=self.spin_value):
+                    self.cycles_completed += self.spin_value
                     text = "Now continuing for {no_cycles:.}!".format(
-                        no_cycles=str(cycles)
+                        no_cycles=str(self.spin_value)
                     )
                     self.console_box.print_console_message(text)
                     # Update canvas information
                     # Add to the number of cycles run
                     self.canvas.draw_signal()
-                    self.canvas.total_cycles += cycles
+                    self.canvas.total_cycles += self.spin_value
 
         else:
             # Show error if file was not parsed correctly

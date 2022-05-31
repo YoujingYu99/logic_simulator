@@ -1,5 +1,11 @@
 import wx
 import os
+from names import Names
+from devices import Devices
+from network import Network
+from monitors import Monitors
+from scanner import Scanner
+from parse import Parser
 
 """Define the graphical user interface elements for the Logic Simulator.
 Used in the Gui class to enable the user to perform functions and view console output
@@ -95,6 +101,15 @@ class FileMenu(wx.Menu):
                 self.parentFrame.console_box.print_console_message(text)
 
                 # TODO: parse and scan the file
+                #
+                #
+                #
+                #
+                #
+                # names = Names()
+                # devices = Devices(names)
+                # network = Network(names, devices)
+                # monitors = Monitors(names, devices, network)
 
         dialog.Destroy()
 
