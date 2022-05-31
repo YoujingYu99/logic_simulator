@@ -1,6 +1,7 @@
 from scanner import Symbol, Scanner
 from names import Names
 import logging
+import sys
 
 """Parse the definition file and build the logic network.
 
@@ -96,9 +97,10 @@ class Parser:
                 and self.symbol.id != self.scanner.LEFT_CURLY_BRACKET_ID
             ):
                 self.error("LEFT_CURLY_BRACE_EXPECTED")
+            else:
+                self.logger.debug("-Start first connection")
+                self.symbol = self.scanner.get_symbol()
 
-            self.logger.debug("-Start first connection")
-            self.symbol = self.scanner.get_symbol()
             self.create_conn()
             self.symbol = self.scanner.get_symbol()
 
@@ -112,8 +114,9 @@ class Parser:
 
             if self.symbol.type == self.scanner.KEYWORD:
                 self.error("RIGHT_CURLY_BRACE_EXPECTED")
+            else:
+                self.symbol = self.scanner.get_symbol()
 
-        self.symbol = self.scanner.get_symbol()
         if (
             self.symbol.type == self.scanner.KEYWORD
             and self.symbol.id == self.scanner.MONITOR_ID
@@ -125,29 +128,30 @@ class Parser:
                 and self.symbol.id != self.scanner.LEFT_CURLY_BRACKET_ID
             ):
                 self.error("LEFT_CURLY_BRACE_EXPECTED")
+            else:
+                self.symbol = self.scanner.get_symbol()
 
-            self.symbol = self.scanner.get_symbol()
             self.logger.debug("-Start first monitor point")
             self.make_monitor()
             self.symbol = self.scanner.get_symbol()
-
-            while int(self.symbol.id) != self.scanner.RIGHT_CURLY_BRACKET_ID and (
-                self.symbol.type != self.scanner.KEYWORD or self.symbol != ""
+            if self.symbol.type == self.scanner.EOF:
+                self.error("RIGHT_CURLY_BRACE_EXPECTED")
+                self.error("MISSING_END_KEYWORD")
+            while int(self.symbol.id) != self.scanner.RIGHT_CURLY_BRACKET_ID and not (
+                self.symbol.type != self.scanner.KEYWORD
             ):
                 self.logger.debug("-- Another monitor point found")
                 self.make_monitor()
                 self.symbol = self.scanner.get_symbol()
-        self.symbol = self.scanner.get_symbol()
 
         if (
             self.symbol.type == self.scanner.KEYWORD
-            and self.symbol.id != self.scanner.END_ID
+            and self.symbol.id == self.scanner.END_ID
+            or self.symbol.type == self.scanner.EOF
         ):
             self.error("RIGHT_CURLY_BRACE_EXPECTED")
-
-        elif self.symbol.id == None:
-            self.error("MISSING_END_KEYWORD")
-            return 0
+        else:
+            self.symbol = self.scanner.get_symbol()
         self.logger.debug(
             f"{self.symbol.type}, {self.names.get_name_string(self.symbol.id)}"
         )
@@ -157,6 +161,8 @@ class Parser:
             and self.symbol.id == self.scanner.END_ID
         ):
             self.logger.debug("<--- End of file found --->")
+        elif self.symbol.type == self.scanner.EOF:
+            self.error("MISSING_END_KEYWORD")
 
     def make_monitor(self):
         """
@@ -487,6 +493,15 @@ class Parser:
 
         if error_type == "LEFT_CURLY_BRACE_EXPECTED":
             print("Missing '{'")
+        elif error_type == "RIGHT_CURLY_BRACE_EXPECTED":
+            print("Missing '}'")
+            if self.symbol.type == self.scanner.EOF:
+                return
+            while self.symbol.type != self.scanner.KEYWORD:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "MISSING_END_KEYWORD":
+            print("Missing END to indicate end of definition file")
+            sys.exit()
         else:
             raise NotImplementedError
 
@@ -498,7 +513,7 @@ path_definition = "definitions/circuit.def"
 
 scanner_logger = logging.getLogger("scanner")
 parser_logger = logging.getLogger("parser")
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 names_instance = Names()
 
