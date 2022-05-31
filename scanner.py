@@ -10,7 +10,8 @@ Symbol - encapsulates a symbol and stores its properties.
 """
 from winreg import KEY_WOW64_32KEY
 from names import Names
-
+import logging
+import sys
 
 class Symbol:
     """Encapsulate a symbol and store its properties.
@@ -28,6 +29,8 @@ class Symbol:
         """Initialise symbol properties."""
         self.type = None
         self.id = None
+        self.start_col = None  # show error bar at the start of the symbol
+        self.start_line = None
 
 
 class Scanner:
@@ -52,6 +55,8 @@ class Scanner:
     def __init__(self, path, names, logger):
         """Open specified file and initialise reserved words and IDs."""
         self.names = names
+        self.current_line = 1
+        self.current_col = 0
 
         # <--- Create Symbol Types --->
         self.symbol_type_list = [
@@ -69,7 +74,7 @@ class Scanner:
             self.KEYWORD,
             self.GATE_NAME,
             self.DEVICE_NAME,
-            self.ERROR_NAMES,
+            self.ERROR,
             self.EOF,
         ] = range(16)
 
@@ -149,6 +154,11 @@ class Scanner:
     def advance(self) -> None:
         """Read next character and update current character."""
         self.current_character = self.file.read(1)
+        self.current_col += 1
+        if self.current_character != "":
+            if ord(self.current_character) == 10:  # newline 
+                self.current_line += 1
+                self.current_col = 0
 
     def skip_spaces(self) -> None:
         """Assign next non whitespace character to current character."""
@@ -210,14 +220,21 @@ class Scanner:
             if char.isnumeric():
                 number_string += char
             else:
+                number_int = int(number_string)
                 return (number_string, char)
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
-        symbol = Symbol()  #
+        if self.current_col == 0 and self.current_line == 1:
+            self.advance()
+        symbol = Symbol()
         if self.current_character.isspace():
             self.skip_spaces()  # current character now not whitespace
+        self.logger.debug(f"Line: {self.current_line}, Col:{self.current_col}")
+        symbol.start_line = self.current_line
+        symbol.start_col = self.current_col
         # assignment uses if statements as the sequences of char vary
+        # order in assignment matters so carefull when adding new types
         if self.current_character.islower():  # device name
             device_name = self.get_device_name()[0]
             symbol.type = self.DEVICE_NAME
@@ -240,7 +257,7 @@ class Scanner:
                 symbol.type = self.INPUT_PIN
                 [symbol.id] = self.names.lookup([capital_string])
             else:  # error
-                symbol.type = self.ERROR_NAMES
+                symbol.type = self.ERROR
                 [symbol.id] = self.names.lookup([capital_string])
 
         elif self.current_character == "I":
@@ -250,7 +267,7 @@ class Scanner:
                 symbol.type = self.INPUT_NUMBER
                 symbol.id = self.get_number()[0]
             else:
-                symbol.type = self.ERROR_NAMES
+                symbol.type = self.ERROR
 
         elif self.current_character.isdigit():
             symbol.id = self.get_number()[0]
@@ -264,7 +281,7 @@ class Scanner:
                 symbol.id = self.RIGHT_ARROW_ID
                 self.advance()
             else:
-                symbol.type = self.ERROR_NAMES
+                symbol.type = self.ERROR
         elif self.current_character == ".":
             symbol.type = self.DOT
             [symbol.id] = self.names.lookup([self.current_character])
@@ -298,6 +315,7 @@ class Scanner:
         elif self.current_character == "":
             symbol.type = self.EOF
         else:  # not a valid character
+            symbol.type = self.ERROR
             self.advance()
         try:
             self.logger.debug(f"{symbol.type}, {self.names.get_name_string(symbol.id)}")
@@ -308,15 +326,17 @@ class Scanner:
 
 
 # Run file and simple test
-# names_instance = Names()
+names_instance = Names()
 
-# path_definition = "definitions/circuit.def"
-# a_scanner = Scanner(path_definition, names_instance)
-# a_scanner.advance()
-# for i in range(70):
-#     symbol1 = a_scanner.get_symbol()
-#     if symbol1.type == 16:
-#         break
-#     print("ID, string")
-#     print(symbol1.type, names_instance.get_name_string(symbol1.id))
-#     print("---")
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+scanner_logger = logging.getLogger("scanner")
+path_definition = "definitions/circuit.def"
+a_scanner = Scanner(path_definition, names_instance, scanner_logger)
+sym_id = 1
+for i in range(80):
+    if sym_id == a_scanner.END_ID:
+        break
+    symbol1 = a_scanner.get_symbol()
+    sym_id = symbol1.id
+    
+
