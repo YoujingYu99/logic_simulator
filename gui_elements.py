@@ -204,7 +204,7 @@ class HelpMenu(wx.Menu):
         # menu stuff hoes here
 
         # open an item
-        infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO, text="&Open\tCtrl+H")
+        infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO, text="&Start\tCtrl+H")
         self.Append(infoItem)
         self.Bind(wx.EVT_MENU, handler=self.on_info, source=infoItem)
         self.AppendSeparator()
@@ -219,7 +219,9 @@ class HelpMenu(wx.Menu):
     def on_info(self, event):
         """Display Basic Help information"""
         wx.MessageBox(
-            "Start by uploading your definition file by selecting 'File/Open'. Then press 'Run' to run the simulation.",
+            "Start by uploading your definition file by selecting 'File/Open'.\nChoose the number of cycles you wish "
+            "to run by spinning the button.Then press 'Run' to run the simulation.\nClick on 'Choose Monitor' or "
+            "'Choose Switch' to choose the signals to be displayed or state of switches.",
             "How to Use Logic Simulator App",
             wx.ICON_INFORMATION | wx.OK,
         )
@@ -255,7 +257,8 @@ class AboutMenu(wx.Menu):
     def on_about(self, event):
         """Display about information"""
         wx.MessageBox(
-            "Logic Simulator\nCreated by Mojisola Agboola\n2017",
+            "Logic Simulator created by Mojisola Agboola\n2017\nDeveloped and completed by Niko, Youjing and Gleb, "
+            "the most brilliant engineers of the 2019 cohort.",
             "About Logsim",
             wx.ICON_INFORMATION | wx.OK,
         )

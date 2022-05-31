@@ -89,6 +89,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Set monitors to be drawn
         self.devices = devices
         self.monitors = monitors
+        # Initialise the monitored signals list
         self.monitored_signal_list = []
         # The number of values to be run input by the user
         self.spin_value = spin_value
@@ -378,7 +379,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             label_zero = "0"
             GLUT.glutBitmapCharacter(font, ord(label_zero))
 
-            # grid at 1
+            # Grid at 1
             GL.glColor3f(0, 0, 0)
             GL.glBegin(GL.GL_LINE_STRIP)
             GL.glVertex2f(y_tick_left, zero_pos + self.signal_height)
@@ -417,7 +418,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         if self.total_cycles > 0:
             # Draw all signals selected
             for count in range(len(self.monitored_signal_list)):
-                monitor_name = self.monitored_signal_list
+                # Get name of monitor
+                monitor_name = self.monitored_signal_list[count]
                 # Add the label of monitor
                 text = str(monitor_name)
                 font = self.label_font
