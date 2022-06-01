@@ -130,15 +130,20 @@ class Parser:
                 self.error("LEFT_CURLY_BRACE_EXPECTED")
             else:
                 self.symbol = self.scanner.get_symbol()
-
             self.logger.debug("-Start first monitor point")
+
             self.make_monitor()
             self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.EOF:
                 self.error("RIGHT_CURLY_BRACE_EXPECTED")
                 self.error("MISSING_END_KEYWORD")
-            while int(self.symbol.id) != self.scanner.RIGHT_CURLY_BRACKET_ID and not (
-                self.symbol.type != self.scanner.KEYWORD
+            while (
+                int(self.symbol.id)
+                not in [
+                    self.scanner.RIGHT_CURLY_BRACKET_ID,
+                    self.scanner.END_ID,
+                ]
+                and self.symbol.type != self.scanner.EOF
             ):
                 self.logger.debug("-- Another monitor point found")
                 self.make_monitor()
@@ -152,9 +157,9 @@ class Parser:
             self.error("RIGHT_CURLY_BRACE_EXPECTED")
         else:
             self.symbol = self.scanner.get_symbol()
-        self.logger.debug(
-            f"{self.symbol.type}, {self.names.get_name_string(self.symbol.id)}"
-        )
+            self.logger.debug(
+                f"{self.symbol.type}, {self.names.get_name_string(self.symbol.id)}"
+            )
 
         if (
             self.symbol.type == self.scanner.KEYWORD
@@ -170,19 +175,21 @@ class Parser:
         """
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
-        self.symbol = self.scanner.get_symbol()
 
+        self.symbol = self.scanner.get_symbol()
         if int(self.symbol.type) == self.scanner.DOT:
             self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.OUTPUT_PIN:
                 self.symbol = self.scanner.get_symbol()
             else:
                 self.error("OUTPUT_PIN_EXPECTED")
-
-        if self.symbol.type == self.scanner.SEMICOLON:
-            pass
         else:
+            pass
+
+        if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
+        else:
+            pass
         self.logger.debug("-Monitor point ended")
 
     def create_conn(self):
@@ -502,6 +509,31 @@ class Parser:
         elif error_type == "MISSING_END_KEYWORD":
             print("Missing END to indicate end of definition file")
             sys.exit()
+        elif error_type == "DEVICE_NAME_EXPECTED":
+            print("Device output to monitor not specified")
+            while self.symbol.id not in [
+                self.scanner.SEMICOLON_ID,
+                self.scanner.RIGHT_CURLY_BRACKET_ID,
+            ] and self.symbol.type not in [self.scanner.EOF, self.scanner.KEYWORD]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "SEMICOLON_EXPECTED":
+            print("Semicolon expected at end of line.")
+            while self.symbol.type not in [
+                self.scanner.CURLY_BRACKET,
+                self.scanner.KEYWORD,
+                self.scanner.EOF,
+                self.scanner.SEMICOLON,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "OUTPUT_PIN_EXPECTED":
+            print("Output pin not specified")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+            ]:
+                self.symbol = self.scanner.get_symbol()
         else:
             raise NotImplementedError
 
