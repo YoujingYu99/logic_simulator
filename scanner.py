@@ -65,8 +65,9 @@ class Scanner:
             self.RIGHT_ARROW,
             self.BRACKET,
             self.CURLY_BRACKET,
-            self.OUTPUT_PIN,
-            self.INPUT_PIN,
+            self.DTYPE_OUTPUT_PIN,
+            self.DTYPE_INPUT_PIN,
+            self.GATE_PIN,
             self.INPUT_NUMBER,
             self.NUMBER,
             self.KEYWORD,
@@ -74,10 +75,14 @@ class Scanner:
             self.DEVICE_NAME,
             self.ERROR,
             self.EOF,
-        ] = range(15)
+        ] = range(16)
 
         # <--- Define Symbols Within Types --->
         self.punctuation_list = [",", ";", ".", "=>"]
+
+        self.bracket_list = ["(", ")"]
+
+        self.curly_bracket_list = ["{", "}"]
 
         self.keywords_list = ["DEVICES", "CONNECT", "MONITOR", "END"]
 
@@ -92,13 +97,13 @@ class Scanner:
             "XOR",
         ]
 
-        self.output_pin_list = ["Q", "BAR"]
+        self.dtype_output_pin_list = ["Q", "QBAR"]
 
-        self.input_pin_list = ["DATA", "CLK", "SET", "CLEAR"]
+        self.dtype_pin_list = ["DATA", "CLK", "SET", "CLEAR"]
 
-        self.bracket_list = ["(", ")"]
+        self.gates_pin_list = ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8",
+             "I9", "I10", "I11", "I12", "I13", "I14", "I15", "I16"]
 
-        self.curly_bracket_list = ["{", "}"]
 
         # <--- Create ID's and populate names list --->
         [
@@ -115,13 +120,21 @@ class Scanner:
         [self.LEFT_CURLY_BRACKET_ID, self.RIGHT_CURLY_BRACKET_ID] = self.names.lookup(
             self.curly_bracket_list
         )
-
+        
         [
             self.DEVICES_ID,
             self.CONNECT_ID,
             self.MONITOR_ID,
             self.END_ID,
         ] = self.names.lookup(self.keywords_list)
+
+        [self.Q_ID, 
+            self.QBAR_ID] = self.names.lookup(self.dtype_output_pin_list)
+
+        [self.DATA_ID, self.CLK_ID, self.SET_ID, self.CLEAR_ID] = self.names.lookup(
+            self.dtype_pin_list
+        )
+
 
         [
             self.CLOCK_ID,
@@ -134,13 +147,10 @@ class Scanner:
             self.XOR_ID,
         ] = self.names.lookup(self.gate_name_list)
 
-        [self.DATA_ID, self.CLK_ID, self.SET_ID, self.CLEAR_ID] = self.names.lookup(
-            self.input_pin_list
-        )
-
-        [self.Q_ID, self.BAR_ID] = self.names.lookup(self.output_pin_list)
-
-        
+        [self.I1_ID, self.I2_ID, self.I3_ID, self.I4_ID, self.I5_ID, self.I6_ID, 
+        self.I7_ID, self.I8_ID, self.I9_ID, self.I10_ID, self.I11_ID, self.I12_ID, 
+        self.I13_ID, self.I14_ID, self.I15_ID, 
+            self.I16_ID] = self.names.lookup(self.gates_pin_list)
 
         self.current_character = ""
 
@@ -243,7 +253,7 @@ class Scanner:
 
         elif (
             self.current_character.isalpha() and self.current_character != "I"
-        ):  # keyword which is not input pin
+        ):  # keyword which is not input pin to a gate of from I1, or I10
             capital_string = self.get_capital_name()[0]
             if capital_string in self.keywords_list:  # keyword
                 symbol.type = self.KEYWORD
@@ -251,11 +261,11 @@ class Scanner:
             elif capital_string in self.gate_name_list:  # gatename
                 symbol.type = self.GATE_NAME
                 [symbol.id] = self.names.lookup([capital_string])
-            elif capital_string in self.output_pin_list:  # output pin
-                symbol.type = self.OUTPUT_PIN
+            elif capital_string in self.dtype_output_pin_list:  # output pin
+                symbol.type = self.DTYPE_OUTPUT_PIN
                 [symbol.id] = self.names.lookup([capital_string])
-            elif capital_string in self.input_pin_list:  # input pin
-                symbol.type = self.INPUT_PIN
+            elif capital_string in self.dtype_pin_list:  # input pin
+                symbol.type = self.DTYPE_INPUT_PIN
                 [symbol.id] = self.names.lookup([capital_string])
             else:  # error
                 symbol.type = self.ERROR
@@ -265,8 +275,9 @@ class Scanner:
             # Saves only the input number.
             self.advance()
             if self.current_character.isdigit():
-                symbol.type = self.INPUT_NUMBER
-                symbol.id = int(self.get_number()[0])
+                symbol.type = self.GATE_PIN
+                input_pin_string = 'I' + self.get_number()[0]
+                [symbol.id] = self.names.lookup([input_pin_string])
             else:
                 symbol.type = self.ERROR
 
@@ -319,10 +330,13 @@ class Scanner:
             symbol.type = self.ERROR
             self.advance()
         try:
-            self.logger.debug(f"{symbol.type}, {self.names.get_name_string(symbol.id)}")
+            if symbol.type == self.NUMBER:
+                self.logger.debug(f"{symbol.type}, {symbol.id}")
+            else:
+                self.logger.debug(f"{symbol.type}, {self.names.get_name_string(symbol.id)}")
         except:
             self.logger.debug(f"{symbol.type}, {symbol.id}")
-
+        
         return symbol
 
 

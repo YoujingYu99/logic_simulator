@@ -194,8 +194,8 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         if int(self.symbol.type) == self.scanner.DOT:
             self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.OUTPUT_PIN:
-                self.symbol = self.symbol.id
+            if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
+                output_id = self.symbol.id
                 self.symbol = self.scanner.get_symbol()
             else:
                 self.error("OUTPUT_PIN_EXPECTED")
@@ -224,7 +224,7 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.DOT:
             self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.output_pin:
+            if self.symbol.type == self.scanner.output_pin:
                 first_port_id = self.symbol.id
                 self.scanner.get_symbol()
             else:
@@ -246,8 +246,8 @@ class Parser:
         else:
             self.symbol = self.scanner.get_symbol()
         if self.symbol.type not in [
-            self.scanner.INPUT_NUMBER,
-            self.scanner.INPUT_PIN,
+            self.scanner.DTYPE_INPUT_PIN,
+            self.scanner.GATE_PIN,
         ]:
             self.error("NOT_VALID_INPUT")
         else:
@@ -728,31 +728,41 @@ class Parser:
 
 # Uncomment to run
 
-# path_definition = "definitions/circuit.def"
-# scanner_logger = logging.getLogger("scanner")
-# parser_logger = logging.getLogger("parser")
-# logging.basicConfig(level=logging.DEBUG)
+path_definition = "definitions/circuit.def"
+scanner_logger = logging.getLogger("scanner")
+parser_logger = logging.getLogger("parser")
+logging.basicConfig(level=logging.DEBUG)
 
-# names_instance = Names()
-# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-# device_instance = Devices(names_instance)
-# network_instance = Network(names_instance, device_instance)
-# monitor_instance = Monitors(names_instance, device_instance, network_instance)
+names_instance = Names()
+scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
+device_instance = Devices(names_instance)
+network_instance = Network(names_instance, device_instance)
+monitor_instance = Monitors(names_instance, device_instance, network_instance)
 
-# parser_1 = Parser(
-#     names_instance,
-#     device_instance,
-#     network_instance,
-#     monitor_instance,
-#     scanner_instance,
-#     parser_logger,
-# )
+parser_1 = Parser(
+    names_instance,
+    device_instance,
+    network_instance,
+    monitor_instance,
+    scanner_instance,
+    parser_logger,
+)
 
-# a = parser_1.parse_network()
+a = parser_1.parse_network()
+print('--Check all devices have been created')
+print(parser_1.devices.find_devices())
+print(parser_1.devices.get_device(42).inputs) # This is the DTYPE device
+print(parser_1.devices.get_device(42).outputs) # DTYPE 
+print(parser_1.devices.get_device(46).inputs)
 
-# print(parser_1.devices.find_devices())
 
-# # This is the DTYPE device
-# print(parser_1.devices.get_device(27).inputs)
+print('--Check all network inputs are satisfied')
+print(parser_1.network.check_network())
 
-# print(parser_1.network.check_network())
+
+monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
+
+print('--List monitor points')
+print(monitored_signal_list)
+
+parser_1.monitors.display_signals()

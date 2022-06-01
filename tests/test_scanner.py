@@ -111,13 +111,13 @@ def test_get_number(input_string, expected_string):
     ("{", 5),
     ("Q", 6),
     ("DATA", 7), 
-    ("I124", 8),
-    ("123456", 9),
-    ("DEVICES", 10),
-    ("CLOCK", 11),
-    ("dtypeName", 12),
-    ("$$", 13),
-    ("", 14)
+    ("I7", 12),
+    ("123456", 10),
+    ("DEVICES", 11),
+    ("QBAR", 7),
+    ("dtypeName", 13),
+    ("$$", 14),
+    ("", 15)
 ])
 def test_get_symbol_types(input_string, expected_string):
     """Test if symbol types are correctly extracted."""
@@ -138,12 +138,12 @@ def test_get_symbol_types(input_string, expected_string):
     ("Q", 6),
     ("DATA", 7), 
     ("I124", 8),
-    ("123456", 9),
-    ("DEVICES", 10),
-    ("CLOCK", 11),
-    ("dtypeName", 12),
-    ("$$", 13),
-    ("", 14)
+    ("123456", 10),
+    ("DEVICES", 11),
+    ("CLOCK", 12),
+    ("dtypeName", 13),
+    ("$$", 14),
+    ("", 15)
 ])
 def test_get_symbol_types(input_string, expected_string):
     """Test if symbol types are correctly extracted."""
@@ -164,9 +164,10 @@ def test_get_symbol_types(input_string, expected_string):
     ("{", 6),
     ("}", 7),
     ("DEVICES", 8),
-    ('CLEAR', 23), 
+    ('CLEAR', 17), 
+    ('QBAR', 13), 
     ('1234', 1234),
-    ('I123', 123)
+    ('I13', 38)
 ])
 def test_get_symbol_id(input_string, expected_string):
     """Test if symbol ids are correctly extracted."""
