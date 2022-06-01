@@ -181,6 +181,7 @@ class Parser:
             print("No Errors found")
             return True
 
+
     def make_monitor(self):
         """
         Function to parse the monitor line as per the EBNF spec
