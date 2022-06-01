@@ -507,7 +507,10 @@ class Parser:
         """
         self.error_count += 1
         self.logger.error(error_type)
-
+        self.logger.error(
+            f"""Error location: line:{self.scanner.current_line}
+                             column:{self.scanner.current_col}"""
+        )
         if error_type == "LEFT_CURLY_BRACE_EXPECTED":
             print("Missing '{'")
         elif error_type == "RIGHT_CURLY_BRACE_EXPECTED":
@@ -623,7 +626,6 @@ class Parser:
                 self.scanner.KEYWORD,
             ]:
                 self.symbol = self.scanner.get_symbol()
-
         else:
             raise NotImplementedError
 
@@ -635,7 +637,7 @@ path_definition = "definitions/circuit.def"
 
 scanner_logger = logging.getLogger("scanner")
 parser_logger = logging.getLogger("parser")
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 names_instance = Names()
 
