@@ -178,7 +178,7 @@ def test_get_symbol_id(input_string, expected_string):
     assert symbol.id == expected_string
 
 
-def test_get_symbol_types():
+def test_column_and_line_count():
     """Test if the column and line counter is correct."""
     file_string = "DEVICES{\n    DTYPE dtype;"
     scanner = new_scanner(file_string)
