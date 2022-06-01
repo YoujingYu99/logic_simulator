@@ -17,6 +17,7 @@ packaging==21.3
 Pillow==9.1.0
 pluggy==1.0.0
 py==1.11.0
+python==3.7.3
 pycodestyle==2.8.0
 pydocstyle==6.1.1
 pyparsing==3.0.9
