@@ -59,7 +59,7 @@ class Parser:
         # skeleton code. When complete, should return False when there are
         # errors in the circuit definition file.
         # Read first character
-        
+
         self.symbol = self.scanner.get_symbol()
         if (
             self.symbol.type == self.scanner.KEYWORD
@@ -184,7 +184,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
             else:
                 self.error("OUTPUT_PIN_EXPECTED")
-        
+
         self.monitors.make_monitor(device_id, output_id, cycles_completed=0)
 
         if self.symbol.type == self.scanner.SEMICOLON:
@@ -212,8 +212,8 @@ class Parser:
 
         if self.symbol.type != self.scanner.RIGHT_ARROW:
             self.error("RIGHT_ARROW_EXPECTED")
-
-        self.symbol = self.scanner.get_symbol()
+        else:
+            self.symbol = self.scanner.get_symbol()
 
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
@@ -229,10 +229,12 @@ class Parser:
             self.error("NOT_VALID_INPUT")
 
         second_port_id = self.symbol.id
-        
+
         # Make Connection
-        self.network.make_connection(first_device_id, first_port_id, second_device_id, second_port_id)
-    
+        self.network.make_connection(
+            first_device_id, first_port_id, second_device_id, second_port_id
+        )
+
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -267,7 +269,7 @@ class Parser:
 
     def gate_devices(self, device_kind):
         """
-        Method to parse and create device. 
+        Method to parse and create device.
         """
         # First Gate
         self.device_name()
@@ -291,7 +293,7 @@ class Parser:
 
         # Create device
         self.devices.make_device(device_id, device_kind, device_property)
-        
+
         # More devices
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
@@ -338,7 +340,6 @@ class Parser:
 
         else:
             self.logger.error("SEMILCOLON_EXPECTED")
-        
 
     def switch_devices(self, device_kind):
         """
@@ -515,7 +516,6 @@ class Parser:
             # error of invalid input
             self.error("INVALID_INPUT_INITIALISATION")
 
-
     def device_name(self):
         """
         Method to parse device names
@@ -545,10 +545,35 @@ class Parser:
         elif error_type == "MISSING_END_KEYWORD":
             print("Missing END to indicate end of definition file")
             sys.exit()
+        elif error_type == "DEVICE_NAME_EXPECTED":
+            print("Device output to monitor not specified")
+            while self.symbol.id not in [
+                self.scanner.SEMICOLON_ID,
+                self.scanner.RIGHT_CURLY_BRACKET_ID,
+            ] and self.symbol.type not in [self.scanner.EOF, self.scanner.KEYWORD]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "SEMICOLON_EXPECTED":
+            print("Semicolon expected at end of line.")
+            while self.symbol.type not in [
+                self.scanner.CURLY_BRACKET,
+                self.scanner.KEYWORD,
+                self.scanner.EOF,
+                self.scanner.SEMICOLON,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "OUTPUT_PIN_EXPECTED":
+            print("Output pin not specified")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "RIGHT_ARROW_EXPECTED":
+            print("Right arrow expected to signify connect, skipping line")
         else:
             raise NotImplementedError
-
-
 
 
 # configure the loggers, they should always be configured in top level file and
@@ -567,7 +592,7 @@ class Parser:
 # network_instance = Network(names_instance, device_instance)
 # monitor_instance = Monitors(names_instance, device_instance, network_instance)
 
-# parser_1 = Parser(names_instance, device_instance, network_instance, 
+# parser_1 = Parser(names_instance, device_instance, network_instance,
 #     monitor_instance, scanner_instance, parser_logger)
 
 # a = parser_1.parse_network()
