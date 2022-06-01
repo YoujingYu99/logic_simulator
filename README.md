@@ -42,4 +42,3 @@ python logsim.py
 ## Contributors
 This project is developed by Nikodem, Youjing and Gleb in collaboration.
 
-## References
