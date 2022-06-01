@@ -6,7 +6,7 @@ DEVICES{
 CONNECT{
     sw1 => dtype.SET;
     sw2 => dtype.CLK;
-    sw3 => dtype.SET;
+    sw3 => dtype.CLEAR;
     clock => dtype.DATA;
 }
 MONITOR{
