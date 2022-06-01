@@ -549,29 +549,32 @@ class Parser:
             raise NotImplementedError
 
 
-path_definition = "definitions/circuit.def"
+
 
 # configure the loggers, they should always be configured in top level file and
 # then passed into the following classes so that the level can be configured
 
-scanner_logger = logging.getLogger("scanner")
-parser_logger = logging.getLogger("parser")
-logging.basicConfig(level=logging.DEBUG)
+# Uncomment to run
 
-names_instance = Names()
-scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-device_instance = Devices(names_instance)
-network_instance = Network(names_instance, device_instance)
-monitor_instance = Monitors(names_instance, device_instance, network_instance)
+# path_definition = "definitions/circuit.def"
+# scanner_logger = logging.getLogger("scanner")
+# parser_logger = logging.getLogger("parser")
+# logging.basicConfig(level=logging.DEBUG)
 
-parser_1 = Parser(names_instance, device_instance, network_instance, 
-    monitor_instance, scanner_instance, parser_logger)
+# names_instance = Names()
+# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
+# device_instance = Devices(names_instance)
+# network_instance = Network(names_instance, device_instance)
+# monitor_instance = Monitors(names_instance, device_instance, network_instance)
 
-a = parser_1.parse_network()
+# parser_1 = Parser(names_instance, device_instance, network_instance, 
+#     monitor_instance, scanner_instance, parser_logger)
 
-print(parser_1.devices.find_devices())
+# a = parser_1.parse_network()
 
-# This is the DTYPE device
-print(parser_1.devices.get_device(27).inputs)
+# print(parser_1.devices.find_devices())
 
-print(parser_1.network.check_network())
+# # This is the DTYPE device
+# print(parser_1.devices.get_device(27).inputs)
+
+# print(parser_1.network.check_network())
