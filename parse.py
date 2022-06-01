@@ -55,9 +55,6 @@ class Parser:
 
     def parse_network(self):
         """Parse the circuit definition file."""
-        # For now just return True, so that userint and gui can run in the
-        # skeleton code. When complete, should return False when there are
-        # errors in the circuit definition file.
         # Read first character
 
         self.symbol = self.scanner.get_symbol()
@@ -181,7 +178,6 @@ class Parser:
             print("No Errors found")
             return True
 
-
     def make_monitor(self):
         """
         Function to parse the monitor line as per the EBNF spec
@@ -201,11 +197,6 @@ class Parser:
                 self.error("OUTPUT_PIN_EXPECTED")
 
         self.monitors.make_monitor(device_id, output_id, cycles_completed=0)
-
-        if self.symbol.type == self.scanner.SEMICOLON:
-            pass
-        else:
-            pass
 
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
