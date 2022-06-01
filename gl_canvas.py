@@ -85,6 +85,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.y_grid_offset_upper = 20
         self.tick_width = 3
         self.label_font = GLUT.GLUT_BITMAP_HELVETICA_12
+        self.label_size = 3
 
         # Set monitors to be drawn
         self.devices = devices
@@ -368,21 +369,21 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             )
             # Light grey dotted lines
             GL.glColor3f(0.863, 0.863, 0.863)
-            # GL.glBegin(GL.GL_LINE_STRIP)
-            # GL.glVertex2f(y_tick_left, zero_pos)
-            # GL.glVertex2f(y_tick_right, zero_pos)
-            # GL.glEnd()
-            GL.glLineStipple(1, 0xAAAA)
-            # GL.glEnable(GL_LINE_STIPPLE)
-            GL.glBegin(GL.glLineStipple(1, 0xAAAA))
+            GL.glBegin(GL.GL_LINE_STRIP)
             GL.glVertex2f(y_tick_left, zero_pos)
             GL.glVertex2f(y_tick_right, zero_pos)
             GL.glEnd()
+            # GL.glLineStipple(1, 0xAAAA)
+            # # GL.glEnable(GL_LINE_STIPPLE)
+            # GL.glBegin(GL.glLineStipple(1, 0xAAAA))
+            # GL.glVertex2f(y_tick_left, zero_pos)
+            # GL.glVertex2f(y_tick_right, zero_pos)
+            # GL.glEnd()
             # Label 0
             x_pos_0 = y_tick_left - self.label_size
             y_pos_0 = zero_pos
             GL.glRasterPos2f(x_pos_0, y_pos_0)
-            font = self.font
+            font = self.label_font
             label_zero = "0"
             GLUT.glutBitmapCharacter(font, ord(label_zero))
 
@@ -396,7 +397,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             x_pos_1 = y_tick_left - self.label_size
             y_pos_1 = zero_pos + self.signal_height
             GL.glRasterPos2f(x_pos_1, y_pos_1)
-            font = self.font
+            font = self.label_font
             label_one = "1"
             GLUT.glutBitmapCharacter(font, ord(label_one))
 
@@ -422,7 +423,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # e.g. if cycles period is 2, the label goes 0, 2, 4, ...
         cycle_period = self.spin_value // (self.num_period_display - 1)
         # Draw signals one on top of another.
-        if self.total_cycles > 0:
+        if self.spin_value> 0:
             # Draw all signals selected
             for count in range(len(self.monitored_signal_list)):
                 # Get name of monitor

@@ -728,41 +728,41 @@ class Parser:
 
 # Uncomment to run
 
-path_definition = "definitions/circuit.def"
-scanner_logger = logging.getLogger("scanner")
-parser_logger = logging.getLogger("parser")
-logging.basicConfig(level=logging.DEBUG)
-
-names_instance = Names()
-scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-device_instance = Devices(names_instance)
-network_instance = Network(names_instance, device_instance)
-monitor_instance = Monitors(names_instance, device_instance, network_instance)
-
-parser_1 = Parser(
-    names_instance,
-    device_instance,
-    network_instance,
-    monitor_instance,
-    scanner_instance,
-    parser_logger,
-)
-
-a = parser_1.parse_network()
-print('--Check all devices have been created')
-print(parser_1.devices.find_devices())
-print(parser_1.devices.get_device(42).inputs) # This is the DTYPE device
-print(parser_1.devices.get_device(42).outputs) # DTYPE 
-print(parser_1.devices.get_device(46).inputs)
-
-
-print('--Check all network inputs are satisfied')
-print(parser_1.network.check_network())
-
-
-monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
-
-print('--List monitor points')
-print(monitored_signal_list)
-
-parser_1.monitors.display_signals()
+# path_definition = "definitions/circuit.def"
+# scanner_logger = logging.getLogger("scanner")
+# parser_logger = logging.getLogger("parser")
+# logging.basicConfig(level=logging.DEBUG)
+#
+# names_instance = Names()
+# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
+# device_instance = Devices(names_instance)
+# network_instance = Network(names_instance, device_instance)
+# monitor_instance = Monitors(names_instance, device_instance, network_instance)
+#
+# parser_1 = Parser(
+#     names_instance,
+#     device_instance,
+#     network_instance,
+#     monitor_instance,
+#     scanner_instance,
+#     parser_logger,
+# )
+#
+# a = parser_1.parse_network()
+# print('--Check all devices have been created')
+# print(parser_1.devices.find_devices())
+# print(parser_1.devices.get_device(42).inputs) # This is the DTYPE device
+# print(parser_1.devices.get_device(42).outputs) # DTYPE
+# print(parser_1.devices.get_device(46).inputs)
+#
+#
+# print('--Check all network inputs are satisfied')
+# print(parser_1.network.check_network())
+#
+#
+# monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
+#
+# print('--List monitor points')
+# print(monitored_signal_list)
+#
+# parser_1.monitors.display_signals()

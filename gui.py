@@ -306,9 +306,7 @@ class Gui(wx.Frame):
             # If successfully run
             if self.run_network(self.spin_value):
                 self.cycles_completed += self.spin_value
-                text = "Now running for {no_cycles:.}!".format(
-                    no_cycles=str(self.spin_value)
-                )
+                text = "".join(["Running for ", str(self.spin_value), "cycles\n"])
                 self.console_box.print_console_message(text)
 
                 # Update canvas information
@@ -328,14 +326,12 @@ class Gui(wx.Frame):
                 # If no previous cycles have run
                 if self.cycles_completed == 0:
                     self.console_box.print_console_message(
-                        "Error! No previous simulation. Please run first."
+                        "Error! No previous simulation. Please run first.\n"
                     )
                 # If the network is successfully run.
                 elif self.run_network(cycles=self.spin_value):
                     self.cycles_completed += self.spin_value
-                    text = "Now continuing for {no_cycles:.}!".format(
-                        no_cycles=str(self.spin_value)
-                    )
+                    text = "".join(["Continuing for ", str(self.spin_value), "cycles"])
                     self.console_box.print_console_message(text)
                     # Update canvas information
                     # Add to the number of cycles run
@@ -371,7 +367,8 @@ class Gui(wx.Frame):
         self.monitored_list = self.monitors.get_signal_names()[0]
         self.unmonitored_list = self.monitors.get_signal_names()[1]
         # Append list to get a full list of monitor names
-        self.monitor_names_list = self.monitored_list.extend(self.unmonitored_list)
+        self.monitor_names_list = self.monitored_list + self.unmonitored_list
+
 
         # To get monitor ids
         for monitor_name in self.monitor_names_list:
@@ -418,9 +415,9 @@ class Gui(wx.Frame):
                 device_id, output_id, self.cycles_completed
             )
             if monitor_error == self.monitors.NO_ERROR:
-                self.console_box.print_console_message("Successfully made monitor.")
+                self.console_box.print_console_message("Successfully made monitor.\n")
             else:
-                self.console_box.print_console_message("Error! Could not make monitor.")
+                self.console_box.print_console_message("Error! Could not make monitor.\n")
         # Update the monitored_signal_list in the canvas element
         self.canvas.monitored_signal_list = self.monitored_list
         self.canvas.draw_signal()
