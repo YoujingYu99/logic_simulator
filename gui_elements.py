@@ -100,13 +100,6 @@ class FileMenu(wx.Menu):
             text = "Loading {file_name:}.".format(file_name=path)
             self.parentFrame.console_box.print_console_message(text)
 
-            # names = Names()
-            # devices = Devices(names)
-            # network = Network(names, devices)
-            # monitors = Monitors(names, devices, network)
-            # scanner = Scanner(myfile, names, logger=)
-            # parser = Parser(names, devices, network, monitors, scanner)
-
             names = Names()
             scanner = Scanner(path, names, self.parentFrame.scanner_logger)
             devices = Devices(names)
@@ -133,6 +126,7 @@ class FileMenu(wx.Menu):
                 self.parentFrame.get_monitor_names()
                 self.parentFrame.get_switch_names()
             else:
+                print(parser.devices.find_devices())
                 self.parentFrame.console_box.print_console_message(
                     "File cannot be parsed. Please check your definition file."
                 )
