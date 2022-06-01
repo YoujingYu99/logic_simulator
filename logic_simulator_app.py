@@ -1,11 +1,14 @@
 import wx
 from gui import Gui
 import builtins
+import logging
 import stylesheet
 from names import Names
 from devices import Devices
 from network import Network
 from monitors import Monitors
+from scanner import Scanner
+from parse import Parser
 
 
 # create App class
@@ -22,18 +25,6 @@ class LogicSimulatorApp(wx.App):
         self.stylesheet = stylesheet.WXStyleSheet(css_file)
 
     def on_init(self):
-        # # only uncomment when full code integratable
-        # names = Names()
-        # devices = Devices(names)
-        # network = Network(names, devices)
-        # monitors = Monitors(names, devices, network)
-
-        names = None
-        devices = None
-        network = None
-        monitors = None
-        path = None
-
 
         return True
 

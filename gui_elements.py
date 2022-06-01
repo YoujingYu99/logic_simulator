@@ -96,28 +96,46 @@ class FileMenu(wx.Menu):
 
         path = dialog.GetPath()
         if os.path.exists(path):
-            with open(path) as myfile:
-                text = "Loading {file_name:}.".format(file_name=path)
-                self.parentFrame.console_box.print_console_message(text)
+            # with open(path) as myfile:
+            text = "Loading {file_name:}.".format(file_name=path)
+            self.parentFrame.console_box.print_console_message(text)
 
-                names = Names()
-                devices = Devices(names)
-                network = Network(names, devices)
-                monitors = Monitors(names, devices, network)
-                scanner = Scanner(myfile, names)
-                parser = Parser(names, devices, network, monitors, scanner)
-                if parser.parse_network():
-                    # Set successfully parsed
-                    self.parentFrame.is_parsed = True
-                    # update names, networks etc modules
-                    self.parentFrame.names = names
-                    self.parentFrame.network = network
-                    self.parentFrames.devices = devices
-                    self.parentFrame.monitors = monitors
-                else:
-                    self.parentFrame.console_box.print_console_message(
-                        text="File cannot be parsed. Please check your definition file."
-                    )
+            # names = Names()
+            # devices = Devices(names)
+            # network = Network(names, devices)
+            # monitors = Monitors(names, devices, network)
+            # scanner = Scanner(myfile, names, logger=)
+            # parser = Parser(names, devices, network, monitors, scanner)
+
+            names = Names()
+            scanner = Scanner(path, names, self.parentFrame.scanner_logger)
+            devices = Devices(names)
+            network = Network(names, devices)
+            monitors = Monitors(names, devices, network)
+
+            parser = Parser(
+                names,
+                devices,
+                network,
+                monitors,
+                scanner,
+                self.parentFrame.parser_logger,
+            )
+
+            if parser.parse_network():
+                # Set successfully parsed
+                self.parentFrame.is_parsed = True
+                # update names, networks etc modules
+                self.parentFrame.names = names
+                self.parentFrame.network = network
+                self.parentFrames.devices = devices
+                self.parentFrame.monitors = monitors
+                self.parentFrame.get_monitor_names()
+                self.parentFrame.get_switch_names()
+            else:
+                self.parentFrame.console_box.print_console_message(
+                    "File cannot be parsed. Please check your definition file."
+                )
 
         dialog.Destroy()
 

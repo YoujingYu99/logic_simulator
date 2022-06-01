@@ -7,6 +7,7 @@ Gui - configures the main window and all the widgets.
 """
 import os
 import wx
+import logging
 
 from names import Names
 from devices import Devices
@@ -96,8 +97,6 @@ class Gui(wx.Frame):
         self.monitor_id_list = []
         self.monitored_list = []
         self.unmonitored_list = []
-        # Uncomment when all modules ready
-        # self.get_monitor_names()
 
         # Switch names and IDs
         # all switch ids. Set to empty initially
@@ -106,8 +105,6 @@ class Gui(wx.Frame):
         self.switch_name_list = []
         self.switch_on_list = []
         self.switch_off_list = []
-        # Uncomment when all modules ready
-        # self.get_switch_names()
 
         # Temporarily set file to be not parsed
         self.is_parsed = False
@@ -120,7 +117,7 @@ class Gui(wx.Frame):
         # Canvas for drawing signals; Input the spin value here
         self.canvas = MyGLCanvas(self, devices, monitors, spin_value=self.spin_value)
         # Pass the monitor names list into monitored_signal_list attribute of canvas
-        self.canvas.monitored_signal_list = self.monitor_names_list
+        self.canvas.monitored_signal_list = self.monitored_list
         # Get window size
         self.window_size = self.GetClientSize()
 
@@ -183,8 +180,8 @@ class Gui(wx.Frame):
         self.clear_console_button.Bind(wx.EVT_BUTTON, self.on_clear_console_button)
 
         ## Uncomment when all modules ready
-        # self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button())
-        # self.monitor_button.Bind(wx.EVT_BUTTON, self.on_monitor_button())
+        self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button)
+        self.monitor_button.Bind(wx.EVT_BUTTON, self.on_monitor_button)
         # self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
 
         ## Configure sizers for layout
@@ -237,6 +234,11 @@ class Gui(wx.Frame):
         self.SetSizeHints(600, 600)
         # self.SetSizer(main_sizer)
         self.SetSizer(top_level_sizer)
+
+        # Configure the loggers
+        self.scanner_logger = logging.getLogger("scanner")
+        self.parser_logger = logging.getLogger("parser")
+        logging.basicConfig(level=logging.DEBUG)
 
     def configure_style(self):
         """Configure the CSS stylesheet in the element"""
@@ -377,7 +379,7 @@ class Gui(wx.Frame):
             # Append device id, output id to the monitor id list
             self.monitor_id_list.append((device_id, output_id))
 
-    def on_monitor_button(self):
+    def on_monitor_button(self, event):
         """Choose signals to monitor and draw."""
         if self.is_parsed:
             # renew the names for monitors
@@ -441,7 +443,7 @@ class Gui(wx.Frame):
                 # Add the name of the switch into the switch_on list
                 self.switch_on_list.append(switch_name)
 
-    def on_switch_button(self):
+    def on_switch_button(self, event):
         """Set switch to desired state."""
         if self.is_parsed:
             dlg = wx.MultiChoiceDialog(
