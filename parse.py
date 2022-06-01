@@ -200,7 +200,7 @@ class Parser:
             else:
                 self.error("OUTPUT_PIN_EXPECTED")
 
-        self.monitors.make_monitor(device_id, output_id, cycles_completed=10)
+        self.monitors.make_monitor(device_id, output_id, cycles_completed=0)
 
         if self.symbol.type == self.scanner.SEMICOLON:
             pass
@@ -829,6 +829,7 @@ print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
 
 print('--ANDg inputs')
 print(parser_1.devices.get_device(42).inputs) 
+print('--ANDg output')
 print(parser_1.devices.get_device(42).outputs)
 
 print('--Check all network inputs are satisfied')
@@ -838,5 +839,15 @@ monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_
 
 print('--List monitor points')
 print(monitored_signal_list)
+
+print('--Try simulate network')
+simulate = parser_1.network.execute_network()
+simulate = parser_1.network.execute_network()
+print(simulate)
+
+print('--Get output from andg')
+print(parser_1.monitors.get_monitor_signal( 42, None))
+
+print('--Get output from andg using display_signals')
 
 parser_1.monitors.display_signals()
