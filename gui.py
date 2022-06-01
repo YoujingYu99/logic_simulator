@@ -323,7 +323,7 @@ class Gui(wx.Frame):
         """Continue a previously run simulation."""
         if self.is_parsed:
             if self.spin_value is not None:
-                # If no previous cycles
+                # If no previous cycles have run
                 if self.cycles_completed == 0:
                     self.console_box.print_console_message(
                         "Error! No previous simulation. Please run first."
