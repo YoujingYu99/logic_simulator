@@ -11,5 +11,6 @@ CONNECT{
 }
 MONITOR{
     dtype.Q;
+    dtype.BAR;
 }
 END
