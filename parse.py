@@ -219,11 +219,12 @@ class Parser:
 
         if self.symbol.type != self.scanner.DOT:
             self.error("INPUT_SPECIFICATION_EXPECTED")
-
-        self.symbol = self.scanner.get_symbol()
+        else:
+            self.symbol = self.scanner.get_symbol()
         if self.symbol.type not in [self.scanner.INPUT_NUMBER, self.scanner.INPUT_PIN]:
             self.error("NOT_VALID_INPUT")
-        self.symbol = self.scanner.get_symbol()
+        else:
+            self.symbol = self.scanner.get_symbol()
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
         self.logger.debug("-Connection Ended")
@@ -254,7 +255,7 @@ class Parser:
         #     self.logger.debug("-GATE found, start to parse GATE")
         #     self.xor()
         else:
-            self.error("NO_DEVICE_SPECIFIED")
+            self.error("DEVICE_TYPE_NOT_DECLARED")
 
     def gate_devices(self):
         """
@@ -265,38 +266,35 @@ class Parser:
         self.symbol = self.scanner.get_symbol()
         if self.symbol.id != self.scanner.LEFT_BRACKET_ID:
             self.error("LEFT_BRACKET_EXPECTED")
+        else:
 
-        self.symbol = self.scanner.get_symbol()
-        # FIXME type of symbol ID behaves a bit weirdly
-        # not sure if this is intentional
-        if self.symbol.type != self.scanner.NUMBER or (
-            not int(self.symbol.id) in range(1, 17)
-        ):
-            self.error("INVALID_INPUT_INITIALISATION")
-        self.symbol = self.scanner.get_symbol()
-        if self.symbol.id != self.scanner.RIGHT_BRACKET_ID:
-            self.error("RIGHT_BRACKET_EXPECTED")
-        self.symbol = self.scanner.get_symbol()
-        if self.symbol.type == self.scanner.COMMA:
-            while self.symbol.type == self.scanner.COMMA:
-                self.device_name()
+            self.symbol = self.scanner.get_symbol()
+            self.input_number()
+            if self.symbol.id != self.scanner.RIGHT_BRACKET_ID:
+                self.error("RIGHT_BRACKET_EXPECTED")
+            else:
                 self.symbol = self.scanner.get_symbol()
-                if not (
-                    self.symbol.type == self.scanner.BRACKET
-                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID
-                ):
-                    self.error("LEFT_BRACKET_EXPECTED")
-                self.symbol = self.scanner.get_symbol()
-                self.input_number()
-                if not (
-                    self.symbol.type == self.scanner.BRACKET
-                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
-                ):
-                    self.error("RIGHT_BRACKET_EXPECTED")
-                self.symbol = self.scanner.get_symbol()  # comma check
+                if self.symbol.type == self.scanner.COMMA:
+                    while self.symbol.type == self.scanner.COMMA:
+                        self.device_name()
+                        self.symbol = self.scanner.get_symbol()
+                        if not (
+                            self.symbol.type == self.scanner.BRACKET
+                            and self.symbol.id == self.scanner.LEFT_BRACKET_ID
+                        ):
+                            self.error("LEFT_BRACKET_EXPECTED")
+                        else:
+                            self.symbol = self.scanner.get_symbol()
+                            self.input_number()
+                            if not (
+                                self.symbol.type == self.scanner.BRACKET
+                                and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+                            ):
+                                self.error("RIGHT_BRACKET_EXPECTED")
+                            self.symbol = self.scanner.get_symbol()  # comma check
 
-        if not self.symbol.type == self.scanner.SEMICOLON:
-            self.error("SEMICOLON_EXPECTED")
+                if not self.symbol.type == self.scanner.SEMICOLON:
+                    self.error("SEMICOLON_EXPECTED")
 
         self.logger.debug("-End of GATE statement")
 
@@ -536,6 +534,41 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "RIGHT_ARROW_EXPECTED":
             print("Right arrow expected to signify connect, skipping line")
+        elif error_type in ["INPUT_SPECIFICATION_EXPECTED", "NOT_VALID_INPUT"]:
+            print("Input expected but no specified")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "DEVICE_TYPE_NOT_DECLARED":
+            print("Device type not specified, please specify")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+
+        elif error_type == "LEFT_BRACKET_EXPECTED":
+            print("'(' expected but not present")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+                self.scanner.DEVICE_NAME,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "INVALID_INPUT_INITIALISATION":
+            print("Number of inputs incorrectly configured")
+            self.symbol = self.scanner.get_symbol()
+        elif error_type == "RIGHT_BRACKET_EXPECTED":
+            print("')' expected at end of initialisaition")
+            self.symbol = self.scanner.get_symbol()
         else:
             raise NotImplementedError
 
