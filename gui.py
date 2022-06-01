@@ -311,7 +311,7 @@ class Gui(wx.Frame):
 
                 # Update canvas information
                 # Add to the number of cycles run
-                self.canvas.draw_signal()
+                # self.canvas.draw_signal()
                 self.canvas.total_cycles += self.spin_value
 
         else:
@@ -335,7 +335,7 @@ class Gui(wx.Frame):
                     self.console_box.print_console_message(text)
                     # Update canvas information
                     # Add to the number of cycles run
-                    self.canvas.draw_signal()
+                    # self.canvas.draw_signal()
                     self.canvas.total_cycles += self.spin_value
 
         else:
@@ -420,7 +420,7 @@ class Gui(wx.Frame):
                 self.console_box.print_console_message("Error! Could not make monitor.\n")
         # Update the monitored_signal_list in the canvas element
         self.canvas.monitored_signal_list = self.monitored_list
-        self.canvas.draw_signal()
+        # self.canvas.draw_signal()
 
     def get_switch_names(self):
         """switch_names_list : list of switch names

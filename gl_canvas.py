@@ -72,7 +72,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         ]
         # Signal parameters
         # Blue, red, black colours for signals
-        self.signal_colours = [(0, 0, 1), (1, 0, 0), (0, 0, 0)]
+        self.signal_colours = [(0.0, 0.0, 1.0), (1.0, 0.0, 0.0), (0.0, 0.0, 0.0)]
         self.signal_height = 20
         self.signal_cycle_width = 15
         self.signal_y_distance = 5
@@ -86,6 +86,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.tick_width = 3
         self.label_font = GLUT.GLUT_BITMAP_HELVETICA_12
         self.label_size = 3
+        self.label_width = 0
 
         # Set monitors to be drawn
         self.devices = devices
@@ -130,7 +131,10 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         # Draw specified text at position (10, 10)
         self.render_text(text, 10, 10)
-
+        if self.monitored_signal_list:
+            self.draw_signal()
+        else:
+            pass
         # We have been drawing to the back buffer, flush the graphics pipeline
         # and swap the back buffer to the front
         GL.glFlush()
@@ -419,6 +423,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     def draw_signal(self):
         """Draw signal traces for each monitor."""
+
         self.draw_grid(spin_value=self.spin_value)
         # e.g. if cycles period is 2, the label goes 0, 2, 4, ...
         cycle_period = self.spin_value // (self.num_period_display - 1)
@@ -496,10 +501,12 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                         + self.tick_width / 2
                         + self.label_width
                 )
+                print('offset', offset)
 
                 # Draw signal trace
                 for index in range(len(signal_list)):
                     indiv_signal = signal_list[index]
+                    print('indiv',indiv_signal)
                     # horizontal start point of signal
                     if self.spin_value < 10:
                         normal_cycle_width = self.signal_cycle_width
@@ -507,17 +514,19 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                         x_end = x_start + normal_cycle_width
 
                         # If signal is high
-                        if indiv_signal == self.devices.HIGH:
+                        if indiv_signal == 1:
                             # Add offset to y
                             y = self.canvas_origin[1] + self.signal_height + offset
                             GL.glVertex2f(x_start, y)
                             GL.glVertex2f(x_end, y)
+                            print('drain')
                         # If signal is low
-                        if indiv_signal == self.devices.LOW:
+                        if indiv_signal == 0:
                             # Add offset to y
                             y = self.canvas_origin[1] + offset
                             GL.glVertex2f(x_start, y)
                             GL.glVertex2f(x_end, y)
+                            print('drain again')
                     else:
                         # Squeeze cycles together if too many cycles chosen
                         short_cycle_width = self.signal_cycle_width / cycle_period
@@ -534,7 +543,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                         if indiv_signal == self.devices.LOW:
                             # Add offset to y
                             y = self.canvas_origin[1] + offset
-                            GL.glVertex2f(x_start, y)
-                            GL.glVertex2f(x_end, y)
+                            GL.glVertex2f(float(x_start), float(y))
+                            GL.glVertex2f(float(x_end), float(y))
 
                 GL.glEnd()
