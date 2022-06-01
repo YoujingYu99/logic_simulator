@@ -209,8 +209,8 @@ class Parser:
 
         if self.symbol.type != self.scanner.RIGHT_ARROW:
             self.error("RIGHT_ARROW_EXPECTED")
-
-        self.symbol = self.scanner.get_symbol()
+        else:
+            self.symbol = self.scanner.get_symbol()
 
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
@@ -534,6 +534,8 @@ class Parser:
                 self.scanner.KEYWORD,
             ]:
                 self.symbol = self.scanner.get_symbol()
+        elif error_type == "RIGHT_ARROW_EXPECTED":
+            print("Right arrow expected to signify connect, skipping line")
         else:
             raise NotImplementedError
 
