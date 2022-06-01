@@ -1,0 +1,12 @@
+DEVICES{
+    AND andg(2);
+    SWITCH sw1(1), sw2(1);
+}
+CONNECT{
+    sw1 => andg.I1;
+    sw2 => andg.I2;
+}
+MONITOR{
+    andg;
+}
+END
