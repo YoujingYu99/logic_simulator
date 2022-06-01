@@ -194,7 +194,7 @@ class Parser:
         if int(self.symbol.type) == self.scanner.DOT:
             self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
-                self.symbol = self.symbol.id
+                output_id = self.symbol.id
                 self.symbol = self.scanner.get_symbol()
             else:
                 self.error("OUTPUT_PIN_EXPECTED")
@@ -245,8 +245,8 @@ class Parser:
         else:
             self.symbol = self.scanner.get_symbol()
         if self.symbol.type not in [
-            self.scanner.INPUT_NUMBER,
-            self.scanner.INPUT_PIN,
+            self.scanner.DTYPE_INPUT_PIN,
+            self.scanner.GATE_PIN,
         ]:
             self.error("NOT_VALID_INPUT")
         else:
@@ -748,10 +748,20 @@ parser_1 = Parser(
 )
 
 a = parser_1.parse_network()
-
+print('--Check all devices have been created')
 print(parser_1.devices.find_devices())
+print(parser_1.devices.get_device(42).inputs) # This is the DTYPE device
+print(parser_1.devices.get_device(42).outputs) # DTYPE 
+print(parser_1.devices.get_device(46).inputs)
 
-# This is the DTYPE device
-print(parser_1.devices.get_device(27).inputs)
 
+print('--Check all network inputs are satisfied')
 print(parser_1.network.check_network())
+
+
+monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
+
+print('--List monitor points')
+print(monitored_signal_list)
+
+parser_1.monitors.display_signals()
