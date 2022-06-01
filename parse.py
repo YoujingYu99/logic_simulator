@@ -169,6 +169,13 @@ class Parser:
         elif self.symbol.type == self.scanner.EOF:
             self.error("MISSING_END_KEYWORD")
 
+        if self.error_count > 0:
+            print(f"{self.error_count} errors found, please resolve them and try again")
+            return False
+        else:
+            print("No Errors found")
+            return True
+
     def make_monitor(self):
         """
         Fucntion to parse the monitor line as per the EBNF spec
