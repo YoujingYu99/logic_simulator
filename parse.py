@@ -274,27 +274,28 @@ class Parser:
                 self.error("RIGHT_BRACKET_EXPECTED")
             else:
                 self.symbol = self.scanner.get_symbol()
-                if self.symbol.type == self.scanner.COMMA:
-                    while self.symbol.type == self.scanner.COMMA:
-                        self.device_name()
-                        self.symbol = self.scanner.get_symbol()
-                        if not (
-                            self.symbol.type == self.scanner.BRACKET
-                            and self.symbol.id == self.scanner.LEFT_BRACKET_ID
-                        ):
-                            self.error("LEFT_BRACKET_EXPECTED")
-                        else:
-                            self.symbol = self.scanner.get_symbol()
-                            self.input_number()
-                            if not (
-                                self.symbol.type == self.scanner.BRACKET
-                                and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
-                            ):
-                                self.error("RIGHT_BRACKET_EXPECTED")
-                            self.symbol = self.scanner.get_symbol()  # comma check
+        if self.symbol.type == self.scanner.COMMA:
+            while self.symbol.type == self.scanner.COMMA:
+                self.device_name()
+                self.symbol = self.scanner.get_symbol()
+                if not (
+                    self.symbol.type == self.scanner.BRACKET
+                    and self.symbol.id == self.scanner.LEFT_BRACKET_ID
+                ):
+                    self.error("LEFT_BRACKET_EXPECTED")
+                else:
+                    self.symbol = self.scanner.get_symbol()
+                    self.input_number()
+                    if not (
+                        self.symbol.type == self.scanner.BRACKET
+                        and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+                    ):
+                        self.error("RIGHT_BRACKET_EXPECTED")
+                    else:
+                        self.symbol = self.scanner.get_symbol()  # comma check
 
-                if not self.symbol.type == self.scanner.SEMICOLON:
-                    self.error("SEMICOLON_EXPECTED")
+        if not self.symbol.type == self.scanner.SEMICOLON:
+            self.error("SEMICOLON_EXPECTED")
 
         self.logger.debug("-End of GATE statement")
 
@@ -325,20 +326,22 @@ class Parser:
             and self.symbol.id == self.scanner.LEFT_BRACKET_ID
         ):
             self.error("LEFT_BRACKET_EXPECTED")
-        self.symbol = self.scanner.get_symbol()
-        if not (
-            self.symbol.type == self.scanner.NUMBER
-            and int(self.symbol.id) in range(0, 2)
-        ):
-            self.error("INVALID_STATE_OF_SWITCH")
-        self.symbol = self.scanner.get_symbol()
-        if not (
-            self.symbol.type == self.scanner.BRACKET
-            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
-        ):
-            self.error("RIGHT_BRACKET_EXPECTED")
-
-        self.symbol = self.scanner.get_symbol()
+        else:
+            self.symbol = self.scanner.get_symbol()
+            if not (
+                self.symbol.type == self.scanner.NUMBER
+                and int(self.symbol.id) in range(0, 2)
+            ):
+                self.error("INVALID_STATE_OF_SWITCH")
+            else:
+                self.symbol = self.scanner.get_symbol()
+            if not (
+                self.symbol.type == self.scanner.BRACKET
+                and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+            ):
+                self.error("RIGHT_BRACKET_EXPECTED")
+            else:
+                self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
                 self.device_name()
@@ -360,8 +363,9 @@ class Parser:
                     self.symbol.type == self.scanner.BRACKET
                     and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
                 ):
-                    sel.error("RIGHT_BRACKET_EXPECTED")
-                self.symbol = self.scanner.get_symbol()  # comma check
+                    self.error("RIGHT_BRACKET_EXPECTED")
+                else:
+                    self.symbol = self.scanner.get_symbol()  # comma check
 
         if not self.symbol.type == self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -379,17 +383,22 @@ class Parser:
             and self.symbol.id == self.scanner.LEFT_BRACKET_ID
         ):
             self.error("LEFT_BRACKET_EXPECTED")
-        self.symbol = self.scanner.get_symbol()
-        if not (self.symbol.type == self.scanner.NUMBER and int(self.symbol.id) > 0):
-            self.error("INVALID_CYCLE_VALUE")
-        self.symbol = self.scanner.get_symbol()
-        if not (
-            self.symbol.type == self.scanner.BRACKET
-            and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
-        ):
-            self.error("RIGHT_BRACKET_EXPECTED")
+        else:
+            self.symbol = self.scanner.get_symbol()
+            if not (
+                self.symbol.type == self.scanner.NUMBER and int(self.symbol.id) > 0
+            ):
+                self.error("INVALID_CYCLE_VALUE")
+            else:
+                self.symbol = self.scanner.get_symbol()
+            if not (
+                self.symbol.type == self.scanner.BRACKET
+                and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+            ):
+                self.error("RIGHT_BRACKET_EXPECTED")
+            else:
+                self.symbol = self.scanner.get_symbol()
 
-        self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.COMMA:
             while self.symbol.type == self.scanner.COMMA:
                 self.device_name()
@@ -399,63 +408,66 @@ class Parser:
                     and self.symbol.id == self.scanner.LEFT_BRACKET_ID
                 ):
                     self.error("LEFT_BRACKET_EXPECTED")
-                self.symbol = self.scanner.get_symbol()
-                if not (
-                    self.symbol.type == self.scanner.NUMBER and int(self.symbol.id) > 0
-                ):
-                    self.error("INVALID_CYCLE_VALUE")
-                self.symbol = self.scanner.get_symbol()
-                if not (
-                    self.symbol.type == self.scanner.BRACKET
-                    and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
-                ):
-                    self.error("RIGHT_BRACKET_EXPECTED")
-                self.symbol = self.scanner.get_symbol()  # comma check
+                else:
+                    self.symbol = self.scanner.get_symbol()
+                    if not (
+                        self.symbol.type == self.scanner.NUMBER
+                        and int(self.symbol.id) > 0
+                    ):
+                        self.error("INVALID_CYCLE_VALUE")
+                    self.symbol = self.scanner.get_symbol()
+                    if not (
+                        self.symbol.type == self.scanner.BRACKET
+                        and self.symbol.id == self.scanner.RIGHT_BRACKET_ID
+                    ):
+                        self.error("RIGHT_BRACKET_EXPECTED")
+                    else:
+                        self.symbol = self.scanner.get_symbol()  # comma check
 
-        if not self.symbol.type == self.scanner.SEMICOLON:
-            self.error("SEMICOLON_EXPECTED")
+            if not self.symbol.type == self.scanner.SEMICOLON:
+                self.error("SEMICOLON_EXPECTED")
 
-        self.logger.debug("-End of CLOCK statement")
+            self.logger.debug("-End of CLOCK statement")
 
-    def output_pin(self):
-        """
-        Method to parse output pins
-        """
-        if self.symbol == self.scanner.Q:
-            self.symbol = self.scanner.getsymbol()
-        elif self.symbol == self.scanner.QBAR:
-            self.symbol = self.scanner.getsymbol()
-        else:
-            # output pin specified but not describes
-            self.error("OUTPUT_PIN_NOT_DESCRIBED")
-
-    def input_pin(self):
-        if self.symbol == self.scanner.I:
-            self.symbol = self.scanner.getsymbol()
-            self.input_number()
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.DATA_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.CLK_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.SET_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-        elif (
-            self.symbol.type == self.scanner.KEYWORDS
-            and self.symbol.id == self.scanner.CLEAR_ID
-        ):
-            self.symbol = self.scanner.getsymbol()
-        else:
-            # unknown symbol or not specified
-            self.error("UNKOWN_SYMBOL")
+    # def output_pin(self):
+    #     """
+    #     Method to parse output pins
+    #     """
+    #     if self.symbol == self.scanner.Q:
+    #         self.symbol = self.scanner.getsymbol()
+    #     elif self.symbol == self.scanner.QBAR:
+    #         self.symbol = self.scanner.getsymbol()
+    #     else:
+    #         # output pin specified but not describes
+    #         self.error("OUTPUT_PIN_NOT_DESCRIBED")
+    #
+    # def input_pin(self):
+    #     if self.symbol == self.scanner.I:
+    #         self.symbol = self.scanner.getsymbol()
+    #         self.input_number()
+    #     elif (
+    #         self.symbol.type == self.scanner.KEYWORDS
+    #         and self.symbol.id == self.scanner.DATA_ID
+    #     ):
+    #         self.symbol = self.scanner.getsymbol()
+    #     elif (
+    #         self.symbol.type == self.scanner.KEYWORDS
+    #         and self.symbol.id == self.scanner.CLK_ID
+    #     ):
+    #         self.symbol = self.scanner.getsymbol()
+    #     elif (
+    #         self.symbol.type == self.scanner.KEYWORDS
+    #         and self.symbol.id == self.scanner.SET_ID
+    #     ):
+    #         self.symbol = self.scanner.getsymbol()
+    #     elif (
+    #         self.symbol.type == self.scanner.KEYWORDS
+    #         and self.symbol.id == self.scanner.CLEAR_ID
+    #     ):
+    #         self.symbol = self.scanner.getsymbol()
+    #     else:
+    #         # unknown symbol or not specified
+    #         self.error("UNKOWN_INPUT")
 
     def input_number(self):
         if self.symbol.type == self.scanner.NUMBER and (
@@ -466,17 +478,17 @@ class Parser:
             # error of invalid input
             self.error("INVALID_INPUT_INITIALISATION")
 
-    def on_off(self):
-        """
-        Method to parse on/off parameter
-        """
-        if self.symbol == self.scanner.ZERO:
-            self.symbol = self.scanner.getsymbol()
-        elif self.symol == self.scanner.ONE:
-            self.symbol = self.scanner.getsymbol()
-        else:
-            # error: 0 or 1 expected
-            self.error("0_OR_1_EXPECTED")
+    # def on_off(self):
+    #     """
+    #     Method to parse on/off parameter
+    #     """
+    #     if self.symbol == self.scanner.ZERO:
+    #         self.symbol = self.scanner.getsymbol()
+    #     elif self.symol == self.scanner.ONE:
+    #         self.symbol = self.scanner.getsymbol()
+    #     else:
+    #         # error: 0 or 1 expected
+    #         self.error("0_OR_1_EXPECTED")
 
     def device_name(self):
         """
@@ -561,6 +573,7 @@ class Parser:
                 self.scanner.EOF,
                 self.scanner.KEYWORD,
                 self.scanner.DEVICE_NAME,
+                self.scanner.COMMA,
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INVALID_INPUT_INITIALISATION":
@@ -568,7 +581,49 @@ class Parser:
             self.symbol = self.scanner.get_symbol()
         elif error_type == "RIGHT_BRACKET_EXPECTED":
             print("')' expected at end of initialisaition")
-            self.symbol = self.scanner.get_symbol()
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+                self.scanner.DEVICE_NAME,
+                self.scanner.COMMA,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "INVALID_CYCLE_VALUE":
+            print("Invalid value of clock cycles")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+                self.scanner.DEVICE_NAME,
+                self.scanner.COMMA,
+                self.scanner.BRACKET,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "INVALID_STATE_OF_SWITCH":
+            print("Invalid state of switch")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+                self.scanner.DEVICE_NAME,
+                self.scanner.COMMA,
+                self.scanner.BRACKET,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+        elif error_type == "UNKNOWN_INPUT":
+            print("Incorrect_input_pin")
+            while self.symbol.type not in [
+                self.scanner.SEMICOLON,
+                self.scanner.CURLY_BRACKET,
+                self.scanner.EOF,
+                self.scanner.KEYWORD,
+            ]:
+                self.symbol = self.scanner.get_symbol()
+
         else:
             raise NotImplementedError
 
