@@ -37,11 +37,6 @@ python logsim.py
 
 ```
 
-## Bias Calculation
-The bias score calculation is based on the paper,  Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings, and the algorithm is adapted from the work of Chanind at (https://github.com/chanind/word2vec-gender-bias-explorer). Each token is assigned a score between -1 and 1, where a more positive number indicates male-biased and the more negative number indicates female-biased. 
-Another algorithm that we wrote is to identify specific sentence structures and word types associated with each gender. There are, in total, seven such structures that we bring to the user's attention: Subject-Verb-Object(SVO) pairs, intransitive verbs, auxiliary terms, possession, possessives, premodifiers and postmodifiers.
-Both results are saved to an xlsx file that the user can download for their own analysis. Then they can upload them again for visualisation, query and debiasing.
-
 
 
 ## Contributors
