@@ -182,6 +182,7 @@ class Gui(wx.Frame):
         ## Uncomment when all modules ready
         self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button)
         self.monitor_button.Bind(wx.EVT_BUTTON, self.on_monitor_button)
+        self.switch_button.Bind(wx.EVT_BUTTON, self.on_switch_button)
         # self.text_box.Bind(wx.EVT_TEXT_ENTER, self.on_text_box)
 
         ## Configure sizers for layout
@@ -306,7 +307,7 @@ class Gui(wx.Frame):
             # If successfully run
             if self.run_network(self.spin_value):
                 self.cycles_completed += self.spin_value
-                text = "".join(["Running for ", str(self.spin_value), "cycles\n"])
+                text = "".join(["Running for ", str(self.spin_value), " cycles\n"])
                 self.console_box.print_console_message(text)
 
                 # Update canvas information
@@ -331,7 +332,9 @@ class Gui(wx.Frame):
                 # If the network is successfully run.
                 elif self.run_network(cycles=self.spin_value):
                     self.cycles_completed += self.spin_value
-                    text = "".join(["Continuing for ", str(self.spin_value), "cycles"])
+                    text = "".join(
+                        ["Continuing for ", str(self.spin_value), " cycles\n"]
+                    )
                     self.console_box.print_console_message(text)
                     # Update canvas information
                     # Add to the number of cycles run
@@ -368,7 +371,6 @@ class Gui(wx.Frame):
         self.unmonitored_list = self.monitors.get_signal_names()[1]
         # Append list to get a full list of monitor names
         self.monitor_names_list = self.monitored_list + self.unmonitored_list
-
 
         # To get monitor ids
         for monitor_name in self.monitor_names_list:
@@ -417,10 +419,11 @@ class Gui(wx.Frame):
             if monitor_error == self.monitors.NO_ERROR:
                 self.console_box.print_console_message("Successfully made monitor.\n")
             else:
-                self.console_box.print_console_message("Error! Could not make monitor.\n")
+                self.console_box.print_console_message(
+                    "Error! Could not make monitor.\n"
+                )
         # Update the monitored_signal_list in the canvas element
         self.canvas.monitored_signal_list = self.monitored_list
-        # self.canvas.draw_signal()
 
     def get_switch_names(self):
         """switch_names_list : list of switch names
