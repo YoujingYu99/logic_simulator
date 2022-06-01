@@ -366,8 +366,15 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                     + self.y_grid_offset_lower
                     + count * (self.signal_y_distance + self.signal_height)
             )
-            GL.glColor3f(0, 0, 0)
-            GL.glBegin(GL.GL_LINE_STRIP)
+            # Light grey dotted lines
+            GL.glColor3f(0.863, 0.863, 0.863)
+            # GL.glBegin(GL.GL_LINE_STRIP)
+            # GL.glVertex2f(y_tick_left, zero_pos)
+            # GL.glVertex2f(y_tick_right, zero_pos)
+            # GL.glEnd()
+            GL.glLineStipple(1, 0xAAAA)
+            # GL.glEnable(GL_LINE_STIPPLE)
+            GL.glBegin(GL.glLineStipple(1, 0xAAAA))
             GL.glVertex2f(y_tick_left, zero_pos)
             GL.glVertex2f(y_tick_right, zero_pos)
             GL.glEnd()
