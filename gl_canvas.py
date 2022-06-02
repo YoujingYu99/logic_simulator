@@ -413,14 +413,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         font = self.label_font
         x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset / 2
         y_pos_y_label = y_top + self.y_axis_offset / 2
-        # y_pos_y_label = (
-        #     self.canvas_origin[1]
-        #     + self.x_axis_offset
-        #     + self.y_grid_offset_lower
-        #     + num_signals * (self.signal_y_distance + self.signal_height)
-        #     + self.signal_height
-        #     + self.signal_y_distance / 2
-        # )
         GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos_y_label, y_pos_y_label)
         for character in text:
