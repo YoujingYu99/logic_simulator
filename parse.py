@@ -189,18 +189,25 @@ class Parser:
             device_id = self.symbol.id
             output_id = None
 
-            self.symbol = self.scanner.get_symbol()
-
-        if int(self.symbol.type) == self.scanner.DOT:
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
-                output_id = self.symbol.id
+            if self.symbol.id == self.scanner.DTYPE_ID:
                 self.symbol = self.scanner.get_symbol()
+
+                if int(self.symbol.type) == self.scanner.DOT:
+                    self.symbol = self.scanner.get_symbol()
+                    if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
+                        output_id = self.symbol.id
+                        self.symbol = self.scanner.get_symbol()
+                        self.monitors.make_monitor(
+                            device_id, output_id, cycles_completed=0
+                        )
+                    else:
+                        self.error("OUTPUT_PIN_EXPECTED")
+            else:
+                self.logger.debug("Creating device")
                 self.monitors.make_monitor(
                     device_id, output_id, cycles_completed=0
                 )
-            else:
-                self.error("OUTPUT_PIN_EXPECTED")
+                self.symbol = self.scanner.get_symbol()
 
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -840,57 +847,60 @@ class Parser:
 
 
 # For circuit 2
-# path_definition = "definitions/circuit2.def"
-# scanner_logger = logging.getLogger("scanner")
-# parser_logger = logging.getLogger("parser")
-# logging.basicConfig(level=logging.DEBUG)
+path_definition = "definitions/circuit2.def.txt"
+scanner_logger = logging.getLogger("scanner")
+parser_logger = logging.getLogger("parser")
+logging.basicConfig(level=logging.DEBUG)
 
-# names_instance = Names()
-# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-# device_instance = Devices(names_instance)
-# network_instance = Network(names_instance, device_instance)
-# monitor_instance = Monitors(names_instance, device_instance, network_instance)
+names_instance = Names()
+scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
+device_instance = Devices(names_instance)
+network_instance = Network(names_instance, device_instance)
+monitor_instance = Monitors(names_instance, device_instance, network_instance)
 
-# parser_1 = Parser(
-#     names_instance,
-#     device_instance,
-#     network_instance,
-#     monitor_instance,
-#     scanner_instance,
-#     parser_logger,
-# )
+parser_1 = Parser(
+    names_instance,
+    device_instance,
+    network_instance,
+    monitor_instance,
+    scanner_instance,
+    parser_logger,
+)
 
-# a = parser_1.parse_network()
-# print('--Confirm that and gate has been created')
-# print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
-# print('--Confirm that switches have been created')
-# print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
+a = parser_1.parse_network()
+print("--Confirm that and gate has been created")
+print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
+print("--Confirm that switches have been created")
+print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
 
 
-# print('--ANDg inputs')
-# print(parser_1.devices.get_device(42).inputs)
-# print('--ANDg output')
-# print(parser_1.devices.get_device(42).outputs)
+print("--ANDg inputs")
+print(parser_1.devices.get_device(42).inputs)
+print("--ANDg output")
+print(parser_1.devices.get_device(42).outputs)
 
-# print('--Check all network inputs are satisfied')
-# print(parser_1.network.check_network())
+print("--Check all network inputs are satisfied")
+print(parser_1.network.check_network())
 
-# monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
+(
+    monitored_signal_list,
+    non_monitored_signal_list,
+) = parser_1.monitors.get_signal_names()
 
-# print('--List monitor points')
-# print(monitored_signal_list, non_monitored_signal_list)
+print("--List monitor points")
+print(monitored_signal_list, non_monitored_signal_list)
 
-# for i in range(5):
-#     print('--Try simulate network')
-#     simulate = parser_1.network.execute_network()
-#     print(simulate)
+for i in range(5):
+    print("--Try simulate network")
+    simulate = parser_1.network.execute_network()
+    print(simulate)
 
-#     print('--Try record signals')
-#     parser_1.monitors.record_signals()
+    print("--Try record signals")
+    parser_1.monitors.record_signals()
 
-# print('--Get output from andg')
-# print(parser_1.monitors.get_monitor_signal( 42, None))
+print("--Get output from andg")
+print(parser_1.monitors.get_monitor_signal(42, None))
 
-# print('--Get output from andg using display_signals')
+print("--Get output from andg using display_signals")
 
-# parser_1.monitors.display_signals()
+parser_1.monitors.display_signals()
