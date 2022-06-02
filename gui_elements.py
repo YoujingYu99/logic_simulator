@@ -25,6 +25,7 @@ class FileMenu(wx.Menu):
     --------------
     on_init(self): Initialisation step
     on_open(self, event): Open definition file.
+    get_screenshot(self): Get a screenshot of the canvas
     on_save_trace(self, event): Save a screenshot of the canvas as picture.
     on_save_console(self, event): Save the console output to a text file.
     on_quit(self, event): Quit system.
@@ -39,15 +40,8 @@ class FileMenu(wx.Menu):
 
     def on_init(self):
         """Initialise menu and menu items"""
-        # menu stuff hoes here
-        # add new item
-        # special command : wx.ID_NEW is for buttons that create new items or new windows
-        # text has text and shortcut command
-        # newItem = wx.MenuItem(
-        #     parentMenu=self, id=wx.ID_NEW, text="&New\tCtrl+N", kind=wx.ITEM_NORMAL
-        # )
 
-        # open an item
+        # Open item
         openItem = wx.MenuItem(
             parentMenu=self, id=wx.ID_OPEN, text="&Open\tCtrl+O", kind=wx.ITEM_NORMAL
         )
@@ -77,12 +71,11 @@ class FileMenu(wx.Menu):
 
         self.AppendSeparator()
 
-        # quit project
+        # Quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
         self.Append(quitItem)
         self.Bind(wx.EVT_MENU, handler=self.on_quit, source=quitItem)
 
-    # open definition file(text file at the moment)
     def on_open(self, event):
         """Open definition file uploaded by user."""
         wildcard = "TXT files (*.txt)|*.txt"
@@ -147,7 +140,27 @@ class FileMenu(wx.Menu):
 
         dialog.Destroy()
 
-    # possibly save file in the future
+    def get_screenshot(self):
+        """Capture a screenshot of the App."""
+        screen = wx.WindowDC(self.canvas)
+        size = self.canvas.GetSize()
+        width = size.width
+        height = size.height
+        bmp = wx.Bitmap(width, height)
+
+        # Create a memory DC that will be used for actually taking the screenshot
+        memDC = wx.MemoryDC()
+        # Tell the memory DC to use our Bitmap
+        # All drawing action on the memory DC will go to the Bitmap now
+        memDC.SelectObject(bmp)
+        # Blit (in this case copy) the actual screen on the memory DC
+        memDC.Blit(0, 0, width, height, screen, 0, 0)
+        # Select the Bitmap out of the memory DC by selecting a new bitmap
+        memDC.SelectObject(wx.NullBitmap)
+        im = bmp.ConvertToImage()
+
+        return im
+
     def on_save_trace(self, event=None):
         """Save screenshot of the App."""
         im = self.get_screenshot()
@@ -158,36 +171,11 @@ class FileMenu(wx.Menu):
             wildcard=".png",
             style=wx.FD_SAVE,
         )
-        # GetPath fails to get actual path
-        # save_dialog.ShowModal()
-        # import pdb; pdb.set_trace()
         if save_dialog.ShowModal() == wx.ID_OK:
             path = save_dialog.GetPath()
             if not (path[-4:].lower() == ".png"):
                 path = path + ".png"
             im.SaveFile(path)
-
-    def get_screenshot(self):
-        """Capture a screenshot of the App."""
-        screen = wx.WindowDC(self.canvas)
-        size = self.canvas.GetSize()
-        width = size.width
-        height = size.height
-        bmp = wx.Bitmap(width, height)
-        # import pdb; pdb.set_trace()
-
-        # Create a memory DC that will be used for actually taking the screenshot
-        memDC = wx.MemoryDC()
-        # Tell the memory DC to use our Bitmap
-        # all drawing action on the memory DC will go to the Bitmap now
-        memDC.SelectObject(bmp)
-        # Blit (in this case copy) the actual screen on the memory DC
-        memDC.Blit(0, 0, width, height, screen, 0, 0)
-        # Select the Bitmap out of the memory DC by selecting a new bitmap
-        memDC.SelectObject(wx.NullBitmap)
-        im = bmp.ConvertToImage()
-
-        return im
 
     def on_save_console(self, event=None):
         """Capture the console messages in one txt file."""
@@ -228,15 +216,13 @@ class HelpMenu(wx.Menu):
 
     def on_init(self):
         """Initialise menu and menu items"""
-        # menu stuff hoes here
-
-        # open an item
+        # Display starting information/documentation
         infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO, text="&Start\tCtrl+H")
         self.Append(infoItem)
         self.Bind(wx.EVT_MENU, handler=self.on_info, source=infoItem)
         self.AppendSeparator()
 
-        # about information on project
+        # Information about app
         documentationItem = wx.MenuItem(
             parentMenu=self, id=wx.ID_ANY, text="&Documetation\tCtrl+D"
         )
@@ -274,9 +260,6 @@ class AboutMenu(wx.Menu):
 
     def on_init(self):
         """Initialise menu and menu items"""
-        # menu stuff hoes here
-
-        # about information on project
         aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
         self.Append(aboutItem)
         self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
@@ -296,7 +279,6 @@ class ConsoleBox(wx.TextCtrl):
     """This class contains all the methods for creating the menu named 'File'
     Public methods
     --------------
-    on_init(self): Initialisation step
     configure_style(self): Follow the stylesheet defined.
     print_console_message(self, event): Print user message to console.
     clear_console(self, event): Clear all console outputs.
