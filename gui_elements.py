@@ -1,5 +1,6 @@
 import wx
 import os
+import numpy as np
 from names import Names
 from devices import Devices
 from network import Network
@@ -200,6 +201,7 @@ class FileMenu(wx.Menu):
         # Select the Bitmap out of the memory DC by selecting a new bitmap
         memDC.SelectObject(wx.NullBitmap)
         im = bmp.ConvertToImage()
+
         return im
 
     def on_save_console(self, event=None):
