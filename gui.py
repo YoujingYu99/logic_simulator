@@ -94,7 +94,7 @@ class Gui(wx.Frame):
         )
         self.console_font = wx.Font(
             12,
-            wx.FONTFAMILY_SWISS,
+            wx.FONTFAMILY_TELETYPE,
             wx.FONTSTYLE_NORMAL,
             wx.FONTWEIGHT_NORMAL,
             underline=False,
@@ -566,7 +566,6 @@ class Gui(wx.Frame):
         # Set file to be not parsed
         self.is_parsed = False
 
-        # Configure initial parameters
         # Set default spin value
         self.spin_value = 10
         self.cycles_completed = 0

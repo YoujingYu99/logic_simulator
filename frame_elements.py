@@ -152,7 +152,12 @@ class FileMenu(wx.Menu):
                 error_list = parser.error_string.split("$")
                 for error in error_list:
                     self.parentFrame.console_box.\
-                        print_console_message(error)
+                        print_console_message(error+os.linesep)
+                self.parentFrame.console_box.print_console_message(
+                    "A total of " + str(parser.error_count)
+                    + " Error(s) in File. Please correct them and "
+                      "try again.\n"
+                )
 
         dialog.Destroy()
 

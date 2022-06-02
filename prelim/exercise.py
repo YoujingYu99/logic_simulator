@@ -46,7 +46,7 @@ def get_next_number(input_file):
 
     Return the number (or None) and the next non-numeric character.
     """
-    # find start of number
+    # Find start of number
     while True:
         char = input_file.read(1)
         if char.isdigit():
@@ -55,7 +55,7 @@ def get_next_number(input_file):
         elif char == "":
             return None
 
-    # find next non_digit
+    # Find next non_digit
     while True:
         char = input_file.read(1)
         if char.isdigit():
@@ -69,7 +69,7 @@ def get_next_name(input_file):
 
     Return the name string (or None) and the next non-alphanumeric character.
     """
-    # find start of name
+    # Find start of name
     while True:
         char = input_file.read(1)
         if char.isalpha():
@@ -78,7 +78,7 @@ def get_next_name(input_file):
         elif char == "":
             return None
 
-    # find next non_alnum
+    # Find next non_alnum
     while True:
         char = input_file.read(1)
         if char.isalnum():

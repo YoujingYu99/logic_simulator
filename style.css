@@ -1,9 +1,3 @@
-/*
- Orange: #C63D0F
- Black: #3B3738
- Vanilla: #FDF3E7
- Green: #7E8F7C
- */
 
 main_frame {
     /*greyish blue background color*/
@@ -15,15 +9,6 @@ main_frame {
 
 h1, h2, h3, h4, h5, h6, p {
     color: #3B3738;
-}
-
-.button {
-  transition-duration: 0.4s;
-}
-
-.button:hover {
-  background-color: #4CAF50; /* Green */
-  color: white;
 }
 
 .cycle_text{
