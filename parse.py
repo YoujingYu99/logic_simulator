@@ -333,6 +333,8 @@ class Parser:
             while self.symbol.type == self.scanner.COMMA:
                 self.device_name()
                 device_id = self.symbol.id
+
+                self.symbol = self.scanner.get_symbol()
                 if not (
                     self.symbol.type == self.scanner.BRACKET
                     and self.symbol.id == self.scanner.LEFT_BRACKET_ID
