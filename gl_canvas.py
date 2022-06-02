@@ -1,4 +1,5 @@
 """Draw the canvas and subsequent elements for the Graphical User Interface.
+
 Classes:
 --------
 MyGLCanvas - handles all canvas drawing operations.
@@ -11,6 +12,7 @@ from OpenGL import GL, GLUT
 
 class MyGLCanvas(wxcanvas.GLCanvas):
     """Handle all drawing operations.
+
     This class contains functions for drawing onto the canvas. It
     also contains handlers for events relating to the canvas.
     Parameters
@@ -73,7 +75,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         ]
         # Signal parameters
         # Blue, red, black colours for signals
-        self.signal_colours = [(0.0, 0.0, 1.0), (1.0, 0.0, 0.0), (0.0, 0.0, 0.0)]
+        self.signal_colours = [(0.0, 0.0, 1.0), (1.0, 0.0, 0.0),
+                               (0.0, 0.0, 0.0)]
         self.signal_height = 50
         self.signal_cycle_width = 40
         self.signal_y_distance = 20
@@ -136,7 +139,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.draw_signal()
         else:
             pass
-        # We have been drawing to the back buffer, flush the graphics pipeline
+        # We have been drawing to the back buffer, flush the
+        # graphics pipeline
         # and swap the back buffer to the front
         GL.glFlush()
         self.SwapBuffers()
@@ -196,7 +200,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             )
         if event.Leaving():
             text = "".join(
-                ["Mouse left canvas at: ", str(event.GetX()), ", ", str(event.GetY())]
+                ["Mouse left canvas at: ", str(event.GetX()), ", ",
+                 str(event.GetY())]
             )
         if event.Dragging():
             self.pan_x += event.GetX() - self.last_mouse_x
@@ -217,22 +222,26 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 ]
             )
         if event.GetWheelRotation() < 0:
-            self.zoom *= 1.0 + (event.GetWheelRotation() / (20 * event.GetWheelDelta()))
+            self.zoom *= 1.0 + (event.GetWheelRotation() /
+                                (20 * event.GetWheelDelta()))
             # Adjust pan so as to zoom around the mouse position
             self.pan_x -= (self.zoom - old_zoom) * ox
             self.pan_y -= (self.zoom - old_zoom) * oy
             self.init = False
             text = "".join(
-                ["Negative mouse wheel rotation. Zoom is now: ", str(self.zoom)]
+                ["Negative mouse wheel rotation. Zoom is now: ",
+                 str(self.zoom)]
             )
         if event.GetWheelRotation() > 0:
-            self.zoom /= 1.0 - (event.GetWheelRotation() / (20 * event.GetWheelDelta()))
+            self.zoom /= 1.0 - (event.GetWheelRotation() /
+                                (20 * event.GetWheelDelta()))
             # Adjust pan so as to zoom around the mouse position
             self.pan_x -= (self.zoom - old_zoom) * ox
             self.pan_y -= (self.zoom - old_zoom) * oy
             self.init = False
             text = "".join(
-                ["Positive mouse wheel rotation. Zoom is now: ", str(self.zoom)]
+                ["Positive mouse wheel rotation. Zoom is now: ",
+                 str(self.zoom)]
             )
         if text:
             self.render(text)
@@ -253,7 +262,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 GLUT.glutBitmapCharacter(font, ord(character))
 
     def draw_grid(self, spin_value):
-        """Draw grid axes on the displayed signals"""
+        """Draw grid axes on the displayed signals."""
         # Period of cycles
         cycle_period = spin_value // (self.num_period_display - 1)
 
@@ -286,7 +295,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glEnd()
 
         # Draw x grid ticks
-        x_grid_start = self.canvas_origin[0] + self.x_axis_offset + self.y_axis_offset
+        x_grid_start = self.canvas_origin[0] + self.x_axis_offset \
+            + self.y_axis_offset
         if spin_value <= 10:
             # Interval for the vertical grid lines
             x_grid_interval = self.signal_cycle_width
@@ -304,7 +314,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # Only show 8 ticks if spin value greater than 10
             num_list = list(range(self.num_period_display))
             tick_list = [(cycle_period + 1) * tick for tick in num_list]
-            x_tick_x_list = [(i * x_grid_interval) + x_grid_start for i in tick_list]
+            x_tick_x_list = [(i * x_grid_interval) + x_grid_start
+                             for i in tick_list]
         x_tick_y_low = y_bottom + self.x_axis_offset - self.tick_width / 2
         x_tick_y_high = y_bottom + self.x_axis_offset + self.tick_width / 2
         for i in range(len(x_tick_x_list)):
@@ -341,7 +352,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         x_left = self.canvas_origin[0] + self.y_axis_offset
         y_height_needed = (
             len(self.monitored_signal_list)
-            * (self.y_grid_offset_lower + self.signal_height + self.signal_y_distance)
+            * (self.y_grid_offset_lower + self.signal_height
+               + self.signal_y_distance)
             + self.y_grid_offset_upper
             + self.x_axis_offset
         )
@@ -436,7 +448,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         """Draw signal traces for each monitor."""
         self.draw_grid(spin_value=self.cycles_completed)
         # e.g. if cycles period is 2, the label goes 0, 2, 4, ...
-        cycle_period = self.cycles_completed // (self.num_period_display - 1)
+        cycle_period = self.cycles_completed \
+            // (self.num_period_display - 1)
         # Draw signals one on top of another.
         if self.cycles_completed > 0:
             # Draw all signals selected
@@ -448,7 +461,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 font = self.small_font
                 # Put label slightly to the right
                 x_pos_y_label = (
-                    self.canvas_origin[0] + self.y_axis_offset + self.x_grid_offset
+                    self.canvas_origin[0] + self.y_axis_offset
+                    + self.x_grid_offset
                 )
                 # Grid at 0
                 zero_pos = (
@@ -463,8 +477,10 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for character in text:
                     GLUT.glutBitmapCharacter(font, ord(character))
                 # Find signal list for each monitor
-                [device_id, output_id] = self.devices.get_signal_ids(monitor_name)
-                signal_list = self.monitors.monitors_dictionary[(device_id, output_id)]
+                [device_id, output_id] = \
+                    self.devices.get_signal_ids(monitor_name)
+                signal_list = \
+                    self.monitors.monitors_dictionary[(device_id, output_id)]
 
                 # Signal trace depends on the signal count
                 if count % 3 == 1:
@@ -540,7 +556,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                         if 10 <= self.cycles_completed < 20:
                             short_cycle_width = self.signal_cycle_width / 2
                         else:
-                            short_cycle_width = self.signal_cycle_width / cycle_period
+                            short_cycle_width = self.signal_cycle_width \
+                                                / cycle_period
                         x_start = (
                             (index * short_cycle_width)
                             + self.canvas_origin[0]

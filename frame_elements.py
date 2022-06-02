@@ -1,6 +1,19 @@
+"""Define the frame elements for the Logic Simulator.
+
+Used in the Gui class to enable the user to perform functions and
+view console output.
+
+Classes:
+--------
+FileMenu - handles all menu items under 'File' menu.
+HelpMenu - handles all menu items under 'Help' menu.
+AboutMenu - handles all menu items under 'About' menu.
+ConsoleBox - handles all console items in which the user views the messages.
+CycleNumberText - display the number of cycles specified by the user.
+"""
+
 import wx
 import os
-import numpy as np
 from names import Names
 from devices import Devices
 from network import Network
@@ -8,30 +21,23 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
-"""Define the graphical user interface elements for the Logic Simulator.
-Used in the Gui class to enable the user to perform functions and view console output
-Classes:
---------
-FileMenu - handles all menu items under 'File' menu
-HelpMenu - handles all menu items under 'Help' menu
-AboutMenu - handles all menu items under 'About' menu
-ConsoleBox - handles all console items in which the user views the messages
-"""
-
 
 class FileMenu(wx.Menu):
-    """This class contains all the methods for creating the menu named 'File'
+    """This class contains all the methods for creating the menu
+    named 'File'.
+
     Public methods
     --------------
-    on_init(self): Initialisation step
+    on_init(self): Initialisation step.
     on_open(self, event): Open definition file.
-    get_screenshot(self): Get a screenshot of the canvas
+    get_screenshot(self): Get a screenshot of the canvas.
     on_save_trace(self, event): Save a screenshot of the canvas as picture.
     on_save_console(self, event): Save the console output to a text file.
     on_quit(self, event): Quit system.
     """
 
     def __init__(self, parentFrame, main_canvas):
+        """Initialise properties."""
         super().__init__()
         self.on_init()
         self.parentFrame = parentFrame
@@ -39,11 +45,11 @@ class FileMenu(wx.Menu):
         self.token = "FileMenu"
 
     def on_init(self):
-        """Initialise menu and menu items"""
-
+        """Initialise menu and menu items."""
         # Open item
         openItem = wx.MenuItem(
-            parentMenu=self, id=wx.ID_OPEN, text="&Open\tCtrl+O", kind=wx.ITEM_NORMAL
+            parentMenu=self, id=wx.ID_OPEN, text="&Open\tCtrl+O",
+            kind=wx.ITEM_NORMAL
         )
         self.Append(openItem)
         self.Bind(wx.EVT_MENU, handler=self.on_open, source=openItem)
@@ -57,7 +63,8 @@ class FileMenu(wx.Menu):
             kind=wx.ITEM_NORMAL,
         )
         self.Append(saveTraceItem)
-        self.Bind(wx.EVT_MENU, handler=self.on_save_trace, source=saveTraceItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_save_trace,
+                  source=saveTraceItem)
 
         saveConsoleItem = wx.MenuItem(
             parentMenu=self,
@@ -67,12 +74,14 @@ class FileMenu(wx.Menu):
             kind=wx.ITEM_NORMAL,
         )
         self.Append(saveConsoleItem)
-        self.Bind(wx.EVT_MENU, handler=self.on_save_console, source=saveConsoleItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_save_console,
+                  source=saveConsoleItem)
 
         self.AppendSeparator()
 
         # Quit project
-        quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT, text="&Quit\tCtrl+Q")
+        quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT,
+                               text="&Quit\tCtrl+Q")
         self.Append(quitItem)
         self.Bind(wx.EVT_MENU, handler=self.on_quit, source=quitItem)
 
@@ -132,11 +141,13 @@ class FileMenu(wx.Menu):
 
             else:
                 self.parentFrame.console_box.print_console_message(
-                    "File cannot be parsed. Please check your definition file.\n"
+                    "File cannot be parsed. Please check your "
+                    "definition file.\n"
                 )
                 error_list = parser.error_string.split("$")
                 for error in error_list:
-                    self.parentFrame.console_box.print_console_message(error)
+                    self.parentFrame.console_box.\
+                        print_console_message(error)
 
         dialog.Destroy()
 
@@ -148,7 +159,8 @@ class FileMenu(wx.Menu):
         height = size.height
         bmp = wx.Bitmap(width, height)
 
-        # Create a memory DC that will be used for actually taking the screenshot
+        # Create a memory DC that will be used for actually
+        # taking the screenshot
         memDC = wx.MemoryDC()
         # Tell the memory DC to use our Bitmap
         # All drawing action on the memory DC will go to the Bitmap now
@@ -201,7 +213,9 @@ class FileMenu(wx.Menu):
 
 
 class HelpMenu(wx.Menu):
-    """This class contains all the methods for creating the menu named 'Help'
+    """This class contains all the methods for creating the menu
+    named 'Help'.
+
     Public methods
     --------------
     on_init(self): Initialisation step
@@ -210,14 +224,16 @@ class HelpMenu(wx.Menu):
     """
 
     def __init__(self, parentFrame):
+        """Initialise properties."""
         super().__init__()
         self.on_init()
         self.parentFrame = parentFrame
 
     def on_init(self):
-        """Initialise menu and menu items"""
+        """Initialise menu and menu items."""
         # Display starting information/documentation
-        infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO, text="&Start\tCtrl+H")
+        infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO,
+                               text="&Start\tCtrl+H")
         self.Append(infoItem)
         self.Bind(wx.EVT_MENU, handler=self.on_info, source=infoItem)
         self.AppendSeparator()
@@ -227,26 +243,32 @@ class HelpMenu(wx.Menu):
             parentMenu=self, id=wx.ID_ANY, text="&Documetation\tCtrl+D"
         )
         self.Append(documentationItem)
-        self.Bind(wx.EVT_MENU, handler=self.on_documentation, source=documentationItem)
+        self.Bind(wx.EVT_MENU, handler=self.on_documentation,
+                  source=documentationItem)
 
     def on_info(self, event):
-        """Display Basic Help information"""
+        """Display Basic Help information."""
         wx.MessageBox(
-            "Start by uploading your definition file by selecting 'File/Open'.\nChoose the number of cycles you wish "
-            "to run by spinning the button.Then press 'Run' to run the simulation.\nClick on 'Choose Monitor' or "
-            "'Choose Switch' to choose the signals to be displayed or state of switches.",
+            "Start by uploading your definition file by selecting "
+            "'File/Open'.\nChoose the number of cycles you wish "
+            "to run by spinning the button.Then press 'Run' to run the "
+            "simulation.\nClick on 'Choose Monitor' or "
+            "'Choose Switch' to choose the signals to be displayed or "
+            "state of switches.",
             "How to Use Logic Simulator App",
             wx.ICON_INFORMATION | wx.OK,
         )
         return
 
     def on_documentation(self, event):
-        """Open the GitHub Page"""
+        """Open the GitHub Page."""
         wx.LaunchDefaultBrowser("https://github.com/LogicSimulator/GF2_11")
 
 
 class AboutMenu(wx.Menu):
-    """This class contains all the methods for creating the menu named 'About'
+    """This class contains all the methods for creating the menu
+    named 'About'.
+
     Public methods
     --------------
     on_init(self): Initialisation step
@@ -254,20 +276,23 @@ class AboutMenu(wx.Menu):
     """
 
     def __init__(self, parentFrame):
+        """Initialise properties."""
         super().__init__()
         self.on_init()
         self.parentFrame = parentFrame
 
     def on_init(self):
-        """Initialise menu and menu items"""
-        aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT, text="&About\tCtrl+A")
+        """Initialise menu and menu items."""
+        aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT,
+                                text="&About\tCtrl+A")
         self.Append(aboutItem)
         self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
 
     def on_about(self, event):
-        """Display about information"""
+        """Display about information."""
         wx.MessageBox(
-            "Logic Simulator created by Mojisola Agboola\n2017\nDeveloped and completed by Niko, Youjing and Gleb, "
+            "Logic Simulator created by Mojisola Agboola\n2017\n"
+            "Developed and completed by Niko, Youjing and Gleb, "
             "the most brilliant engineers of the 2019 cohort.",
             "About Logsim",
             wx.ICON_INFORMATION | wx.OK,
@@ -276,7 +301,9 @@ class AboutMenu(wx.Menu):
 
 
 class ConsoleBox(wx.TextCtrl):
-    """This class contains all the methods for creating the menu named 'File'
+    """This class contains all the methods for creating the menu
+    named 'File'.
+
     Public methods
     --------------
     configure_style(self): Follow the stylesheet defined.
@@ -294,6 +321,7 @@ class ConsoleBox(wx.TextCtrl):
         size=wx.DefaultSize,
         style=0,
     ):
+        """Initialise properties."""
         super(ConsoleBox, self).__init__(parent, id, label, pos, size, style)
         self.token = "console_box"
         if parent:
@@ -305,7 +333,7 @@ class ConsoleBox(wx.TextCtrl):
         self.console_log = []
 
     def configure_style(self):
-        """Configure the CSS stylesheet in the element"""
+        """Configure the CSS stylesheet in the element."""
         self.style.apply_rules(self)
 
     def print_console_message(self, input_text, clear=False):
@@ -327,12 +355,14 @@ class ConsoleBox(wx.TextCtrl):
         self.print_console_message(input_text=self.console_text, clear=True)
 
     def all_console_messages(self):
-        """Keep all console messages in list"""
+        """Keep all console messages in list."""
         return self.console_log
 
 
 class CycleNumberText(wx.StaticText):
-    """This class contains all the methods for displaying the static number of cycles
+    """This class contains all the methods for displaying the static
+     number of cycles.
+
     Public methods
     --------------
     configure_style(self): Follow the stylesheet defined.
@@ -348,7 +378,9 @@ class CycleNumberText(wx.StaticText):
         style=0,
         name=wx.StaticTextNameStr,
     ):
-        super(CycleNumberText, self).__init__(parent, id, label, pos, size, style, name)
+        """Initialise properties."""
+        super(CycleNumberText, self).__init__(parent, id, label, pos,
+                                              size, style, name)
         self.token = "cycle_text"
         if parent:
             self.token = parent.token + self.token
@@ -356,5 +388,5 @@ class CycleNumberText(wx.StaticText):
         self.configure_style()
 
     def configure_style(self):
-        """Configure the CSS stylesheet in the element"""
+        """Configure the CSS stylesheet in the element."""
         self.style.apply_rules(self)

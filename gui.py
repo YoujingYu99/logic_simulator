@@ -1,28 +1,27 @@
 """Implement the graphical user interface for the Logic Simulator.
+
 Used in the Logic Simulator project to enable the user to run the simulation
 or adjust the network properties.
+
 Classes:
 --------
 Gui - configures the main window and all the widgets.
 """
-import os
 import wx
 import logging
 
-from names import Names
-from devices import Devices
-from network import Network
-from monitors import Monitors
-from scanner import Scanner
-from parse import Parser
 from gl_canvas import MyGLCanvas
-from gui_elements import FileMenu, HelpMenu, AboutMenu, ConsoleBox, CycleNumberText
+from frame_elements import FileMenu, HelpMenu, AboutMenu, \
+    ConsoleBox, CycleNumberText
 
 
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
-    This class provides a graphical user interface for the Logic Simulator and
-    enables the user to change the circuit properties and run simulations.
+
+    This class provides a graphical user interface for the Logic Simulator
+    and enables the user to change the circuit properties and run
+    simulations.
+
     Parameters
     ----------
     title: title of the window.
@@ -31,22 +30,28 @@ class Gui(wx.Frame):
     configure_style(self): Configure CSS stylesheet.
     on_spin(self, event): Event handler for when the user changes the spin
                            control value.
-    check_cycle(self): Check whether the number of cycles is sensible to be run.
+    check_cycle(self): Check whether the number of cycles is sensible
+                            to be run.
     run_network(self, cycles): Check whether the cycle is successfully run.
-    on_run_button(self, spin_value): Event handler for when the user clicks the run
-                                button.
-    on_clear_console_button(self): Event handler for when the user clicks the clear console button.
-    on_rerun_button(self, spin_value): Event handler for when the user clicks the rerun
-    button.
-    on_continue_button(self, spin_value): Event handler for when the user clicks the continue
-    button.
+    on_run_button(self, spin_value): Event handler for when the user clicks
+                            the run button.
+    on_clear_console_button(self): Event handler for when the user clicks
+                            the clear console button.
+    on_rerun_button(self, spin_value): Event handler for when the user
+                            clicks the rerun button.
+    on_continue_button(self, spin_value): Event handler for when the user
+                            clicks the continue button.
     get_monitor_names(self): Return monitor_list and monitor_names_list.
-    on_monitor_button(self): Event handler for when the user chooses a few monitors and draw the signals on canvas.
-    update_monitor(self): Event handler for when the monitor states are updated.
+    on_monitor_button(self): Event handler for when the user chooses a few
+                            monitors and draw the signals.
+    update_monitor(self): Event handler for when the monitor states are
+                            updated.
     get_switch_names(self): Return switch_name_list and switch_on_list.
-    on_switch_button(self): Event handler for when the user chooses a few switches.
+    on_switch_button(self): Event handler for when the user chooses a few
+                            switches.
     update_switches(self): Event handler for when the switch state changes.
-    clear_previous_file(self): Event handler for when the user opens another definition file.
+    clear_previous_file(self): Event handler for when the user opens another
+                            definition file.
     """
 
     def __init__(self, title, path, names, devices, network, monitors):
@@ -123,13 +128,14 @@ class Gui(wx.Frame):
         self.canvas = MyGLCanvas(
             self, devices, monitors, cycles_completed=self.cycles_completed
         )
-        # Pass the monitor names list into monitored_signal_list attribute of canvas
+        # Pass the monitor names list into canvas
         self.canvas.monitored_signal_list = self.monitored_list
         # Get window size
         self.window_size = self.GetClientSize()
 
         self.console_box = ConsoleBox(
-            self, id=wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE | wx.TE_RICH2
+            self, id=wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE
+            | wx.TE_RICH2
         )
         self.console_box.SetFont(self.console_font)
         self.console_box.SetBackgroundColour("white")
@@ -166,7 +172,8 @@ class Gui(wx.Frame):
         self.run_button = wx.Button(self, wx.ID_ANY, "Run")
         self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
         self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
-        self.clear_console_button = wx.Button(self, wx.ID_ANY, "Clear Console")
+        self.clear_console_button = \
+            wx.Button(self, wx.ID_ANY, "Clear Console")
         # Monitor and Switch Buttons
         self.monitor_button = wx.Button(self, wx.ID_ANY, "Choose Monitor")
         self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
@@ -183,12 +190,13 @@ class Gui(wx.Frame):
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
         self.run_button.Bind(wx.EVT_BUTTON, self.on_run_button)
         self.rerun_button.Bind(wx.EVT_BUTTON, self.on_rerun_button)
-        self.clear_console_button.Bind(wx.EVT_BUTTON, self.on_clear_console_button)
+        self.clear_console_button.Bind(wx.EVT_BUTTON,
+                                       self.on_clear_console_button)
         self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button)
         self.monitor_button.Bind(wx.EVT_BUTTON, self.on_monitor_button)
         self.switch_button.Bind(wx.EVT_BUTTON, self.on_switch_button)
 
-        ## Configure sizers for layout
+        # Configure sizers for layout
         # Controls the entire screen
         top_level_sizer = wx.BoxSizer(wx.VERTICAL)
         # Contains canvas and sidebar
@@ -216,23 +224,33 @@ class Gui(wx.Frame):
         # Side sizer configuration
         simulation_setting_sizer.Add(self.text, 1, wx.ALL, 10)
         simulation_setting_sizer.Add(self.spin, 1, wx.ALL, 10)
-        simulation_action_sizer.Add(simulation_action_sizer_1, 1, wx.EXPAND, 0)
-        simulation_action_sizer.Add(simulation_action_sizer_2, 1, wx.EXPAND, 0)
-        simulation_action_sizer_1.Add(self.run_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        simulation_action_sizer_1.Add(self.continue_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
-        simulation_action_sizer_2.Add(self.rerun_button, 1, wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer.Add(simulation_action_sizer_1,
+                                    1, wx.EXPAND, 0)
+        simulation_action_sizer.Add(simulation_action_sizer_2,
+                                    1, wx.EXPAND, 0)
+        simulation_action_sizer_1.Add(self.run_button, 1,
+                                      wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer_1.Add(self.continue_button, 1,
+                                      wx.LEFT | wx.RIGHT, 3, 5)
+        simulation_action_sizer_2.Add(self.rerun_button, 1,
+                                      wx.LEFT | wx.RIGHT, 3, 5)
         simulation_action_sizer_2.Add(
             self.clear_console_button, 1, wx.LEFT | wx.RIGHT, 3, 5
         )
-        simulation_sizer.Add(simulation_setting_sizer, 5, wx.ALL | wx.EXPAND, 5)
-        simulation_sizer.Add(simulation_action_sizer, 5, wx.ALL | wx.EXPAND, 5)
+        simulation_sizer.Add(simulation_setting_sizer, 5,
+                             wx.ALL | wx.EXPAND, 5)
+        simulation_sizer.Add(simulation_action_sizer, 5,
+                             wx.ALL | wx.EXPAND, 5)
 
-        function_sizer.Add(self.monitor_button, 5, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
-        function_sizer.Add(self.switch_button, 5, wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        function_sizer.Add(self.monitor_button, 5,
+                           wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        function_sizer.Add(self.switch_button, 5,
+                           wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
 
         # Console sizer configuration
         console_sizer.Add(self.console_box, 5, wx.EXPAND | wx.ALL, 5)
-        console_sizer.SetMinSize(self.window_size[0], self.window_size[1] / 3)
+        console_sizer.SetMinSize(self.window_size[0],
+                                 self.window_size[1] / 3)
 
         self.SetSizeHints(600, 600)
         self.SetSizer(top_level_sizer)
@@ -243,7 +261,7 @@ class Gui(wx.Frame):
         logging.basicConfig(level=logging.DEBUG)
 
     def configure_style(self):
-        """Configure the CSS stylesheet in the element"""
+        """Configure the CSS stylesheet in the element."""
         self.style.apply_rules(self)
 
     def on_spin(self, event):
@@ -255,11 +273,13 @@ class Gui(wx.Frame):
         self.spin_value = spin_value
 
     def check_cycle(self):
+        """Check whether the number of cycles set to run is sensible."""
         # Warning if too many cycles set
         if self.spin_value >= 1000:
             dlg = wx.MessageDialog(
                 self,
-                "More than 1000 cycles set to be run. Please change to a lower value of runs.",
+                "More than 1000 cycles set to be run. Please "
+                "change to a lower value of runs.",
                 "Warning",
                 wx.OK | wx.ICON_WARNING,
             )
@@ -270,7 +290,8 @@ class Gui(wx.Frame):
         elif 100 < self.spin_value < 1000:
             dlg = wx.MessageDialog(
                 self,
-                "More than 100 cycles set to be run! Are you sure you want to continue?",
+                "More than 100 cycles set to be run! Are you sure you "
+                "want to continue?",
                 "Warning",
                 wx.YES_NO | wx.ICON_QUESTION,
             )
@@ -283,6 +304,7 @@ class Gui(wx.Frame):
 
     def run_network(self, cycles):
         """Run the network for the specified number of simulation cycles.
+
         Return True if successfully run.
         """
         for i in range(cycles):
@@ -310,11 +332,13 @@ class Gui(wx.Frame):
                     self.canvas.monitored_signal_list = self.monitored_list
                     # Update cycles run
                     self.canvas.cycles_completed = self.cycles_completed
-                    text = "".join(["Running for ", str(self.spin_value), " cycles.\n"])
+                    text = "".join(["Running for ",
+                                    str(self.spin_value), " cycles.\n"])
                     self.console_box.print_console_message(text)
             else:
                 # Show error if file was not parsed correctly
-                text = "Cannot run simulation. Please check your definition file.\n"
+                text = "Cannot run simulation. Please check your " \
+                       "definition file.\n"
                 self.console_box.print_console_message(text)
 
     def on_continue_button(self, event):
@@ -327,7 +351,8 @@ class Gui(wx.Frame):
                     # If no previous cycles have run
                     if self.cycles_completed == 0:
                         self.console_box.print_console_message(
-                            "Error! No previous simulation. Please run first.\n"
+                            "Error! No previous simulation. "
+                            "Please run first.\n"
                         )
                     # If the network is successfully run.
                     elif self.run_network(cycles=self.spin_value):
@@ -350,7 +375,10 @@ class Gui(wx.Frame):
 
             else:
                 # Show error if file was not parsed correctly
-                text = "Cannot continue running simulation. Please check your definition file.\n"
+                text = (
+                    "Cannot continue running simulation. Please check"
+                    " your definition file.\n"
+                )
                 self.console_box.print_console_message(text)
 
     def on_clear_console_button(self, event):
@@ -370,18 +398,25 @@ class Gui(wx.Frame):
                 self.console_box.clear_console()
                 self.on_run_button(None)
             else:
-                text = "Cannot rerun simulation. Please check your definition file.\n"
+                text = (
+                    "Cannot rerun simulation. Please check "
+                    "your definition file.\n"
+                )
                 self.console_box.print_console_message(text)
 
     def get_monitor_names(self):
-        """monitored_list/unmonitored_list : names of signals monitored/unmonitored
-        monitor_names_list :all monitor names
+        """Get all monitor names, id and monitored and unmonitored list.
+
+        monitored_list/unmonitored_list : names of signals
+                                    monitored/unmonitored.
+        monitor_names_list :all monitor names.
         """
         # Set monitored and unmonitored lists
         self.monitored_list = self.monitors.get_signal_names()[0]
         self.unmonitored_list = self.monitors.get_signal_names()[1]
         # Append list to get a full list of monitor names
-        self.monitor_names_list = self.monitored_list + self.unmonitored_list
+        self.monitor_names_list = self.monitored_list \
+            + self.unmonitored_list
 
         # To get monitor ids
         for monitor_name in self.monitor_names_list:
@@ -410,17 +445,20 @@ class Gui(wx.Frame):
             dlg.Destroy()
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot Show on Monitor. Please check your definition file.\n"
+            text = "Cannot Show on Monitor. Please check " \
+                   "your definition file.\n"
             self.console_box.print_console_message(text)
 
     def update_monitors(self, selections):
-        """Update signals to be monitored and redraw on canvas"""
+        """Update signals to be monitored and redraw on canvas."""
         # Make monitored list based on user selections
-        new_monitored_list = [self.monitor_names_list[i] for i in selections]
+        new_monitored_list = [self.monitor_names_list[i]
+                              for i in selections]
 
         for monitored_signal in new_monitored_list:
             # Get device and output ids
-            device_id, output_id = self.devices.get_signal_ids(monitored_signal)
+            device_id, output_id = \
+                self.devices.get_signal_ids(monitored_signal)
             # If not already monitored
             if monitored_signal not in self.monitored_list:
                 # Make monitor
@@ -441,9 +479,11 @@ class Gui(wx.Frame):
         self.canvas.monitored_signal_list = self.monitored_list
 
     def get_switch_names(self):
-        """switch_names_list : list of switch names
-        switch_id_list : list of the switch ids
-        switch_on_list : list of switch names for switches set to High
+        """Get all switch names, ids and switches on.
+
+        switch_names_list : list of switch names.
+        switch_id_list : list of the switch ids.
+        switch_on_list : list of switch names for switches set to High.
         """
         # Get switch ids for all devices present
         self.switch_id_list = self.devices.find_devices(self.devices.SWITCH)
@@ -454,7 +494,8 @@ class Gui(wx.Frame):
             switch_id = self.switch_id_list[i]
             switch_name = self.switch_name_list[i]
             # If the state of the switch is HIGH
-            if self.devices.get_device(switch_id).switch_state == self.devices.HIGH:
+            if self.devices.get_device(switch_id).switch_state \
+                    == self.devices.HIGH:
                 # Add the name of the switch into the switch_on list
                 self.switch_on_list.append(switch_name)
 
@@ -476,11 +517,13 @@ class Gui(wx.Frame):
 
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot Show on Monitor. Please check your definition file.\n"
+            text = "Cannot Show on Monitor. Please check " \
+                   "your definition file.\n"
             self.console_box.print_console_message(text)
 
     def update_switches(self, selections):
-        """Update states of the switches in devices and pass into canvas element."""
+        """Update states of the switches in devices and pass into canvas
+        element."""
         # Reset the list of switches on depending on user selection
         self.switch_on_list = [self.switch_name_list[i] for i in selections]
         # Unchosen switches in switch_off_list
@@ -501,7 +544,7 @@ class Gui(wx.Frame):
         self.canvas.devices = self.devices
 
     def clear_previous_file(self):
-        """Reinitialise everything when new definition file chosen"""
+        """Reinitialise everything when new definition file chosen."""
         # Set all input parameters to None/empty
         self.network = None
         self.names = None

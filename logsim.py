@@ -14,8 +14,6 @@ import getopt
 import sys
 import logging
 
-import wx
-
 from names import Names
 from devices import Devices
 from network import Network
@@ -46,11 +44,6 @@ def main(arg_list):
         print(usage_message)
         sys.exit()
 
-    # Initialise instances of the four inner simulator classes
-    # names = Names()
-    # devices = Devices(names)
-    # network = Network(names, devices)
-    # monitors = Monitors(names, devices, network)
     names = None
     devices = None
     network = None
@@ -67,12 +60,6 @@ def main(arg_list):
             print(usage_message)
             sys.exit()
         elif option == "-c":  # use the command line user interface
-            # scanner = Scanner(path, names)
-            # parser = Parser(names, devices, network, monitors, scanner)
-            # if parser.parse_network():
-            #     # Initialise an instance of the userint.UserInterface() class
-            #     userint = UserInterface(names, devices, network, monitors)
-            #     userint.command_interface()
             names_instance = Names()
             scanner_instance = Scanner(
                 path, names_instance, scanner_logger
@@ -93,7 +80,7 @@ def main(arg_list):
             )
 
             if parser.parse_network():
-            # Initialise an instance of the userint.UserInterface() class
+                # Initialise an instance of the userint.UserInterface() class
                 names = parser.names
                 network = parser.network
                 devices = parser.devices
@@ -106,7 +93,8 @@ def main(arg_list):
 
         # if arguments were given
         if arguments:
-            print("Error: No input should be given for Graphic User Interface\n")
+            print("Error: No input should be given for Graphic "
+                  "User Interface\n")
             print(usage_message)
             sys.exit()
 
