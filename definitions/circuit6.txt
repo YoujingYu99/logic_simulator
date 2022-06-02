@@ -2,7 +2,6 @@ DEVICES{
     DTYPE dtype1;
     DTYPE dtype2;
     CLOCK clock(10);
-    sw
 }
 CONNECT{
     sw1 => and1.I1;

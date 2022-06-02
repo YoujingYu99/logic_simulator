@@ -189,25 +189,20 @@ class Parser:
             device_id = self.symbol.id
             output_id = None
 
-            if self.symbol.id == self.scanner.DTYPE_ID:
-                self.symbol = self.scanner.get_symbol()
+            self.symbol = self.scanner.get_symbol()
 
-                if int(self.symbol.type) == self.scanner.DOT:
-                    self.symbol = self.scanner.get_symbol()
-                    if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
-                        output_id = self.symbol.id
-                        self.symbol = self.scanner.get_symbol()
-                        self.monitors.make_monitor(
-                            device_id, output_id, cycles_completed=0
-                        )
-                    else:
-                        self.error("OUTPUT_PIN_EXPECTED")
-            else:
-                self.logger.debug("Creating device")
-                self.monitors.make_monitor(
-                    device_id, output_id, cycles_completed=0
-                )
+            if int(self.symbol.type) == self.scanner.DOT:
                 self.symbol = self.scanner.get_symbol()
+                if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
+                    output_id = self.symbol.id
+                    self.symbol = self.scanner.get_symbol()
+
+                else:
+                    self.error("OUTPUT_PIN_EXPECTED")
+
+            self.monitors.make_monitor(
+                device_id, output_id, cycles_completed=0
+            )
 
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
