@@ -285,7 +285,7 @@ class Parser:
         ):
             self.logger.debug("-GATE found, start to parse GATE")
             self.gate_devices(self.symbol.id)
-        elif self.symbol.id == self.XOR_ID:
+        elif self.symbol.id == self.scanner.XOR_ID:
             self.logger.debug("-GATE found, start to parse GATE")
             self.xor(self.symbol.id)
         else:
