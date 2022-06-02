@@ -15,11 +15,13 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     This class contains functions for drawing onto the canvas. It
     also contains handlers for events relating to the canvas.
+
     Parameters
     ----------
     parent: parent window.
     devices: instance of the devices.Devices() class.
     monitors: instance of the monitors.Monitors() class.
+
     Public methods
     --------------
     init_gl(self): Configures the OpenGL context.

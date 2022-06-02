@@ -26,6 +26,11 @@ class FileMenu(wx.Menu):
     """This class contains all the methods for creating the menu
     named 'File'.
 
+    Parameters
+    ----------
+    parentFrame: parent frame, which is the main frame.
+    main_canvas: canvas object.
+
     Public methods
     --------------
     on_init(self): Initialisation step.
