@@ -1,5 +1,6 @@
 import wx
 import os
+import numpy as np
 from names import Names
 from devices import Devices
 from network import Network
@@ -96,15 +97,19 @@ class FileMenu(wx.Menu):
 
         path = dialog.GetPath()
         if os.path.exists(path):
-            # with open(path) as myfile:
             text = "Loading {file_name:}.\n".format(file_name=path)
             self.parentFrame.console_box.print_console_message(text)
-
+            # Clear memories from the previous file
+            self.parentFrame.clear_previous_file()
             names_instance = Names()
-            scanner_instance = Scanner(path, names_instance, self.parentFrame.scanner_logger)
+            scanner_instance = Scanner(
+                path, names_instance, self.parentFrame.scanner_logger
+            )
             device_instance = Devices(names_instance)
             network_instance = Network(names_instance, device_instance)
-            monitor_instance = Monitors(names_instance, device_instance, network_instance)
+            monitor_instance = Monitors(
+                names_instance, device_instance, network_instance
+            )
 
             parser = Parser(
                 names_instance,
@@ -114,21 +119,6 @@ class FileMenu(wx.Menu):
                 scanner_instance,
                 self.parentFrame.parser_logger,
             )
-
-            # names = Names()
-            # scanner = Scanner(path, names, self.parentFrame.scanner_logger)
-            # devices = Devices(names)
-            # network = Network(names, devices)
-            # monitors = Monitors(names, devices, network)
-            #
-            # parser = Parser(
-            #     names,
-            #     devices,
-            #     network,
-            #     monitors,
-            #     scanner,
-            #     self.parentFrame.parser_logger,
-            # )
 
             if parser.parse_network():
                 # Set successfully parsed
@@ -148,10 +138,12 @@ class FileMenu(wx.Menu):
                 self.parentFrame.get_monitor_names()
 
             else:
-                print(parser.devices.find_devices())
                 self.parentFrame.console_box.print_console_message(
                     "File cannot be parsed. Please check your definition file.\n"
                 )
+                error_list = parser.error_string.split("$")
+                for error in error_list:
+                    self.parentFrame.console_box.print_console_message(error)
 
         dialog.Destroy()
 
@@ -194,6 +186,7 @@ class FileMenu(wx.Menu):
         # Select the Bitmap out of the memory DC by selecting a new bitmap
         memDC.SelectObject(wx.NullBitmap)
         im = bmp.ConvertToImage()
+
         return im
 
     def on_save_console(self, event=None):

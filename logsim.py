@@ -12,6 +12,7 @@ Graphical user interface: logsim.py <file path>
 """
 import getopt
 import sys
+import logging
 
 import wx
 
@@ -56,15 +57,47 @@ def main(arg_list):
     monitors = None
     path = None
 
+    # Configure the loggers
+    scanner_logger = logging.getLogger("scanner")
+    parser_logger = logging.getLogger("parser")
+    logging.basicConfig(level=logging.DEBUG)
+
     for option, path in options:
         if option == "-h":  # print the usage message
             print(usage_message)
             sys.exit()
         elif option == "-c":  # use the command line user interface
-            scanner = Scanner(path, names)
-            parser = Parser(names, devices, network, monitors, scanner)
+            # scanner = Scanner(path, names)
+            # parser = Parser(names, devices, network, monitors, scanner)
+            # if parser.parse_network():
+            #     # Initialise an instance of the userint.UserInterface() class
+            #     userint = UserInterface(names, devices, network, monitors)
+            #     userint.command_interface()
+            names_instance = Names()
+            scanner_instance = Scanner(
+                path, names_instance, scanner_logger
+            )
+            device_instance = Devices(names_instance)
+            network_instance = Network(names_instance, device_instance)
+            monitor_instance = Monitors(
+                names_instance, device_instance, network_instance
+            )
+
+            parser = Parser(
+                names_instance,
+                device_instance,
+                network_instance,
+                monitor_instance,
+                scanner_instance,
+                parser_logger,
+            )
+
             if parser.parse_network():
-                # Initialise an instance of the userint.UserInterface() class
+            # Initialise an instance of the userint.UserInterface() class
+                names = parser.names
+                network = parser.network
+                devices = parser.devices
+                monitors = parser.monitors
                 userint = UserInterface(names, devices, network, monitors)
                 userint.command_interface()
 
