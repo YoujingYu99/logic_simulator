@@ -256,11 +256,10 @@ class Scanner:
             if char.isnumeric():
                 number_string += char
             else:
-                number_int = int(number_string)
                 return (number_string, char)
 
     def get_error_line(self, line_num, line_col):
-        """Extract the line with error and put marker under error column."""
+        """Return the line with error and put marker under error column."""
         with open(self.path) as f:
             lines = f.readlines()
             lines = [line.strip() for line in lines]
@@ -314,7 +313,6 @@ class Scanner:
                 [symbol.id] = self.names.lookup([capital_string])
 
         elif self.current_character == "I":
-            # Saves only the input number.
             self.advance()
             if self.current_character.isdigit():
                 symbol.type = self.GATE_PIN
