@@ -1,7 +1,7 @@
 # Logic Simulatior App
 
 ## Goal
-The aim of our project is to design a logic simulator. The logic network is defined by a circuit definition text file which is to be uploaded by the user. A detailed specification for the language of the circuit definition, using the Extended Backus Naur Form (EBNF) notation, has also been provided. The functionality of the logic simulator is to simulate the operations of an electrical circuit computationally, which provides a time-saving way to test the functionalities of circuits designed.
+The aim of our project is to design a logic simulator. The logic network is defined by a circuit definition text file which is to be uploaded by the user. A detailed specification for the language of the circuit definition, using the Extended Backus Naur Form (EBNF) notation, has also been provided in `grammer.ebnf`. The functionality of the logic simulator is to simulate the operations of an electrical circuit computationally, which provides a time-saving way to test the functionalities of circuits designed.
 
 
 
