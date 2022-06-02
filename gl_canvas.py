@@ -259,7 +259,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
         # Draw x axis. Set x starting points
         x_left = self.canvas_origin[0]
-        if spin_value < 10:
+        if spin_value <= 10:
             x_right = (
                 self.canvas_origin[0]
                 + spin_value * self.signal_cycle_width
@@ -288,7 +288,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Draw x grid ticks
         x_grid_interval = self.signal_cycle_width
         x_grid_start = self.canvas_origin[0] + self.x_axis_offset + self.y_axis_offset
-        if spin_value < 10:
+        if spin_value <= 10:
             # Interval for the vertical grid lines
             x_grid_interval = self.signal_cycle_width
             # Positions of x ticks
@@ -298,7 +298,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(spin_value + 1)
             ]
         else:
-            if 10 < spin_value < 20:
+            if 10 <= spin_value < 20:
                 x_grid_interval = self.signal_cycle_width / 2
             else:
                 x_grid_interval = self.signal_cycle_width / cycle_period
@@ -323,7 +323,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             y_pos = y_bottom + self.x_axis_offset / 2
             GL.glRasterPos2f(x_pos, y_pos)
             font = self.small_font
-            if spin_value < 10:
+            if spin_value <= 10:
                 label = str(i)
             else:
                 label = str(tick_list[i])
@@ -333,7 +333,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Label x axis
         text = "No. of Cycles"
         font = self.label_font
-        x_pos_x_label = x_right + self.y_axis_offset/2
+        x_pos_x_label = x_right + self.y_axis_offset / 2
         y_pos_x_label = y_bottom + self.x_axis_offset
         GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos_x_label, y_pos_x_label)
@@ -495,7 +495,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(len(signal_list)):
                     indiv_signal = signal_list[index]
                     # horizontal start point of signal
-                    if self.cycles_completed < 10:
+                    if self.cycles_completed <= 10:
                         normal_cycle_width = self.signal_cycle_width
                         x_start = (
                             (index * normal_cycle_width)
@@ -530,7 +530,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                             GL.glVertex2f(x_end, y)
                     else:
                         # Squeeze cycles together if too many cycles chosen
-                        if 10 < self.cycles_completed < 20:
+                        if 10 <= self.cycles_completed < 20:
                             short_cycle_width = self.signal_cycle_width / 2
                         else:
                             short_cycle_width = self.signal_cycle_width / cycle_period
