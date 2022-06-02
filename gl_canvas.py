@@ -298,7 +298,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(spin_value + 1)
             ]
         else:
-            x_grid_interval = self.signal_cycle_width/cycle_period
+            x_grid_interval = self.signal_cycle_width / cycle_period
             # Only show 8 ticks if spin value greater than 10
             num_list = list(range(self.num_period_display))
             tick_list = [(cycle_period + 1) * tick for tick in num_list]
@@ -344,13 +344,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         x_left = self.canvas_origin[0] + self.y_axis_offset
         y_height_needed = (
             len(self.monitored_signal_list)
-            * (
-                self.x_axis_offset
-                + self.y_grid_offset_lower
-                + self.signal_height
-                + self.y_grid_offset_upper
-                + self.signal_y_distance
-            )
+            * (self.y_grid_offset_lower + self.signal_height + self.signal_y_distance)
+            + self.y_grid_offset_upper
             + self.x_axis_offset
         )
         y_top = y_bottom + y_height_needed
@@ -358,7 +353,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Draw y axis
         GL.glColor3f(0, 0, 0)
         GL.glBegin(GL.GL_LINE_STRIP)
-        GL.glVertex2f(x_left, y_bottom)
+        GL.glVertex2f(x_left, y_bottom + self.x_axis_offset/2)
         GL.glVertex2f(x_left, y_top)
         GL.glEnd()
 
