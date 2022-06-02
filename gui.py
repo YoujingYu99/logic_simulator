@@ -31,6 +31,8 @@ class Gui(wx.Frame):
     on_menu(self, event): Event handler for the file menu.
     on_spin(self, event): Event handler for when the user changes the spin
                            control value.
+    check_cycle(self): Check whether the number of cycles is sensible to be run.
+    run_network(self, cycles): Check whether the cycle is successfully run.
     on_run_button(self, spin_value): Event handler for when the user clicks the run
                                 button.
     on_rerun_button(self, spin_value): Event handler for when the user clicks the rerun
@@ -109,6 +111,7 @@ class Gui(wx.Frame):
 
         # Temporarily set file to be not parsed
         self.is_parsed = False
+        self.cycle_ok = False
 
         # configure initial parameters
         # Set default spin value
@@ -255,30 +258,30 @@ class Gui(wx.Frame):
         # Update spin values in frame and canvas
         self.canvas.render(text)
         # Disallow running for more than 1000 cycles
-        if spin_value >= 1000:
-            dlg = wx.MessageDialog(
-                self,
-                "More than 1000 cycles set to be run. Please change to a lower value of runs.",
-                "Warning",
-                wx.OK | wx.ICON_WARNING,
-            )
-            dlg.ShowModal()
-            dlg.Destroy()
-        # Warning if running more than 100 cycles
-        elif 100 < spin_value < 1000:
-            dlg = wx.MessageDialog(
-                self,
-                "More than 100 cycles set to be run! Are you sure you want to continue?",
-                "Warning",
-                wx.YES_NO | wx.ICON_QUESTION,
-            )
-            dlg.ShowModal()
-            if dlg.ShowModal() == wx.ID_YES:
-                self.spin_value = spin_value
-            dlg.Destroy()
+        # if spin_value >= 1000:
+        #     dlg = wx.MessageDialog(
+        #         self,
+        #         "More than 1000 cycles set to be run. Please change to a lower value of runs.",
+        #         "Warning",
+        #         wx.OK | wx.ICON_WARNING,
+        #     )
+        #     dlg.ShowModal()
+        #     dlg.Destroy()
+        # # Warning if running more than 100 cycles
+        # elif 100 < spin_value < 1000:
+        #     dlg = wx.MessageDialog(
+        #         self,
+        #         "More than 100 cycles set to be run! Are you sure you want to continue?",
+        #         "Warning",
+        #         wx.YES_NO | wx.ICON_QUESTION,
+        #     )
+        #     dlg.ShowModal()
+        #     if dlg.ShowModal() == wx.ID_YES:
+        #         self.spin_value = spin_value
+        #     dlg.Destroy()
 
-        else:
-            self.spin_value = spin_value
+        # else:
+        self.spin_value = spin_value
 
     def run_network(self, cycles):
         """Run the network for the specified number of simulation cycles.
@@ -293,60 +296,90 @@ class Gui(wx.Frame):
                 return False
         return True
 
+    def check_cycle(self):
+        # Warning if too many cycles set
+        if self.spin_value >= 1000:
+            dlg = wx.MessageDialog(
+                self,
+                "More than 1000 cycles set to be run. Please change to a lower value of runs.",
+                "Warning",
+                wx.OK | wx.ICON_WARNING,
+            )
+            dlg.ShowModal()
+            dlg.Destroy()
+            self.cycle_ok = False
+        # Warning if running more than 100 cycles
+        elif 100 < self.spin_value < 1000:
+            dlg = wx.MessageDialog(
+                self,
+                "More than 100 cycles set to be run! Are you sure you want to continue?",
+                "Warning",
+                wx.YES_NO | wx.ICON_QUESTION,
+            )
+            dlg.ShowModal()
+            if dlg.ShowModal() == wx.ID_YES:
+                self.cycle_ok = True
+            dlg.Destroy()
+        else:
+            self.cycle_ok = True
+
     def on_run_button(self, event):
         """Handle the event when the user clicks the run button."""
-        # text = "Run button pressed."
-        # self.canvas.render(text)
-        if self.is_parsed:
-            # Reset the number of cycles
-            self.cycles_completed = 0
-            self.monitors.reset_monitors()
-            self.devices.cold_startup()
-            # If successfully run
-            if self.run_network(self.spin_value):
-                self.cycles_completed += self.spin_value
-                self.canvas.monitored_signal_list = self.monitored_list
-                # Update cycles run
-                self.canvas.cycles_completed = self.cycles_completed
-                text = "".join(["Running for ", str(self.spin_value), " cycles.\n"])
+        # Check whether a sensible number of cycles is run
+        self.check_cycle()
+        if self.cycle_ok:
+            if self.is_parsed:
+                # Reset the number of cycles
+                self.cycles_completed = 0
+                self.monitors.reset_monitors()
+                self.devices.cold_startup()
+                # If successfully run
+                if self.run_network(self.spin_value):
+                    self.cycles_completed += self.spin_value
+                    self.canvas.monitored_signal_list = self.monitored_list
+                    # Update cycles run
+                    self.canvas.cycles_completed = self.cycles_completed
+                    text = "".join(["Running for ", str(self.spin_value), " cycles.\n"])
+                    self.console_box.print_console_message(text)
+            else:
+                # Show error if file was not parsed correctly
+                text = "Cannot run simulation. Please check your definition file.\n"
                 self.console_box.print_console_message(text)
-        else:
-            # Show error if file was not parsed correctly
-            text = "Cannot run simulation. Please check your definition file.\n"
-            self.console_box.print_console_message(text)
 
     def on_continue_button(self, event):
         """Continue a previously run simulation."""
-        if self.is_parsed:
-            if self.spin_value is not None:
-                # If no previous cycles have run
-                if self.cycles_completed == 0:
-                    self.console_box.print_console_message(
-                        "Error! No previous simulation. Please run first.\n"
-                    )
-                # If the network is successfully run.
-                elif self.run_network(cycles=self.spin_value):
-                    self.cycles_completed += self.spin_value
-                    # Update canvas cycles
-                    self.canvas.cycles_completed = self.cycles_completed
-                    text = "".join(
-                        [
-                            "Continuing for ",
-                            str(self.spin_value),
-                            " cycles,",
-                            " a total of ",
-                            str(self.cycles_completed),
-                            " cycles run.\n",
-                        ]
-                    )
-                    self.console_box.print_console_message(text)
-                    # Update canvas information
-                    # Add to the number of cycles run
+        self.check_cycle()
+        if self.cycle_ok:
+            if self.is_parsed:
+                if self.spin_value is not None:
+                    # If no previous cycles have run
+                    if self.cycles_completed == 0:
+                        self.console_box.print_console_message(
+                            "Error! No previous simulation. Please run first.\n"
+                        )
+                    # If the network is successfully run.
+                    elif self.run_network(cycles=self.spin_value):
+                        self.cycles_completed += self.spin_value
+                        # Update canvas cycles
+                        self.canvas.cycles_completed = self.cycles_completed
+                        text = "".join(
+                            [
+                                "Continuing for ",
+                                str(self.spin_value),
+                                " cycles,",
+                                " a total of ",
+                                str(self.cycles_completed),
+                                " cycles run.\n",
+                            ]
+                        )
+                        self.console_box.print_console_message(text)
+                        # Update canvas information
+                        # Add to the number of cycles run
 
-        else:
-            # Show error if file was not parsed correctly
-            text = "Cannot continue running simulation. Please check your definition file.\n"
-            self.console_box.print_console_message(text)
+            else:
+                # Show error if file was not parsed correctly
+                text = "Cannot continue running simulation. Please check your definition file.\n"
+                self.console_box.print_console_message(text)
 
     def on_clear_console_button(self, event):
         """Clear the entire console output."""
@@ -354,16 +387,18 @@ class Gui(wx.Frame):
 
     def on_rerun_button(self, event):
         """Run the simulation from scratch."""
-        if self.is_parsed:
-            # Reset cycles completed number
-            self.cycles_completed = 0
-            self.canvas.cycles_completed = self.cycles_completed
-            # Reset console to be clear
-            self.console_box.clear_console()
-            self.on_run_button(None)
-        else:
-            text = "Cannot rerun simulation. Please check your definition file.\n"
-            self.console_box.print_console_message(text)
+        self.check_cycle()
+        if self.cycle_ok:
+            if self.is_parsed:
+                # Reset cycles completed number
+                self.cycles_completed = 0
+                self.canvas.cycles_completed = self.cycles_completed
+                # Reset console to be clear
+                self.console_box.clear_console()
+                self.on_run_button(None)
+            else:
+                text = "Cannot rerun simulation. Please check your definition file.\n"
+                self.console_box.print_console_message(text)
 
     def get_monitor_names(self):
         """monitored_list/unmonitored_list : names of signals monitored/unmonitored
