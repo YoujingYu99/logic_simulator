@@ -1,3 +1,4 @@
+from email import parser
 from scanner import Symbol, Scanner
 from names import Names
 from devices import Devices
@@ -51,6 +52,7 @@ class Parser:
         self.success = 1
         self.symbol = ""
         self.error_count = 0
+        self.error_string = "" # when new error encountered add $
         self.logger = logger
 
     def parse_network(self):
@@ -614,19 +616,24 @@ class Parser:
             f"""Error location: line:{self.scanner.current_line}
                              column:{self.scanner.current_col}"""
         )
+        self.error_string += (f"""Error location: line:{self.scanner.current_line}column:{self.scanner.current_col}$""")
         if error_type == "LEFT_CURLY_BRACE_EXPECTED":
             print("Missing '{'")
+            self.error_string += ("Missing '{'$")
         elif error_type == "RIGHT_CURLY_BRACE_EXPECTED":
             print("Missing '}'")
+            self.error_string += ("Missing '}'$")
             if self.symbol.type == self.scanner.EOF:
                 return
             while self.symbol.type != self.scanner.KEYWORD:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "MISSING_END_KEYWORD":
             print("Missing END to indicate end of definition file")
+            self.error_string += ("Missing END to indicate end of definition file$")
             sys.exit()
         elif error_type == "DEVICE_NAME_EXPECTED":
             print("Device output to monitor not specified")
+            self.error_string += ("Device output to monitor not specified$")
             while self.symbol.id not in [
                 self.scanner.SEMICOLON_ID,
                 self.scanner.RIGHT_CURLY_BRACKET_ID,
@@ -637,6 +644,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "SEMICOLON_EXPECTED":
             print("Semicolon expected at end of line.")
+            self.error_string += ("Semicolon expected at end of line.$")
             while self.symbol.type not in [
                 self.scanner.CURLY_BRACKET,
                 self.scanner.KEYWORD,
@@ -646,6 +654,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "OUTPUT_PIN_EXPECTED":
             print("Output pin not specified")
+            self.error_string += ("Output pin not specified$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -655,9 +664,11 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "RIGHT_ARROW_EXPECTED":
             print("Right arrow expected to signify connect")
+            self.error_string += ("Right arrow expected to signify connect$")
 
         elif error_type in ["INPUT_SPECIFICATION_EXPECTED", "NOT_VALID_INPUT"]:
             print("Input expected but no specified")
+            self.error_string += ("Input expected but no specified$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -667,6 +678,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "DEVICE_TYPE_NOT_DECLARED":
             print("Device type not specified, please specify")
+            self.error_string += ("Device type not specified, please specify$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -677,6 +689,7 @@ class Parser:
 
         elif error_type == "LEFT_BRACKET_EXPECTED":
             print("'(' expected but not present")
+            self.error_string += ("'(' expected but not present$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -688,9 +701,11 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INVALID_INPUT_INITIALISATION":
             print("Number of inputs incorrectly configured")
+            self.error_string += ("Number of inputs incorrectly configured$")
             self.symbol = self.scanner.get_symbol()
         elif error_type == "RIGHT_BRACKET_EXPECTED":
             print("')' expected at end of initialisaition")
+            self.error_string += ("')' expected at end of initialisaition$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -702,6 +717,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INVALID_CYCLE_VALUE":
             print("Invalid value of clock cycles")
+            self.error_string += ("Invalid value of clock cycles$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -714,6 +730,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INVALID_STATE_OF_SWITCH":
             print("Invalid state of switch")
+            self.error_string += ("Invalid state of switch$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -726,6 +743,7 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "UNKNOWN_INPUT":
             print("Incorrect_input_pin")
+            self.error_string += ("Incorrect_input_pin$")
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -801,108 +819,6 @@ class Parser:
 #
 # print('--Get output from andg using display_signals')
 # parser_1.monitors.display_signals()
-# path_definition = "definitions/circuit.def"
-# scanner_logger = logging.getLogger("scanner")
-# parser_logger = logging.getLogger("parser")
-# logging.basicConfig(level=logging.DEBUG)
-
-
-# names_instance = Names()
-# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-# device_instance = Devices(names_instance)
-# network_instance = Network(names_instance, device_instance)
-# monitor_instance = Monitors(names_instance, device_instance, network_instance)
-
-
-# parser_1 = Parser(
-#     names_instance,
-#     device_instance,
-#     network_instance,
-#     monitor_instance,
-#     scanner_instance,
-#     parser_logger,
-# )
-
-
-# a = parser_1.parse_network()
-# print('--Check all devices have been created')
-# print(parser_1.devices.find_devices())
-# print(parser_1.devices.get_device(42).inputs) # This is the DTYPE device
-# print(parser_1.devices.get_device(42).outputs) # DTYPE
-# print(parser_1.devices.get_device(46).inputs)
-
-
-# print('--Check all network inputs are satisfied')
-# print(parser_1.network.check_network())
-# print('--Try simulate network')
-# simulate = parser_1.network.execute_network()
-# print(simulate)
-
-# monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
-
-# print('--List monitor points')
-# print(monitored_signal_list)
-
-# print('--Pring input and outputs')
-# print(parser_1.devices.get_device(42).outputs) # DTYPE
-# print(parser_1.devices.get_device(42).inputs)
-
-
-# # For circuit 2
-# path_definition = "definitions/circuit2.def.txt"
-# scanner_logger = logging.getLogger("scanner")
-# parser_logger = logging.getLogger("parser")
-# logging.basicConfig(level=logging.DEBUG)
-#
-# names_instance = Names()
-# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-# device_instance = Devices(names_instance)
-# network_instance = Network(names_instance, device_instance)
-# monitor_instance = Monitors(names_instance, device_instance, network_instance)
-#
-# parser_1 = Parser(
-#     names_instance,
-#     device_instance,
-#     network_instance,
-#     monitor_instance,
-#     scanner_instance,
-#     parser_logger,
-# )
-#
-# a = parser_1.parse_network()
-# print('--Confirm that and gate has been created')
-# print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
-# print('--Confirm that switches have been created')
-# print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
-#
-#
-# print('--ANDg inputs')
-# print(parser_1.devices.get_device(42).inputs)
-# print('--ANDg output')
-# print(parser_1.devices.get_device(42).outputs)
-#
-# print('--Check all network inputs are satisfied')
-# print(parser_1.network.check_network())
-#
-# monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
-#
-# print('--List monitor points')
-# print(monitored_signal_list, non_monitored_signal_list)
-#
-# for i in range(5):
-#     print('--Try simulate network')
-#     simulate = parser_1.network.execute_network()
-#     print(simulate)
-#
-#     print('--Try record signals')
-#     parser_1.monitors.record_signals()
-#
-# print('--Get output from andg')
-# print(parser_1.monitors.get_monitor_signal( 42, None))
-#
-# print('--Get output from andg using display_signals')
-#
-# parser_1.monitors.display_signals()
 
 
 # For circuit 2
@@ -960,5 +876,7 @@ class Parser:
 # print('--Get output from andg using display_signals')
 
 # parser_1.monitors.display_signals()
+
+
 
 
