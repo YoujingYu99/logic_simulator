@@ -155,7 +155,9 @@ class FileMenu(wx.Menu):
                 self.parentFrame.console_box.print_console_message(
                     "File cannot be parsed. Please check your definition file.\n"
                 )
-                parser.error_string
+                error_list = parser.error_string.split('$')
+                for error in error_list:
+                    self.parentFrame.console_box.print_console_message(error)
 
         dialog.Destroy()
 
