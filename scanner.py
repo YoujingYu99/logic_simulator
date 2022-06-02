@@ -8,6 +8,7 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
+from black import out
 from names import Names
 import logging
 import sys
@@ -56,6 +57,9 @@ class Scanner:
         self.names = names
         self.current_line = 1
         self.current_col = 0
+
+        self.current_line_error = 1
+        self.current_col_error = 0
 
         # <--- Create Symbol Types --->
         self.symbol_type_list = [
@@ -153,23 +157,32 @@ class Scanner:
             self.I16_ID] = self.names.lookup(self.gates_pin_list)
 
         self.current_character = ""
+        self.current_character_error = ""
 
         # Opens the definition file
+        self.path = path
         self.file = open(path)
+        self.file_error = open(path)
         self.logger = logger
         self.logger.info("\nNow reading file...")
         self.logger.info("File name:  " + self.file.name)
 
-    def advance(self):
+    def advance(self, read_error_file=False):
         """Read next character and update current character."""
-        self.current_character = self.file.read(1)
-        self.current_col += 1
-        if self.current_character != "":
-            if ord(self.current_character) == 10:  # newline 
-                self.current_line += 1
-                self.current_col = 0
-
-        
+        if read_error_file:
+            self.current_character_error = self.file_error.read(1)
+            self.current_col_error += 1
+            if self.current_character_error != "":
+                if ord(self.current_character_error) == 10:  # newline 
+                    self.current_line_error += 1
+                    self.current_col_error = 0
+        else:
+            self.current_character = self.file.read(1)
+            self.current_col += 1
+            if self.current_character != "":
+                if ord(self.current_character) == 10:  # newline 
+                    self.current_line += 1
+                    self.current_col = 0
 
     def skip_spaces(self):
         """Assign next non whitespace character to current character."""
@@ -233,6 +246,23 @@ class Scanner:
             else:
                 number_int = int(number_string)
                 return (number_string, char)
+
+    def get_error_line(self, line_num, line_col):
+        with open(self.path) as f:
+            lines = f.readlines()
+            lines = [line.strip() for line in lines]
+        output_string = lines[line_num - 1]
+        white_space = " "
+
+        marker = ""
+        for i in range(line_col - 1):
+            marker += white_space
+        
+        marker += "^"
+        output_string += '\n'
+        output_string += marker
+        return output_string 
+        
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
@@ -341,12 +371,14 @@ class Scanner:
 
 
 # Run file and simple test
-# names_instance = Names()
+names_instance = Names()
 
-# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-# scanner_logger = logging.getLogger("scanner")
-# path_definition = "definitions/circuit.def"
-# a_scanner = Scanner(path_definition, names_instance, scanner_logger)
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+scanner_logger = logging.getLogger("scanner")
+path_definition = "definitions/circuit.def"
+a_scanner = Scanner(path_definition, names_instance, scanner_logger)
+
+print(a_scanner.get_error_line(1, 6))
 # sym_id = 1
 # for i in range(80):
 #     if sym_id == a_scanner.END_ID:

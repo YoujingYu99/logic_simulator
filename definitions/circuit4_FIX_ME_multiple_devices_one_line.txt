@@ -1,0 +1,16 @@
+DEVICES{
+    SWITCH sw1(1), sw2(1), sw3(1), sw4(1);
+    AND and1(2), and2(2), and3(3);
+}
+CONNECT{
+    sw1 => and1.I1;
+    sw2 => and1.I2;
+    sw3 => and2.I1;
+    sw4 => and2.I2;
+    and1 => and3.I1;
+    and2 => and3.I2;
+}
+MONITOR{
+    and3;
+}
+END
