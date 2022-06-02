@@ -189,18 +189,25 @@ class Parser:
             device_id = self.symbol.id
             output_id = None
 
-            self.symbol = self.scanner.get_symbol()
-
-        if int(self.symbol.type) == self.scanner.DOT:
-            self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
-                output_id = self.symbol.id
+            if self.symbol.id == self.scanner.DTYPE_ID:
                 self.symbol = self.scanner.get_symbol()
+
+                if int(self.symbol.type) == self.scanner.DOT:
+                    self.symbol = self.scanner.get_symbol()
+                    if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
+                        output_id = self.symbol.id
+                        self.symbol = self.scanner.get_symbol()
+                        self.monitors.make_monitor(
+                            device_id, output_id, cycles_completed=0
+                        )
+                    else:
+                        self.error("OUTPUT_PIN_EXPECTED")
+            else:
+                self.logger.debug("Creating device")
                 self.monitors.make_monitor(
                     device_id, output_id, cycles_completed=0
                 )
-            else:
-                self.error("OUTPUT_PIN_EXPECTED")
+                self.symbol = self.scanner.get_symbol()
 
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -287,7 +294,7 @@ class Parser:
             self.gate_devices(self.symbol.id)
         elif self.symbol.id == self.scanner.XOR_ID:
             self.logger.debug("-GATE found, start to parse GATE")
-            self.xor(self.symbol.id)
+            self.xor_devices(self.symbol.id)
         else:
             self.error("DEVICE_TYPE_NOT_DECLARED")
 
@@ -632,9 +639,18 @@ class Parser:
                              column:{self.scanner.current_col}"""
         )
         # current col is incorrect
-        self.logger.error(self.scanner.get_error_line(self.scanner.current_line, self.scanner.current_col))
-        self.error_string += (f"""Error location: line:{self.scanner.current_line}column:{self.scanner.current_col}$""")
-        self.error_string += self.scanner.get_error_line(self.scanner.current_line, self.scanner.current_col) + '$'
+        self.logger.error(
+            self.scanner.get_error_line(
+                self.scanner.current_line, self.scanner.current_col
+            )
+        )
+        self.error_string += f"""Error location: line:{self.scanner.current_line}column:{self.scanner.current_col}$"""
+        self.error_string += (
+            self.scanner.get_error_line(
+                self.scanner.current_line, self.scanner.current_col
+            )
+            + "$"
+        )
         if error_type == "LEFT_CURLY_BRACE_EXPECTED":
             print("Missing '{'")
             self.error_string += "Missing '{'$"
