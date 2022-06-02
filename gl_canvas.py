@@ -63,7 +63,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.min_height = 0
 
         # Initialise variables for drawing signals
-        # grid starting point
+        # Grid starting point
         self.grid_origin = 0
         # width, height
         canvas_width, canvas_height = self.GetClientSize()
@@ -286,7 +286,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glEnd()
 
         # Draw x grid ticks
-        x_grid_interval = self.signal_cycle_width
         x_grid_start = self.canvas_origin[0] + self.x_axis_offset + self.y_axis_offset
         if spin_value <= 10:
             # Interval for the vertical grid lines
@@ -305,8 +304,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             # Only show 8 ticks if spin value greater than 10
             num_list = list(range(self.num_period_display))
             tick_list = [(cycle_period + 1) * tick for tick in num_list]
-            # # Remove last redundant element
-            # tick_list = tick_list[:-1]
             x_tick_x_list = [(i * x_grid_interval) + x_grid_start for i in tick_list]
         x_tick_y_low = y_bottom + self.x_axis_offset - self.tick_width / 2
         x_tick_y_high = y_bottom + self.x_axis_offset + self.tick_width / 2
@@ -372,7 +369,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         y_tick_right = x_left + self.tick_width / 2
         for count in range(num_signals):
             # Draw y grid ticks
-            # grid at 0
+            # Grid at 0
             zero_pos = (
                 y_bottom
                 + self.x_axis_offset
@@ -436,7 +433,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 x_pos_y_label = (
                     self.canvas_origin[0] + self.y_axis_offset + self.x_grid_offset
                 )
-                # grid at 0
+                # Grid at 0
                 zero_pos = (
                     self.canvas_origin[1]
                     + self.x_axis_offset
@@ -487,7 +484,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 # Draw signal trace
                 for index in range(len(signal_list)):
                     indiv_signal = signal_list[index]
-                    # horizontal start point of signal
+                    # Horizontal start point of signal
                     if self.cycles_completed <= 10:
                         normal_cycle_width = self.signal_cycle_width
                         x_start = (
