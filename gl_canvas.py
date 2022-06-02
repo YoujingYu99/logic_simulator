@@ -31,7 +31,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
     draw_signal(self): Draw signals chosen.
     """
 
-    def __init__(self, parent, devices, monitors, spin_value):
+    def __init__(self, parent, devices, monitors, cycles_completed):
         """Initialise canvas properties and useful variables."""
         super().__init__(
             parent,
@@ -95,9 +95,9 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Initialise the monitored signals list
         self.monitored_signal_list = []
         # The number of values to be run input by the user
-        self.spin_value = spin_value
+        # self.spin_value = cycles_completed
         # Cycles already run in total
-        self.total_cycles = 0
+        self.cycles_completed = cycles_completed
 
         # Bind events to the canvas
         self.Bind(wx.EVT_PAINT, self.on_paint)
@@ -286,10 +286,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glEnd()
 
         # Draw x grid ticks
-        # Interval for the vertical grid lines
         x_grid_interval = self.signal_cycle_width
         x_grid_start = self.canvas_origin[0] + self.x_axis_offset + self.y_axis_offset
         if spin_value < 10:
+            # Interval for the vertical grid lines
+            x_grid_interval = self.signal_cycle_width
             # Positions of x ticks
             # Add one more tick at the end
             x_tick_x_list = [
@@ -297,10 +298,14 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(spin_value + 1)
             ]
         else:
+            x_grid_interval = self.signal_cycle_width/cycle_period
             # Only show 8 ticks if spin value greater than 10
-            tick_list = cycle_period * list(range(self.num_period_display))
-            # Add one more tick
-            tick_list.append(tick_list[-1] + 1)
+            num_list = list(range(self.num_period_display))
+            tick_list = [(cycle_period + 1) * tick for tick in num_list]
+            # Remove last redundant element
+            tick_list = tick_list[:-1]
+            # # Add one more tick
+            # tick_list.append(tick_list[-1] + 1)
             x_tick_x_list = [(i * x_grid_interval) + x_grid_start for i in tick_list]
         x_tick_y_low = y_bottom + self.x_axis_offset - self.tick_width / 2
         x_tick_y_high = y_bottom + self.x_axis_offset + self.tick_width / 2
@@ -427,11 +432,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
 
     def draw_signal(self):
         """Draw signal traces for each monitor."""
-        self.draw_grid(spin_value=self.spin_value)
+        self.draw_grid(spin_value=self.cycles_completed)
         # e.g. if cycles period is 2, the label goes 0, 2, 4, ...
-        cycle_period = self.spin_value // (self.num_period_display - 1)
+        cycle_period = self.cycles_completed // (self.num_period_display - 1)
         # Draw signals one on top of another.
-        if self.spin_value > 0:
+        if self.cycles_completed > 0:
             # Draw all signals selected
             for count in range(len(self.monitored_signal_list)):
                 # Get name of monitor
@@ -495,7 +500,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(len(signal_list)):
                     indiv_signal = signal_list[index]
                     # horizontal start point of signal
-                    if self.spin_value < 10:
+                    if self.cycles_completed < 10:
                         normal_cycle_width = self.signal_cycle_width
                         x_start = (
                             (index * normal_cycle_width)

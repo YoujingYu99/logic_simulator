@@ -115,7 +115,7 @@ class Gui(wx.Frame):
         self.cycles_completed = 0
 
         # Canvas for drawing signals; Input the spin value here
-        self.canvas = MyGLCanvas(self, devices, monitors, spin_value=self.spin_value)
+        self.canvas = MyGLCanvas(self, devices, monitors, cycles_completed=self.cycles_completed)
         # Pass the monitor names list into monitored_signal_list attribute of canvas
         self.canvas.monitored_signal_list = self.monitored_list
         # Get window size
@@ -301,19 +301,17 @@ class Gui(wx.Frame):
         # self.canvas.render(text)
         if self.is_parsed:
             # Reset the number of cycles for the canvas
-            self.canvas.total_cycles = 0
+            self.canvas.cycles_completed = 0
             self.monitors.reset_monitors()
             self.devices.cold_startup()
             # If successfully run
             if self.run_network(self.spin_value):
                 self.cycles_completed += self.spin_value
+                # Update cycles run
+                self.canvas.cycles_completed = self.cycles_completed
                 text = "".join(["Running for ", str(self.spin_value), " cycles\n"])
                 self.console_box.print_console_message(text)
 
-                # Update canvas information
-                # Add to the number of cycles run
-                # self.canvas.draw_signal()
-                self.canvas.total_cycles += self.spin_value
 
         else:
             # Show error if file was not parsed correctly
@@ -332,14 +330,14 @@ class Gui(wx.Frame):
                 # If the network is successfully run.
                 elif self.run_network(cycles=self.spin_value):
                     self.cycles_completed += self.spin_value
+                    # Update canvas cycles
+                    self.canvas.cycles_completed = self.cycles_completed
                     text = "".join(
                         ["Continuing for ", str(self.spin_value), " cycles\n"]
                     )
                     self.console_box.print_console_message(text)
                     # Update canvas information
                     # Add to the number of cycles run
-                    # self.canvas.draw_signal()
-                    self.canvas.total_cycles += self.spin_value
 
         else:
             # Show error if file was not parsed correctly
@@ -355,6 +353,7 @@ class Gui(wx.Frame):
         if self.is_parsed:
             # Reset cycles completed number
             self.cycles_completed = 0
+            self.canvas.cycles_completed = self.cycles_completed
             # Reset console to be clear
             self.console_box.clear_console()
             self.on_run_button()
