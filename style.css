@@ -7,7 +7,8 @@
 
 main_frame {
     /*greyish blue background color*/
-    background-color:   #e1fafa;
+    /*background-color:   #e1fafa;*/
+    background-color: #c2d6d6;
     width: 1000px;
     height: 400px;
 }

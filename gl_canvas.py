@@ -83,7 +83,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.x_axis_offset = 50
         self.x_grid_offset = 5
         self.y_grid_offset_lower = 20
-        self.y_grid_offset_upper = 20
+        self.y_grid_offset_upper = 10
         self.tick_width = 3
         self.small_font = GLUT.GLUT_BITMAP_HELVETICA_12
         self.label_font = GLUT.GLUT_BITMAP_9_BY_15
@@ -383,7 +383,15 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GL.glVertex2f(y_tick_right, zero_pos)
             GL.glEnd()
 
+            # Light grey grid lines
+            GL.glColor3f(0.88, 0.92, 0.92)
+            GL.glBegin(GL.GL_LINE_STRIP)
+            GL.glVertex2f(y_tick_left, zero_pos)
+            GL.glVertex2f(x_right, zero_pos)
+            GL.glEnd()
+
             # Label 0
+            GL.glColor3f(0, 0, 0)
             x_pos_0 = x_left - self.label_size
             y_pos_0 = zero_pos
             GL.glRasterPos2f(x_pos_0, y_pos_0)
@@ -397,7 +405,16 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GL.glVertex2f(y_tick_left, zero_pos + self.signal_height)
             GL.glVertex2f(y_tick_right, zero_pos + self.signal_height)
             GL.glEnd()
+
+            # Light grey grid lines
+            GL.glColor3f(0.88, 0.92, 0.92)
+            GL.glBegin(GL.GL_LINE_STRIP)
+            GL.glVertex2f(y_tick_left, zero_pos + self.signal_height)
+            GL.glVertex2f(x_right, zero_pos + self.signal_height)
+            GL.glEnd()
+
             # Label 1
+            GL.glColor3f(0, 0, 0)
             x_pos_1 = x_left - self.label_size
             y_pos_1 = zero_pos + self.signal_height
             GL.glRasterPos2f(x_pos_1, y_pos_1)
