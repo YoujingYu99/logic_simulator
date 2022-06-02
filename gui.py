@@ -392,8 +392,6 @@ class Gui(wx.Frame):
                 "Monitored Signals",
                 self.monitor_names_list,
             )
-            # # Set the dialog default before the user sets it
-            # dlg.GetSelections(self.monitor_selected_list)
 
             if dlg.ShowModal() == wx.ID_OK:
                 # Return indexes selected by the user
@@ -461,9 +459,6 @@ class Gui(wx.Frame):
                 "Switch Settings",
                 self.switch_name_list,
             )
-
-            # Set the dialogue default before the user chooses it.
-            # dlg.SetSelections(self.switch_on_list)
 
             if dlg.ShowModal() == wx.ID_OK:
                 selections = dlg.GetSelections()
