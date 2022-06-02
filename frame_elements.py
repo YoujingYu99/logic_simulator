@@ -188,6 +188,8 @@ class FileMenu(wx.Menu):
             if not (path[-4:].lower() == ".png"):
                 path = path + ".png"
             im.SaveFile(path)
+            self.parentFrame.console_box.print_console_message(
+                "Canvas image successfully saved.\n")
 
     def on_save_console(self, event=None):
         """Capture the console messages in one txt file."""
@@ -206,6 +208,8 @@ class FileMenu(wx.Menu):
         with open(path, "w+") as myfile:
             for line in data:
                 myfile.write(str(line) + "\n")
+        self.parentFrame.console_box.print_console_message(
+            "Console output successfully saved.\n")
 
     def on_quit(self, event):
         """Quit the system."""

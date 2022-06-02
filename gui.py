@@ -542,6 +542,8 @@ class Gui(wx.Frame):
 
         # Update devices in the canvas element
         self.canvas.devices = self.devices
+        self.console_box.print_console_message("Successfully set the state"
+                                               "of switches.\n")
 
     def clear_previous_file(self):
         """Reinitialise everything when new definition file chosen."""
