@@ -251,36 +251,31 @@ class Gui(wx.Frame):
         text = "".join(["New spin control value: ", str(spin_value)])
         # Update spin values in frame and canvas
         self.canvas.render(text)
-        # Disallow running for more than 1000 cyles
-        if spin_value > 1000:
+        # Disallow running for more than 1000 cycles
+        if spin_value >= 1000:
             dlg = wx.MessageDialog(
                 self,
-                "More than 1000 cyles set to be run. Please change to a lower value of runs.",
+                "More than 1000 cycles set to be run. Please change to a lower value of runs.",
                 "Warning",
                 wx.OK | wx.ICON_WARNING,
             )
             dlg.ShowModal()
-            if dlg == wx.OK:
-                self.spin_value = 10
-                self.canvas.spin_value = spin_value
             dlg.Destroy()
         # Warning if running more than 100 cycles
-        elif spin_value > 100:
+        elif 100 < spin_value < 1000:
             dlg = wx.MessageDialog(
                 self,
                 "More than 100 cycles set to be run! Are you sure you want to continue?",
                 "Warning",
-                wx.OK | wx.ICON_WARNING,
+                wx.YES_NO | wx.ICON_QUESTION,
             )
             dlg.ShowModal()
-            if dlg == wx.OK:
+            if dlg.ShowModal() == wx.ID_YES:
                 self.spin_value = spin_value
-                self.canvas.spin_value = spin_value
             dlg.Destroy()
 
         else:
             self.spin_value = spin_value
-            self.canvas.spin_value = spin_value
 
     def run_network(self, cycles):
         """Run the network for the specified number of simulation cycles.
@@ -310,7 +305,7 @@ class Gui(wx.Frame):
                 self.canvas.monitored_signal_list = self.monitored_list
                 # Update cycles run
                 self.canvas.cycles_completed = self.cycles_completed
-                text = "".join(["Running for ", str(self.spin_value), " cycles\n"])
+                text = "".join(["Running for ", str(self.spin_value), " cycles.\n"])
                 self.console_box.print_console_message(text)
         else:
             # Show error if file was not parsed correctly
@@ -332,7 +327,7 @@ class Gui(wx.Frame):
                     # Update canvas cycles
                     self.canvas.cycles_completed = self.cycles_completed
                     text = "".join(
-                        ["Continuing for ", str(self.spin_value), " cycles,", "a total of", str(self.cycles_completed), " cycles run\n"]
+                        ["Continuing for ", str(self.spin_value), " cycles,", " a total of", str(self.cycles_completed), " cycles run.\n"]
                     )
                     self.console_box.print_console_message(text)
                     # Update canvas information
