@@ -307,12 +307,11 @@ class Gui(wx.Frame):
             # If successfully run
             if self.run_network(self.spin_value):
                 self.cycles_completed += self.spin_value
+                self.canvas.monitored_signal_list = self.monitored_list
                 # Update cycles run
                 self.canvas.cycles_completed = self.cycles_completed
                 text = "".join(["Running for ", str(self.spin_value), " cycles\n"])
                 self.console_box.print_console_message(text)
-
-
         else:
             # Show error if file was not parsed correctly
             text = "Cannot run simulation. Please check your definition file.\n"
