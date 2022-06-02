@@ -85,7 +85,8 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.y_grid_offset_lower = 20
         self.y_grid_offset_upper = 20
         self.tick_width = 3
-        self.label_font = GLUT.GLUT_BITMAP_HELVETICA_12
+        self.small_font = GLUT.GLUT_BITMAP_HELVETICA_12
+        self.label_font = GLUT.GLUT_BITMAP_9_BY_15
         self.label_size = 20
         self.label_width = 0
 
@@ -321,7 +322,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             x_pos = x_tick_x_list[i]
             y_pos = y_bottom + self.x_axis_offset / 2
             GL.glRasterPos2f(x_pos, y_pos)
-            font = self.label_font
+            font = self.small_font
             if spin_value < 10:
                 label = str(i)
             else:
@@ -332,7 +333,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Label x axis
         text = "No. of Cycles"
         font = self.label_font
-        x_pos_x_label = x_right + self.y_axis_offset
+        x_pos_x_label = x_right + self.y_axis_offset/2
         y_pos_x_label = y_bottom + self.x_axis_offset
         GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos_x_label, y_pos_x_label)
@@ -389,7 +390,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             x_pos_0 = x_left - self.label_size
             y_pos_0 = zero_pos
             GL.glRasterPos2f(x_pos_0, y_pos_0)
-            font = self.label_font
+            font = self.small_font
             label_zero = "0"
             GLUT.glutBitmapCharacter(font, ord(label_zero))
 
@@ -403,7 +404,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             x_pos_1 = x_left - self.label_size
             y_pos_1 = zero_pos + self.signal_height
             GL.glRasterPos2f(x_pos_1, y_pos_1)
-            font = self.label_font
+            font = self.small_font
             label_one = "1"
             GLUT.glutBitmapCharacter(font, ord(label_one))
 
@@ -437,7 +438,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 monitor_name = self.monitored_signal_list[count]
                 # Add the label of monitor
                 text = str(monitor_name)
-                font = self.label_font
+                font = self.small_font
                 # Put label slightly to the right
                 x_pos_y_label = (
                     self.canvas_origin[0] + self.y_axis_offset + self.x_grid_offset
