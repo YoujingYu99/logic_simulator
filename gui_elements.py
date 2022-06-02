@@ -97,10 +97,10 @@ class FileMenu(wx.Menu):
 
         path = dialog.GetPath()
         if os.path.exists(path):
-            # with open(path) as myfile:
             text = "Loading {file_name:}.\n".format(file_name=path)
             self.parentFrame.console_box.print_console_message(text)
-
+            # Clear memories from the previous file
+            self.parentFrame.clear_previous_file()
             names_instance = Names()
             scanner_instance = Scanner(
                 path, names_instance, self.parentFrame.scanner_logger
@@ -119,21 +119,6 @@ class FileMenu(wx.Menu):
                 scanner_instance,
                 self.parentFrame.parser_logger,
             )
-
-            # names = Names()
-            # scanner = Scanner(path, names, self.parentFrame.scanner_logger)
-            # devices = Devices(names)
-            # network = Network(names, devices)
-            # monitors = Monitors(names, devices, network)
-            #
-            # parser = Parser(
-            #     names,
-            #     devices,
-            #     network,
-            #     monitors,
-            #     scanner,
-            #     self.parentFrame.parser_logger,
-            # )
 
             if parser.parse_network():
                 # Set successfully parsed
@@ -156,7 +141,7 @@ class FileMenu(wx.Menu):
                 self.parentFrame.console_box.print_console_message(
                     "File cannot be parsed. Please check your definition file.\n"
                 )
-                error_list = parser.error_string.split('$')
+                error_list = parser.error_string.split("$")
                 for error in error_list:
                     self.parentFrame.console_box.print_console_message(error)
 

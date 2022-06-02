@@ -42,7 +42,8 @@ class Gui(wx.Frame):
     update_monitor(self): Event handler for when the monitor states are updated.
     get_switch_names(self): Return switch_name_list and switch_on_list.
     on_switch_button(self): Event handler for when the user chooses a few switches.
-    update_switches(self): Event handler for when the switch state changes
+    update_switches(self): Event handler for when the switch state changes.
+    clear_previous_file(self): Event handler for when the user opens another definition file.
     """
 
     def __init__(self, title, path, names, devices, network, monitors):
@@ -115,7 +116,9 @@ class Gui(wx.Frame):
         self.cycles_completed = 0
 
         # Canvas for drawing signals; Input the spin value here
-        self.canvas = MyGLCanvas(self, devices, monitors, cycles_completed=self.cycles_completed)
+        self.canvas = MyGLCanvas(
+            self, devices, monitors, cycles_completed=self.cycles_completed
+        )
         # Pass the monitor names list into monitored_signal_list attribute of canvas
         self.canvas.monitored_signal_list = self.monitored_list
         # Get window size
@@ -327,7 +330,14 @@ class Gui(wx.Frame):
                     # Update canvas cycles
                     self.canvas.cycles_completed = self.cycles_completed
                     text = "".join(
-                        ["Continuing for ", str(self.spin_value), " cycles,", " a total of", str(self.cycles_completed), " cycles run.\n"]
+                        [
+                            "Continuing for ",
+                            str(self.spin_value),
+                            " cycles,",
+                            " a total of",
+                            str(self.cycles_completed),
+                            " cycles run.\n",
+                        ]
                     )
                     self.console_box.print_console_message(text)
                     # Update canvas information
@@ -412,7 +422,9 @@ class Gui(wx.Frame):
                     device_id, output_id, self.cycles_completed
                 )
                 if monitor_error == self.monitors.NO_ERROR:
-                    self.console_box.print_console_message("Successfully made monitor.\n")
+                    self.console_box.print_console_message(
+                        "Successfully made monitor.\n"
+                    )
                 else:
                     self.console_box.print_console_message(
                         "Error! Could not make monitor.\n"
@@ -484,3 +496,49 @@ class Gui(wx.Frame):
 
         # Update devices in the canvas element
         self.canvas.devices = self.devices
+
+    def clear_previous_file(self):
+        """Reinitialise everything when new definition file chosen"""
+        # Set input parameters
+        self.network = None
+        self.names = None
+        self.devices = None
+        self.monitors = None
+        # monitor_names_list contains all the signals that can be monitored
+        self.monitor_names_list = []
+        # monitor_id_list: [(device_id, output_id)]
+        self.monitor_id_list = []
+        self.monitored_list = []
+        self.unmonitored_list = []
+
+        # Switch names and IDs
+        # all switch ids. Set to empty initially
+        self.switch_id_list = []
+        # all switch names. Set to empty initially
+        self.switch_name_list = []
+        self.switch_on_list = []
+        self.switch_off_list = []
+
+        # Temporarily set file to be not parsed
+        self.is_parsed = False
+
+        # configure initial parameters
+        # Set default spin value
+        self.spin_value = 10
+        self.cycles_completed = 0
+
+        # Configure console properties
+        self.console_text = "Welcome to Logic Simulation App!"
+
+        # Configure the loggers
+        self.scanner_logger = logging.getLogger("scanner")
+        self.parser_logger = logging.getLogger("parser")
+        logging.basicConfig(level=logging.DEBUG)
+
+        # Reinitialise the canvas elements
+        self.canvas.devices = None
+        self.canvas.monitors = None
+        # Initialise the monitored signals list
+        self.canvas.monitored_signal_list = []
+        # Cycles already run in total
+        self.canvas.cycles_completed = 0

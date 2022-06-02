@@ -94,8 +94,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.monitors = monitors
         # Initialise the monitored signals list
         self.monitored_signal_list = []
-        # The number of values to be run input by the user
-        # self.spin_value = cycles_completed
         # Cycles already run in total
         self.cycles_completed = cycles_completed
 
@@ -564,7 +562,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                                 + self.y_grid_offset_lower
                                 + offset
                             )
-                            GL.glVertex2f(float(x_start), float(y))
-                            GL.glVertex2f(float(x_end), float(y))
+                            GL.glVertex2f(x_start, y)
+                            GL.glVertex2f(x_end, y)
 
                 GL.glEnd()
