@@ -207,3 +207,52 @@ def test_dtype_devices_clean(error_mock):
     parser = return_parser("dtype;")
     parser.dtype_devices(mock.Mock())
     error_mock.assert_not_called()
+
+
+@patch("parse.Parser.error")
+@pytest.mark.parametrize(
+    "text,test_error",
+    [
+        ("sw10);", "LEFT_BRACKET_EXPECTED"),
+        ("sw(10);", "INVALID_STATE_OF_SWITCH"),
+        ("sw(0;", "RIGHT_BRACKET_EXPECTED"),
+        ("sw1(1), sw10);", "LEFT_BRACKET_EXPECTED"),
+        ("sw1(1), sw(10);", "INVALID_STATE_OF_SWITCH"),
+        ("sw1(1), sw(0;", "RIGHT_BRACKET_EXPECTED"),
+        ("sw(0)", "SEMICOLON_EXPECTED"),
+    ],
+)
+def test_switch_devices_errors(error_mock, text, test_error):
+    parser = return_parser(text)
+    parser.switch_devices(mock.Mock())
+    error_mock.assert_any_call(test_error)
+
+
+@patch("parse.Parser.error")
+@pytest.mark.parametrize(
+    "text", ["sw(1);", "sw(1), sw1(0);", "sw(1),sw2(1),sw3(0);"]
+)
+def test_switch_devices_clean(error_mock, text):
+    parser = return_parser(text)
+    parser.switch_devices(mock.Mock())
+    error_mock.assert_not_called()
+
+
+@patch("parse.Parser.error")
+@pytest.mark.parametrize(
+    "text,test_error",
+    [
+        ("clock10);", "LEFT_BRACKET_EXPECTED"),
+        ("clock(-6);", "INVALID_CYCLE_VALUE"),
+        ("clock(0;", "RIGHT_BRACKET_EXPECTED"),
+        ("clock1(1), clock10);", "LEFT_BRACKET_EXPECTED"),
+        ("clock1(1), clock(0;", "RIGHT_BRACKET_EXPECTED"),
+        ("clock1(2), clock(-6);", "INVALID_CYCLE_VALUE"),
+        ("clock(0)", "SEMICOLON_EXPECTED"),
+    ],
+)
+def test_clock_devices_errors(error_mock, text, test_error):
+    parser = return_parser(text)
+    parser.clock_devices(mock.Mock())
+    print(error_mock.call_args_list)
+    error_mock.assert_any_call(test_error)
