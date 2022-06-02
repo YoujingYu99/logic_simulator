@@ -1,4 +1,6 @@
 """Tests the parser module"""
+import re
+from sqlite3 import paramstyle
 from names import Names
 from parse import Parser
 from devices import Devices
@@ -244,11 +246,11 @@ def test_switch_devices_clean(error_mock, text):
     [
         ("clock10);", "LEFT_BRACKET_EXPECTED"),
         ("clock(-6);", "INVALID_CYCLE_VALUE"),
-        ("clock(0;", "RIGHT_BRACKET_EXPECTED"),
+        ("clock(10;", "RIGHT_BRACKET_EXPECTED"),
         ("clock1(1), clock10);", "LEFT_BRACKET_EXPECTED"),
-        ("clock1(1), clock(0;", "RIGHT_BRACKET_EXPECTED"),
+        ("clock1(1), clock(10;", "RIGHT_BRACKET_EXPECTED"),
         ("clock1(2), clock(-6);", "INVALID_CYCLE_VALUE"),
-        ("clock(0)", "SEMICOLON_EXPECTED"),
+        ("clock(80)", "SEMICOLON_EXPECTED"),
     ],
 )
 def test_clock_devices_errors(error_mock, text, test_error):
@@ -256,3 +258,43 @@ def test_clock_devices_errors(error_mock, text, test_error):
     parser.clock_devices(mock.Mock())
     print(error_mock.call_args_list)
     error_mock.assert_any_call(test_error)
+
+
+@patch("parse.Parser.error")
+@pytest.mark.parametrize(
+    "text",
+    ["clock(1);", "clock(1), clock1(0);", "clock(1),clock2(1),clock3(0);"],
+)
+def test_clock_devices_clean(error_mock, text):
+    parser = return_parser(text)
+    parser.switch_devices(mock.Mock())
+    error_mock.assert_not_called()
+
+
+@patch("parse.Parser.error")
+@pytest.mark.parametrize("text", ["19", "a", "DEVICE", "-5"])
+def test_input_number_errors(error_mock, text):
+    parser = return_parser(text)
+    parser.symbol = parser.scanner.get_symbol()
+    parser.input_number()
+    error_mock.assert_any_call("INVALID_INPUT_INITIALISATION")
+
+
+@patch("parse.Parser.error")
+@pytest.mark.parametrize("text", ["12", "1"])
+def test_input_number_errors(error_mock, text):
+    parser = return_parser(text)
+    parser.symbol = parser.scanner.get_symbol()
+    parser.input_number()
+    error_mock.assert_not_called()
+
+
+@patch("parse.Parser.error")
+@pytest.mark.parametrize("text", ["3num", ",num", "Num", "AND", "-7"])
+def test_device_name(error_mock, text):
+    parser = return_parser(text)
+    parser.device_name()
+    error_mock.assert_any_call("DEVICE_NAME_EXPECTED")
+
+
+# error not tested locally due to extensive files needed. It would have been tested hand conducted end to end tests.
