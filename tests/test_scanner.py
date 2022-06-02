@@ -204,3 +204,16 @@ def test_column_and_line_count():
     assert symbol.start_col == 16
     assert symbol.start_line == 2
 
+def test_column_and_line_count():
+    """Test if the column and line counter is correct."""
+    file_string = "DEVICES{\n    DTYPE dtype;"
+    scanner = new_scanner(file_string)
+
+    mocked_open_function = mock_open(read_data=file_string)
+
+    with patch("builtins.open", mocked_open_function) as mock_file:
+        error_line = scanner.get_error_line(2, 1)
+        assert 'DTYPE dtype;\n^' == error_line
+
+   
+

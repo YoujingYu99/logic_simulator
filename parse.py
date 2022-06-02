@@ -616,7 +616,10 @@ class Parser:
             f"""Error location: line:{self.scanner.current_line}
                              column:{self.scanner.current_col}"""
         )
+        # current col is incorrect
+        self.logger.error(self.scanner.get_error_line(self.scanner.current_line, self.scanner.current_col))
         self.error_string += (f"""Error location: line:{self.scanner.current_line}column:{self.scanner.current_col}$""")
+        self.error_string += self.scanner.get_error_line(self.scanner.current_line, self.scanner.current_col) + '$'
         if error_type == "LEFT_CURLY_BRACE_EXPECTED":
             print("Missing '{'")
             self.error_string += ("Missing '{'$")
@@ -822,7 +825,7 @@ class Parser:
 
 
 # For circuit 2
-# path_definition = "definitions/circuit2.def"
+# path_definition = "definitions/circuit2.def.txt"
 # scanner_logger = logging.getLogger("scanner")
 # parser_logger = logging.getLogger("parser")
 # logging.basicConfig(level=logging.DEBUG)
@@ -843,6 +846,14 @@ class Parser:
 # )
 
 # a = parser_1.parse_network()
+# print('-----------')
+# print(parser_1.scanner.get_error_line(2,3))
+
+# errors = parser_1.error_string.split('$')
+# for line in errors:
+#     print(line)
+
+
 # print('--Confirm that and gate has been created')
 # print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
 # print('--Confirm that switches have been created')
@@ -876,6 +887,8 @@ class Parser:
 # print('--Get output from andg using display_signals')
 
 # parser_1.monitors.display_signals()
+
+
 
 
 
