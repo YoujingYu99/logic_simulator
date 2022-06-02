@@ -1,9 +1,10 @@
+"""Tests for the scanner module."""
+
 import pytest
 from unittest.mock import patch, mock_open
 from scanner import Scanner
 from names import Names
 import logging
-import io
 
 
 def new_scanner(file_text):
@@ -229,6 +230,7 @@ def test_column_and_line_count():
     assert symbol.start_col == 16
     assert symbol.start_line == 2
 
+
 def test_column_and_line_count():
     """Test if the column and line counter is correct."""
     file_string = "DEVICES{\n    DTYPE dtype;"
@@ -239,6 +241,3 @@ def test_column_and_line_count():
     with patch("builtins.open", mocked_open_function) as mock_file:
         error_line = scanner.get_error_line(2, 1)
         assert 'DTYPE dtype;\n^' == error_line
-
-   
-
