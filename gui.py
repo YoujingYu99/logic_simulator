@@ -406,21 +406,25 @@ class Gui(wx.Frame):
     def update_monitors(self, selections):
         """Update signals to be monitored and redraw on canvas"""
         # Make monitored list based on user selections
-        self.monitored_list = [self.monitor_names_list[i] for i in selections]
+        new_monitored_list = [self.monitor_names_list[i] for i in selections]
 
-        for monitored_signal in self.monitored_list:
+        for monitored_signal in new_monitored_list:
             # Get device and output ids
             device_id, output_id = self.devices.get_signal_ids(monitored_signal)
-            # Make monitor
-            monitor_error = self.monitors.make_monitor(
-                device_id, output_id, self.cycles_completed
-            )
-            if monitor_error == self.monitors.NO_ERROR:
-                self.console_box.print_console_message("Successfully made monitor.\n")
-            else:
-                self.console_box.print_console_message(
-                    "Error! Could not make monitor.\n"
+            # If not already monitored
+            if monitored_signal not in self.monitored_list:
+                # Make monitor
+                monitor_error = self.monitors.make_monitor(
+                    device_id, output_id, self.cycles_completed
                 )
+                if monitor_error == self.monitors.NO_ERROR:
+                    self.console_box.print_console_message("Successfully made monitor.\n")
+                else:
+                    self.console_box.print_console_message(
+                        "Error! Could not make monitor.\n"
+                    )
+        # Update the monitored list
+        self.monitored_list = new_monitored_list
         # Update the monitored_signal_list in the canvas element
         self.canvas.monitored_signal_list = self.monitored_list
 

@@ -76,7 +76,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.signal_colours = [(0.0, 0.0, 1.0), (1.0, 0.0, 0.0), (0.0, 0.0, 0.0)]
         self.signal_height = 50
         self.signal_cycle_width = 40
-        self.signal_y_distance = 5
+        self.signal_y_distance = 20
         # Axis parameters
         self.num_period_display = 8
         self.y_axis_offset = 50
