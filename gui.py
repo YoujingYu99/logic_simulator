@@ -355,7 +355,7 @@ class Gui(wx.Frame):
             self.canvas.cycles_completed = self.cycles_completed
             # Reset console to be clear
             self.console_box.clear_console()
-            self.on_run_button()
+            self.on_run_button(None)
         else:
             text = "Cannot rerun simulation. Please check your definition file.\n"
             self.console_box.print_console_message(text)
