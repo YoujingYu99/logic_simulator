@@ -1,3 +1,4 @@
+import pdb
 from scanner import Symbol, Scanner
 from names import Names
 from devices import Devices
@@ -184,19 +185,22 @@ class Parser:
         """
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
-        device_id = self.symbol.id
-        output_id = None
+        else:
+            device_id = self.symbol.id
+            output_id = None
 
-        self.symbol = self.scanner.get_symbol()
+            self.symbol = self.scanner.get_symbol()
+
         if int(self.symbol.type) == self.scanner.DOT:
             self.symbol = self.scanner.get_symbol()
             if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
                 output_id = self.symbol.id
                 self.symbol = self.scanner.get_symbol()
+                self.monitors.make_monitor(
+                    device_id, output_id, cycles_completed=0
+                )
             else:
                 self.error("OUTPUT_PIN_EXPECTED")
-
-        self.monitors.make_monitor(device_id, output_id, cycles_completed=0)
 
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -210,14 +214,16 @@ class Parser:
         """
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
-        first_device_id = self.symbol.id
-        first_port_id = None
-        self.symbol = self.scanner.get_symbol()
+        else:
+            first_device_id = self.symbol.id
+            first_port_id = None
+            self.symbol = self.scanner.get_symbol()
+
         if self.symbol.type == self.scanner.DOT:
             self.symbol = self.scanner.get_symbol()
-            if self.symbol.type == self.scanner.output_pin:
+            if self.symbol.type == self.scanner.DTYPE_OUTPUT_PIN:
                 first_port_id = self.symbol.id
-                self.scanner.get_symbol()
+                self.symbol = self.scanner.get_symbol()
             else:
                 self.error("OUTPUT_PIN_EXPECTED")
 
@@ -228,29 +234,30 @@ class Parser:
 
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
-        second_device_id = self.symbol.id
-
-        self.symbol = self.scanner.get_symbol()
-
-        if self.symbol.type != self.scanner.DOT:
-            self.error("INPUT_SPECIFICATION_EXPECTED")
         else:
+            second_device_id = self.symbol.id
+
             self.symbol = self.scanner.get_symbol()
-        if self.symbol.type not in [
-            self.scanner.DTYPE_INPUT_PIN,
-            self.scanner.GATE_PIN,
-        ]:
-            self.error("NOT_VALID_INPUT")
-        else:
-            second_port_id = self.symbol.id
 
-            # Make Connection
-            self.network.make_connection(
-                first_device_id,
-                first_port_id,
-                second_device_id,
-                second_port_id,
-            )
+            if self.symbol.type != self.scanner.DOT:
+                self.error("INPUT_SPECIFICATION_EXPECTED")
+            else:
+                self.symbol = self.scanner.get_symbol()
+            if self.symbol.type not in [
+                self.scanner.DTYPE_INPUT_PIN,
+                self.scanner.GATE_PIN,
+            ]:
+                self.error("NOT_VALID_INPUT")
+            else:
+                second_port_id = self.symbol.id
+
+                # Make Connection
+                self.network.make_connection(
+                    first_device_id,
+                    first_port_id,
+                    second_device_id,
+                    second_port_id,
+                )
 
             self.symbol = self.scanner.get_symbol()
         if self.symbol.type != self.scanner.SEMICOLON:
@@ -334,12 +341,11 @@ class Parser:
                     ):
                         self.error("RIGHT_BRACKET_EXPECTED")
                     else:
+                        # Create device
+                        self.devices.make_device(
+                            device_id, device_kind, device_property
+                        )
                         self.symbol = self.scanner.get_symbol()  # comma check
-
-                # Create device
-                self.devices.make_device(
-                    device_id, device_kind, device_property
-                )
 
         if not self.symbol.type == self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -361,7 +367,7 @@ class Parser:
             self.logger.debug("-End of DTYPE statement")
 
         else:
-            self.logger.error("SEMILCOLON_EXPECTED")
+            self.error("SEMILCOLON_EXPECTED")
 
     def switch_devices(self, device_kind):
         """
@@ -603,13 +609,14 @@ class Parser:
             print("Missing END to indicate end of definition file")
             sys.exit()
         elif error_type == "DEVICE_NAME_EXPECTED":
-            print("Device output to monitor not specified")
+            print("Device not specified")
             while self.symbol.id not in [
                 self.scanner.SEMICOLON_ID,
                 self.scanner.RIGHT_CURLY_BRACKET_ID,
             ] and self.symbol.type not in [
                 self.scanner.EOF,
                 self.scanner.KEYWORD,
+                self.scanner.DEVICE_NAME,
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "SEMICOLON_EXPECTED":
@@ -723,13 +730,13 @@ class Parser:
 # scanner_logger = logging.getLogger("scanner")
 # parser_logger = logging.getLogger("parser")
 # logging.basicConfig(level=logging.DEBUG)
-#
+
 # names_instance = Names()
 # scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
 # device_instance = Devices(names_instance)
 # network_instance = Network(names_instance, device_instance)
 # monitor_instance = Monitors(names_instance, device_instance, network_instance)
-#
+
 # parser_1 = Parser(
 #     names_instance,
 #     device_instance,
@@ -738,22 +745,25 @@ class Parser:
 #     scanner_instance,
 #     parser_logger,
 # )
-#
+
 # a = parser_1.parse_network()
-# print('--Check all devices have been created')
+# print("--Check all devices have been created")
 # print(parser_1.devices.find_devices())
-# print(parser_1.devices.get_device(42).inputs) # This is the DTYPE device
-# print(parser_1.devices.get_device(42).outputs) # DTYPE
+# print(parser_1.devices.get_device(42).inputs)  # This is the DTYPE device
+# print(parser_1.devices.get_device(42).outputs)  # DTYPE
 # print(parser_1.devices.get_device(46).inputs)
-#
-#
-# print('--Check all network inputs are satisfied')
+
+
+# print("--Check all network inputs are satisfied")
 # print(parser_1.network.check_network())
-#
-#
-# monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
-#
-# print('--List monitor points')
+
+
+# (
+#     monitored_signal_list,
+#     non_monitored_signal_list,
+# ) = parser_1.monitors.get_signal_names()
+
+# print("--List monitor points")
 # print(monitored_signal_list)
-#
+
 # parser_1.monitors.display_signals()
