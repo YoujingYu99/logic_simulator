@@ -291,7 +291,6 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         if spin_value < 10:
             # Interval for the vertical grid lines
             x_grid_interval = self.signal_cycle_width
-            print(x_grid_interval)
             # Positions of x ticks
             # Add one more tick at the end
             x_tick_x_list = [
@@ -299,21 +298,18 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(spin_value + 1)
             ]
         else:
-            if 10< spin_value < 20:
+            if 10 < spin_value < 20:
                 x_grid_interval = self.signal_cycle_width / 2
             else:
                 x_grid_interval = self.signal_cycle_width / cycle_period
             # Only show 8 ticks if spin value greater than 10
             num_list = list(range(self.num_period_display))
             tick_list = [(cycle_period + 1) * tick for tick in num_list]
-            # Remove last redundant element
-            tick_list = tick_list[:-1]
-            # # Add one more tick
-            # tick_list.append(tick_list[-1] + 1)
+            # # Remove last redundant element
+            # tick_list = tick_list[:-1]
             x_tick_x_list = [(i * x_grid_interval) + x_grid_start for i in tick_list]
         x_tick_y_low = y_bottom + self.x_axis_offset - self.tick_width / 2
         x_tick_y_high = y_bottom + self.x_axis_offset + self.tick_width / 2
-        # 1 more tick on the x axis
         for i in range(len(x_tick_x_list)):
             GL.glColor3f(0, 0, 0)
             GL.glBegin(GL.GL_LINE_STRIP)
@@ -357,7 +353,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         # Draw y axis
         GL.glColor3f(0, 0, 0)
         GL.glBegin(GL.GL_LINE_STRIP)
-        GL.glVertex2f(x_left, y_bottom + self.x_axis_offset/2)
+        GL.glVertex2f(x_left, y_bottom + self.x_axis_offset / 2)
         GL.glVertex2f(x_left, y_top)
         GL.glEnd()
 
