@@ -8,10 +8,7 @@ Classes
 Scanner - reads definition file and translates characters into symbols.
 Symbol - encapsulates a symbol and stores its properties.
 """
-from black import out
-from names import Names
-import logging
-import sys
+
 
 class Symbol:
     """Encapsulate a symbol and store its properties.
@@ -58,9 +55,6 @@ class Scanner:
         self.current_line = 1
         self.current_col = 0
 
-        self.current_line_error = 1
-        self.current_col_error = 0
-
         # <--- Create Symbol Types --->
         self.symbol_type_list = [
             self.COMMA,
@@ -105,9 +99,24 @@ class Scanner:
 
         self.dtype_pin_list = ["DATA", "CLK", "SET", "CLEAR"]
 
-        self.gates_pin_list = ["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8",
-             "I9", "I10", "I11", "I12", "I13", "I14", "I15", "I16"]
-
+        self.gates_pin_list = [
+            "I1",
+            "I2",
+            "I3",
+            "I4",
+            "I5",
+            "I6",
+            "I7",
+            "I8",
+            "I9",
+            "I10",
+            "I11",
+            "I12",
+            "I13",
+            "I14",
+            "I15",
+            "I16",
+        ]
 
         # <--- Create ID's and populate names list --->
         [
@@ -121,10 +130,10 @@ class Scanner:
             self.bracket_list
         )
 
-        [self.LEFT_CURLY_BRACKET_ID, self.RIGHT_CURLY_BRACKET_ID] = self.names.lookup(
-            self.curly_bracket_list
-        )
-        
+        [self.LEFT_CURLY_BRACKET_ID,
+            self.RIGHT_CURLY_BRACKET_ID] = self.names.lookup(
+                self.curly_bracket_list)
+
         [
             self.DEVICES_ID,
             self.CONNECT_ID,
@@ -132,13 +141,11 @@ class Scanner:
             self.END_ID,
         ] = self.names.lookup(self.keywords_list)
 
-        [self.Q_ID, 
-            self.QBAR_ID] = self.names.lookup(self.dtype_output_pin_list)
+        [self.Q_ID, self.QBAR_ID] = self.names.lookup(
+            self.dtype_output_pin_list)
 
-        [self.DATA_ID, self.CLK_ID, self.SET_ID, self.CLEAR_ID] = self.names.lookup(
-            self.dtype_pin_list
-        )
-
+        [self.DATA_ID, self.CLK_ID, self.SET_ID,
+            self.CLEAR_ID] = self.names.lookup(self.dtype_pin_list)
 
         [
             self.CLOCK_ID,
@@ -151,13 +158,26 @@ class Scanner:
             self.XOR_ID,
         ] = self.names.lookup(self.gate_name_list)
 
-        [self.I1_ID, self.I2_ID, self.I3_ID, self.I4_ID, self.I5_ID, self.I6_ID, 
-        self.I7_ID, self.I8_ID, self.I9_ID, self.I10_ID, self.I11_ID, self.I12_ID, 
-        self.I13_ID, self.I14_ID, self.I15_ID, 
-            self.I16_ID] = self.names.lookup(self.gates_pin_list)
+        [
+            self.I1_ID,
+            self.I2_ID,
+            self.I3_ID,
+            self.I4_ID,
+            self.I5_ID,
+            self.I6_ID,
+            self.I7_ID,
+            self.I8_ID,
+            self.I9_ID,
+            self.I10_ID,
+            self.I11_ID,
+            self.I12_ID,
+            self.I13_ID,
+            self.I14_ID,
+            self.I15_ID,
+            self.I16_ID,
+        ] = self.names.lookup(self.gates_pin_list)
 
         self.current_character = ""
-        self.current_character_error = ""
 
         # Opens the definition file
         self.path = path
@@ -169,20 +189,12 @@ class Scanner:
 
     def advance(self, read_error_file=False):
         """Read next character and update current character."""
-        if read_error_file:
-            self.current_character_error = self.file_error.read(1)
-            self.current_col_error += 1
-            if self.current_character_error != "":
-                if ord(self.current_character_error) == 10:  # newline 
-                    self.current_line_error += 1
-                    self.current_col_error = 0
-        else:
-            self.current_character = self.file.read(1)
-            self.current_col += 1
-            if self.current_character != "":
-                if ord(self.current_character) == 10:  # newline 
-                    self.current_line += 1
-                    self.current_col = 0
+        self.current_character = self.file.read(1)
+        self.current_col += 1
+        if self.current_character != "":
+            if ord(self.current_character) == 10:  # newline
+                self.current_line += 1
+                self.current_col = 0
 
     def skip_spaces(self):
         """Assign next non whitespace character to current character."""
@@ -248,6 +260,7 @@ class Scanner:
                 return (number_string, char)
 
     def get_error_line(self, line_num, line_col):
+        """Extract the line with error and put marker under error column."""
         with open(self.path) as f:
             lines = f.readlines()
             lines = [line.strip() for line in lines]
@@ -257,12 +270,11 @@ class Scanner:
         marker = ""
         for i in range(line_col - 1):
             marker += white_space
-        
+
         marker += "^"
-        output_string += '\n'
+        output_string += "\n"
         output_string += marker
-        return output_string 
-        
+        return output_string
 
     def get_symbol(self):
         """Translate the next sequence of characters into a symbol."""
@@ -306,7 +318,7 @@ class Scanner:
             self.advance()
             if self.current_character.isdigit():
                 symbol.type = self.GATE_PIN
-                input_pin_string = 'I' + self.get_number()[0]
+                input_pin_string = "I" + self.get_number()[0]
                 [symbol.id] = self.names.lookup([input_pin_string])
             else:
                 symbol.type = self.ERROR
@@ -363,28 +375,10 @@ class Scanner:
             if symbol.type == self.NUMBER:
                 self.logger.debug(f"{symbol.type}, {symbol.id}")
             else:
-                self.logger.debug(f"{symbol.type}, {self.names.get_name_string(symbol.id)}")
-        except:
+                self.logger.debug(
+                    f"{symbol.type}, {self.names.get_name_string(symbol.id)}"
+                )
+        except BaseException:
             self.logger.debug(f"{symbol.type}, {symbol.id}")
-        
+
         return symbol
-
-
-# Run file and simple test
-# names_instance = Names()
-
-# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-# scanner_logger = logging.getLogger("scanner")
-# path_definition = "definitions/circuit.def"
-# a_scanner = Scanner(path_definition, names_instance, scanner_logger)
-
-# print(a_scanner.get_error_line(1, 6))
-# sym_id = 1
-# for i in range(80):
-#     if sym_id == a_scanner.END_ID:
-#         break
-#     symbol1 = a_scanner.get_symbol()
-#     sym_id = symbol1.id
-
-    
-
