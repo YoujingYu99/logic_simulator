@@ -484,7 +484,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 # Draw signal trace
                 for index in range(len(signal_list)):
                     indiv_signal = signal_list[index]
-                    # horizontal start point of signal
+                    # Horizontal start point of signal
                     if self.cycles_completed <= 10:
                         normal_cycle_width = self.signal_cycle_width
                         x_start = (
