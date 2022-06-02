@@ -78,7 +78,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         self.signal_cycle_width = 40
         self.signal_y_distance = 20
         # Axis parameters
-        self.num_period_display = 8
+        self.num_period_display = 10
         self.y_axis_offset = 50
         self.x_axis_offset = 50
         self.x_grid_offset = 5
@@ -291,6 +291,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         if spin_value < 10:
             # Interval for the vertical grid lines
             x_grid_interval = self.signal_cycle_width
+            print(x_grid_interval)
             # Positions of x ticks
             # Add one more tick at the end
             x_tick_x_list = [
@@ -298,7 +299,10 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 for index in range(spin_value + 1)
             ]
         else:
-            x_grid_interval = self.signal_cycle_width / cycle_period
+            if 10< spin_value < 20:
+                x_grid_interval = self.signal_cycle_width / 2
+            else:
+                x_grid_interval = self.signal_cycle_width / cycle_period
             # Only show 8 ticks if spin value greater than 10
             num_list = list(range(self.num_period_display))
             tick_list = [(cycle_period + 1) * tick for tick in num_list]
@@ -530,7 +534,10 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                             GL.glVertex2f(x_end, y)
                     else:
                         # Squeeze cycles together if too many cycles chosen
-                        short_cycle_width = self.signal_cycle_width / cycle_period
+                        if 10 < self.cycles_completed < 20:
+                            short_cycle_width = self.signal_cycle_width / 2
+                        else:
+                            short_cycle_width = self.signal_cycle_width / cycle_period
                         x_start = (
                             (index * short_cycle_width)
                             + self.canvas_origin[0]
