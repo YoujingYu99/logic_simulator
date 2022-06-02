@@ -270,7 +270,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         else:
             x_right = (
                 self.canvas_origin[0]
-                + (self.num_period_display + 1) * self.signal_cycle_width
+                + (self.num_period_display + 5) * self.signal_cycle_width
                 + x_left
                 + self.x_axis_offset
                 + self.y_axis_offset
@@ -357,14 +357,14 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         GL.glVertex2f(x_left, y_top)
         GL.glEnd()
 
-        # # Draw y_grid for signal cycles
-        # for i in range(len(x_tick_x_list)):
-        #     # Grey gridlines
-        #     GL.glColor3f(0.5, 0.5, 0.5)
-        #     GL.glBegin(GL.GL_LINE_STRIP)
-        #     GL.glVertex2f(x_tick_x_list[i], x_tick_y_low)
-        #     GL.glVertex2f(x_tick_x_list[i], y_top)
-        #     GL.glEnd()
+        # Draw y_grid for signal cycles
+        for i in range(len(x_tick_x_list)):
+            # Grey gridlines
+            GL.glColor3f(0.7, 0.8, 0.8)
+            GL.glBegin(GL.GL_LINE_STRIP)
+            GL.glVertex2f(x_tick_x_list[i], x_tick_y_low)
+            GL.glVertex2f(x_tick_x_list[i], y_top)
+            GL.glEnd()
 
         # Draw y grid for many signals
         num_signals = len(self.monitored_signal_list)
@@ -412,14 +412,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         text = "Monitor Name"
         font = self.label_font
         x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset / 2
-        y_pos_y_label = (
-            self.canvas_origin[1]
-            + self.x_axis_offset
-            + self.y_grid_offset_lower
-            + num_signals * (self.signal_y_distance + self.signal_height)
-            + self.signal_height
-            + self.signal_y_distance / 2
-        )
+        y_pos_y_label = y_top + self.y_axis_offset / 2
         GL.glColor3f(0, 0, 0)
         GL.glRasterPos2f(x_pos_y_label, y_pos_y_label)
         for character in text:

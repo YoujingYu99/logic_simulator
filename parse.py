@@ -638,7 +638,19 @@ class Parser:
             f"""Error location: line:{self.scanner.current_line}
                              column:{self.scanner.current_col}"""
         )
+        # current col is incorrect
+        self.logger.error(
+            self.scanner.get_error_line(
+                self.scanner.current_line, self.scanner.current_col
+            )
+        )
         self.error_string += f"""Error location: line:{self.scanner.current_line}column:{self.scanner.current_col}$"""
+        self.error_string += (
+            self.scanner.get_error_line(
+                self.scanner.current_line, self.scanner.current_col
+            )
+            + "$"
+        )
         if error_type == "LEFT_CURLY_BRACE_EXPECTED":
             print("Missing '{'")
             self.error_string += "Missing '{'$"
@@ -847,60 +859,65 @@ class Parser:
 
 
 # For circuit 2
-path_definition = "definitions/circuit2.def.txt"
-scanner_logger = logging.getLogger("scanner")
-parser_logger = logging.getLogger("parser")
-logging.basicConfig(level=logging.DEBUG)
+# path_definition = "definitions/circuit2.def.txt"
+# scanner_logger = logging.getLogger("scanner")
+# parser_logger = logging.getLogger("parser")
+# logging.basicConfig(level=logging.DEBUG)
 
-names_instance = Names()
-scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-device_instance = Devices(names_instance)
-network_instance = Network(names_instance, device_instance)
-monitor_instance = Monitors(names_instance, device_instance, network_instance)
+# names_instance = Names()
+# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
+# device_instance = Devices(names_instance)
+# network_instance = Network(names_instance, device_instance)
+# monitor_instance = Monitors(names_instance, device_instance, network_instance)
 
-parser_1 = Parser(
-    names_instance,
-    device_instance,
-    network_instance,
-    monitor_instance,
-    scanner_instance,
-    parser_logger,
-)
+# parser_1 = Parser(
+#     names_instance,
+#     device_instance,
+#     network_instance,
+#     monitor_instance,
+#     scanner_instance,
+#     parser_logger,
+# )
 
-a = parser_1.parse_network()
-print("--Confirm that and gate has been created")
-print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
-print("--Confirm that switches have been created")
-print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
+# a = parser_1.parse_network()
+# print('-----------')
+# print(parser_1.scanner.get_error_line(2,3))
+
+# errors = parser_1.error_string.split('$')
+# for line in errors:
+#     print(line)
 
 
-print("--ANDg inputs")
-print(parser_1.devices.get_device(42).inputs)
-print("--ANDg output")
-print(parser_1.devices.get_device(42).outputs)
+# print('--Confirm that and gate has been created')
+# print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
+# print('--Confirm that switches have been created')
+# print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
 
-print("--Check all network inputs are satisfied")
-print(parser_1.network.check_network())
 
-(
-    monitored_signal_list,
-    non_monitored_signal_list,
-) = parser_1.monitors.get_signal_names()
+# print('--ANDg inputs')
+# print(parser_1.devices.get_device(42).inputs)
+# print('--ANDg output')
+# print(parser_1.devices.get_device(42).outputs)
 
-print("--List monitor points")
-print(monitored_signal_list, non_monitored_signal_list)
+# print('--Check all network inputs are satisfied')
+# print(parser_1.network.check_network())
 
-for i in range(5):
-    print("--Try simulate network")
-    simulate = parser_1.network.execute_network()
-    print(simulate)
+# monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
 
-    print("--Try record signals")
-    parser_1.monitors.record_signals()
+# print('--List monitor points')
+# print(monitored_signal_list, non_monitored_signal_list)
 
-print("--Get output from andg")
-print(parser_1.monitors.get_monitor_signal(42, None))
+# for i in range(5):
+#     print('--Try simulate network')
+#     simulate = parser_1.network.execute_network()
+#     print(simulate)
 
-print("--Get output from andg using display_signals")
+#     print('--Try record signals')
+#     parser_1.monitors.record_signals()
 
-parser_1.monitors.display_signals()
+# print('--Get output from andg')
+# print(parser_1.monitors.get_monitor_signal( 42, None))
+
+# print('--Get output from andg using display_signals')
+
+# parser_1.monitors.display_signals()
