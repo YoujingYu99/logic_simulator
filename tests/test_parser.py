@@ -212,6 +212,22 @@ def test_dtype_devices_clean(error_mock):
 
 
 @patch("parse.Parser.error")
+@pytest.mark.parametrize("text,test_error", [("xor", "SEMICOLON_EXPECTED")])
+def test_xor_devices_errors(error_mock, text, test_error):
+    parser = return_parser(text)
+    parser.gate_devices(mock.Mock())
+    error_mock.assert_any_call(test_error)
+
+
+@patch("parse.Parser.error")
+def test_xor_devices_clean(error_mock):
+
+    parser = return_parser("xor;")
+    parser.dtype_devices(mock.Mock())
+    error_mock.assert_not_called()
+
+
+@patch("parse.Parser.error")
 @pytest.mark.parametrize(
     "text,test_error",
     [

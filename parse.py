@@ -285,9 +285,9 @@ class Parser:
         ):
             self.logger.debug("-GATE found, start to parse GATE")
             self.gate_devices(self.symbol.id)
-        # elif self.symbol.id == self.XOR_ID:
-        #     self.logger.debug("-GATE found, start to parse GATE")
-        #     self.xor()
+        elif self.symbol.id == self.XOR_ID:
+            self.logger.debug("-GATE found, start to parse GATE")
+            self.xor(self.symbol.id)
         else:
             self.error("DEVICE_TYPE_NOT_DECLARED")
 
@@ -379,6 +379,24 @@ class Parser:
         self.devices.make_device(device_id, device_kind, device_property=None)
         if self.symbol.type == self.scanner.SEMICOLON:
             self.logger.debug("-End of DTYPE statement")
+
+        else:
+            self.error("SEMILCOLON_EXPECTED")
+
+    def xor_devices(self, device_kind):
+        """
+        Method to parse xor gates
+        """
+        self.device_name()
+        device_id = self.symbol.id
+        self.symbol = self.scanner.get_symbol()
+        while self.symbol.type == self.scanner.COMMA:
+            self.device_name()
+            self.symbol = self.scanner.get_symbol()
+        # Create device
+        self.devices.make_device(device_id, device_kind, device_property=None)
+        if self.symbol.type == self.scanner.SEMICOLON:
+            self.logger.debug("-End of XOR statement")
 
         else:
             self.error("SEMILCOLON_EXPECTED")
