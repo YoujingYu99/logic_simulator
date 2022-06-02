@@ -371,14 +371,14 @@ class Scanner:
 
 
 # Run file and simple test
-names_instance = Names()
+# names_instance = Names()
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-scanner_logger = logging.getLogger("scanner")
-path_definition = "definitions/circuit.def"
-a_scanner = Scanner(path_definition, names_instance, scanner_logger)
+# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+# scanner_logger = logging.getLogger("scanner")
+# path_definition = "definitions/circuit.def"
+# a_scanner = Scanner(path_definition, names_instance, scanner_logger)
 
-print(a_scanner.get_error_line(1, 6))
+# print(a_scanner.get_error_line(1, 6))
 # sym_id = 1
 # for i in range(80):
 #     if sym_id == a_scanner.END_ID:
