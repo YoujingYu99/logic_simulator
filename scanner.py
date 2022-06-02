@@ -260,10 +260,11 @@ class Scanner:
 
     def get_error_line(self, line_num, line_col):
         """Return the line with error and put marker under error column."""
-        with open(self.path) as f:
-            lines = f.readlines()
-            lines = [line.strip() for line in lines]
-        output_string = lines[line_num - 1]
+        f = open(self.path)
+        data = f.read()
+        data = data.split('\n')
+        
+        output_string = data[line_num - 1]
         white_space = " "
 
         marker = ""

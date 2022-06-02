@@ -240,4 +240,4 @@ def test_column_and_line_count():
 
     with patch("builtins.open", mocked_open_function) as mock_file:
         error_line = scanner.get_error_line(2, 1)
-        assert 'DTYPE dtype;\n^' == error_line
+        assert '    DTYPE dtype;\n^' == error_line
