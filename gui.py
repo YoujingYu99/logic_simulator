@@ -334,7 +334,7 @@ class Gui(wx.Frame):
                             "Continuing for ",
                             str(self.spin_value),
                             " cycles,",
-                            " a total of",
+                            " a total of ",
                             str(self.cycles_completed),
                             " cycles run.\n",
                         ]
