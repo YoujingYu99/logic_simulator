@@ -135,6 +135,17 @@ class FileMenu(wx.Menu):
                 self.parentFrame.network = parser.network
                 self.parentFrame.devices = parser.devices
                 self.parentFrame.monitors = parser.monitors
+
+                # Test here
+                input_list = []
+                output_list = []
+                for device in self.parentFrame.devices.devices_list:
+                    for key in device.inputs.keys():
+                        input_list.append(self.parentFrame.names.get_name_string(key))
+
+
+
+
                 # Update canvas objects
                 self.parentFrame.canvas.names = parser.names
                 self.parentFrame.canvas.network = parser.network

@@ -209,10 +209,10 @@ class Gui(wx.Frame):
         self.monitor_button.Bind(wx.EVT_BUTTON, self.on_monitor_button)
         self.switch_button.Bind(wx.EVT_BUTTON, self.on_switch_button)
         # Make and remove connections
-        self.make_connection_button.Bind(wx.EVT_BUTTON,
-                                         self.on_make_connection_button)
-        self.remove_connection_button.Bind(wx.EVT_BUTTON,
-                                           self.on_remove_connection_button)
+        # self.make_connection_button.Bind(wx.EVT_BUTTON,
+        #                                  self.on_make_connection_button)
+        # self.remove_connection_button.Bind(wx.EVT_BUTTON,
+        #                                    self.on_remove_connection_button)
 
         # Configure sizers for layout
         # Controls the entire screen
@@ -618,6 +618,8 @@ class Gui(wx.Frame):
 
     def on_make_connection_button(self):
         """Make connection between two inputs/outputs."""
+        chosen_input = None
+        chosen_output = None
         if self.is_parsed:
             # Renew the names for monitors
             self.get_inputs_outputs()
@@ -646,18 +648,22 @@ class Gui(wx.Frame):
                 selected_output = output_dlg.GetStringSelection()
                 chosen_output = selected_output
             output_dlg.Destroy()
-            # TODO: get device and port ids from the names
-            first_device_id = None
-            first_port_id = None
-            second_device_id = None
-            second_port_id = None
 
-            # Get output and port ids
-            self.network.make_connection(first_device_id, first_port_id,
-                                         second_device_id, second_port_id)
+            # If both chosen
+            if chosen_input and chosen_output:
+                first_device_id, first_port_id = \
+                    self.devices.get_signal_ids(chosen_input)
+                second_device_id, second_port_id = \
+                    self.devices.get_signal_ids(
+                    chosen_output)
+                # Get output and port ids
+                self.network.make_connection(first_device_id, first_port_id,
+                    second_device_id, second_port_id)
 
     def on_remove_connection_button(self):
         """Remove connection between two inputs/outputs."""
+        chosen_input = None
+        chosen_output = None
         if self.is_parsed:
             # Renew the names for monitors
             self.get_inputs_outputs()
@@ -686,15 +692,16 @@ class Gui(wx.Frame):
                 selected_output = output_dlg.GetStringSelection()
                 chosen_output = selected_output
             output_dlg.Destroy()
-            # TODO: get device and port ids from the names
-            first_device_id = None
-            first_port_id = None
-            second_device_id = None
-            second_port_id = None
-
-            # Get output and port ids
-            self.network.remove_connection(first_device_id, first_port_id,
-                                         second_device_id, second_port_id)
+            # If both chosen
+            if chosen_input and chosen_output:
+                first_device_id, first_port_id = \
+                    self.devices.get_signal_ids(chosen_input)
+                second_device_id, second_port_id = \
+                    self.devices.get_signal_ids(chosen_output)
+                # Get output and port ids
+                self.network.remove_connection(first_device_id, first_port_id,
+                                             second_device_id,
+                                             second_port_id)
 
 
 
