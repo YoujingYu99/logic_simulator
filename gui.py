@@ -695,3 +695,6 @@ class Gui(wx.Frame):
             # Get output and port ids
             self.network.remove_connection(first_device_id, first_port_id,
                                          second_device_id, second_port_id)
+
+
+

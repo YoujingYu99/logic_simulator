@@ -34,6 +34,8 @@ class Network:
     make_connection(self, first_device_id, first_port_id, second_device_id,
                     second_port_id): Connects the first device to the second
                                      device.
+    remove_connection(self, first_device_id, first_port_id, second_device_id,
+                    second_port_id):Remove connection between devices.
 
     check_network(self): Checks if all inputs in the network are connected.
 
@@ -161,6 +163,37 @@ class Network:
             error_type = self.PORT_ABSENT
 
         return error_type
+
+    def remove_connection(
+        self, first_device_id, first_port_id, second_device_id, second_port_id
+    ):
+        """Remove connetion between first device and second device.
+
+        Return self.NO_ERROR if successful, or the corresponding error if not.
+        """
+        first_device = self.devices.get_device(first_device_id)
+        second_device = self.devices.get_device(second_device_id)
+
+        if first_device is None or second_device is None:
+            error_type = self.DEVICE_ABSENT
+
+        # If valid port ids
+        elif first_port_id in first_device.inputs \
+                and second_port_id in second_device.inputs:
+            if first_device.inputs[first_port_id] is not None \
+                    and second_device.inputs[second_port_id] is not None:
+                # Remove connection
+                first_device.inputs.pop(first_port_id)
+                second_device.inputs.pop(second_port_id)
+                error_type = self.NO_ERROR
+            else:  # second_port_id is not a valid input or output port
+                error_type = self.PORT_ABSENT
+
+        else:  # first_port_id not a valid input or output port
+            error_type = self.PORT_ABSENT
+
+        return error_type
+
 
     def check_network(self):
         """Return True if all inputs in the network are connected."""
