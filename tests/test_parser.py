@@ -128,11 +128,12 @@ def test_create_conn_errors(error_mock, text, error):
 
 
 @patch("parse.Parser.error")
+@patch("parse.Parser.device_semantic_error_check")
 @pytest.mark.parametrize(
     "text",
     [("sw1 => dtype.SET;"), ("dtype.Q => gate.I1;")],
 )
-def test_create_conn_clean(error_mock, text):
+def test_create_conn_clean(error_mock, foo, text):
     """
     Function to test make_monitor method of parser
     """
@@ -167,6 +168,7 @@ def test_device_errors(error_mock):
     "text", ["CLOCK", "SWITCH", "DTYPE", "AND", "NAND", "OR", "NOR"]
 )
 def test_device_clean(text, **mocks):
+    "Function to test device parsing happens for non-error files"
     parser = return_parser(text)
     parser.symbol = parser.scanner.get_symbol()
     parser.device()
@@ -177,6 +179,7 @@ def test_device_clean(text, **mocks):
     "parse.Parser",
     input_number=DEFAULT,
     error=DEFAULT,
+    device_semantic_error_check=DEFAULT,
 )
 @pytest.mark.parametrize(
     "text,test_error",
@@ -190,6 +193,9 @@ def test_device_clean(text, **mocks):
     ],
 )
 def test_gate_devices_errors(text, test_error, **mocks):
+    """
+    Test for error handling of gate_devices()
+    """
     parser = return_parser(text)
     parser.gate_devices(mock.Mock())
     parser.error.assert_any_call(test_error)
@@ -198,14 +204,20 @@ def test_gate_devices_errors(text, test_error, **mocks):
 @patch("parse.Parser.error")
 @pytest.mark.parametrize("text,test_error", [("dtype", "SEMICOLON_EXPECTED")])
 def test_dtype_devices_errors(error_mock, text, test_error):
+    """
+    Test for error handling of dtype_devices
+    """
     parser = return_parser(text)
     parser.gate_devices(mock.Mock())
     error_mock.assert_any_call(test_error)
 
 
 @patch("parse.Parser.error")
-def test_dtype_devices_clean(error_mock):
-
+@patch("parse.Parser.device_semantic_error_check")
+def test_dtype_devices_clean(foo, error_mock):
+    """
+    Test dtype_devices parses as intended
+    """
     parser = return_parser("dtype;")
     parser.dtype_devices(mock.Mock())
     error_mock.assert_not_called()
@@ -214,14 +226,20 @@ def test_dtype_devices_clean(error_mock):
 @patch("parse.Parser.error")
 @pytest.mark.parametrize("text,test_error", [("xor", "SEMICOLON_EXPECTED")])
 def test_xor_devices_errors(error_mock, text, test_error):
+    """
+    Test xor_devices throws errors when expected
+    """
     parser = return_parser(text)
     parser.gate_devices(mock.Mock())
     error_mock.assert_any_call(test_error)
 
 
 @patch("parse.Parser.error")
-def test_xor_devices_clean(error_mock):
-
+@patch("parse.Parser.device_semantic_error_check")
+def test_xor_devices_clean(foo, error_mock):
+    """
+    Test xor_devices parses text
+    """
     parser = return_parser("xor;")
     parser.dtype_devices(mock.Mock())
     error_mock.assert_not_called()
@@ -241,16 +259,23 @@ def test_xor_devices_clean(error_mock):
     ],
 )
 def test_switch_devices_errors(error_mock, text, test_error):
+    """
+    Test switch_devices for error handling
+    """
     parser = return_parser(text)
     parser.switch_devices(mock.Mock())
     error_mock.assert_any_call(test_error)
 
 
 @patch("parse.Parser.error")
+@patch("parse.Parser.device_semantic_error_check")
 @pytest.mark.parametrize(
     "text", ["sw(1);", "sw(1), sw1(0);", "sw(1),sw2(1),sw3(0);"]
 )
-def test_switch_devices_clean(error_mock, text):
+def test_switch_devices_clean(foo, error_mock, text):
+    """
+    Test switch_devices parses correctly
+    """
     parser = return_parser(text)
     parser.switch_devices(mock.Mock())
     error_mock.assert_not_called()
@@ -270,6 +295,9 @@ def test_switch_devices_clean(error_mock, text):
     ],
 )
 def test_clock_devices_errors(error_mock, text, test_error):
+    """
+    Test error_handling of clock_devices
+    """
     parser = return_parser(text)
     parser.clock_devices(mock.Mock())
     print(error_mock.call_args_list)
@@ -277,11 +305,15 @@ def test_clock_devices_errors(error_mock, text, test_error):
 
 
 @patch("parse.Parser.error")
+@patch("parse.Parser.device_semantic_error_check")
 @pytest.mark.parametrize(
     "text",
     ["clock(1);", "clock(1), clock1(0);", "clock(1),clock2(1),clock3(0);"],
 )
-def test_clock_devices_clean(error_mock, text):
+def test_clock_devices_clean(foo, error_mock, text):
+    """
+    Test clock_devices parses correctly
+    """
     parser = return_parser(text)
     parser.switch_devices(mock.Mock())
     error_mock.assert_not_called()
@@ -290,6 +322,9 @@ def test_clock_devices_clean(error_mock, text):
 @patch("parse.Parser.error")
 @pytest.mark.parametrize("text", ["19", "a", "DEVICE", "-5"])
 def test_input_number_errors(error_mock, text):
+    """
+    Test input_number for error handling
+    """
     parser = return_parser(text)
     parser.symbol = parser.scanner.get_symbol()
     parser.input_number()
@@ -298,7 +333,10 @@ def test_input_number_errors(error_mock, text):
 
 @patch("parse.Parser.error")
 @pytest.mark.parametrize("text", ["12", "1"])
-def test_input_number_errors(error_mock, text):
+def test_input_number_clean(error_mock, text):
+    """
+    Test input_number parses correctly
+    """
     parser = return_parser(text)
     parser.symbol = parser.scanner.get_symbol()
     parser.input_number()
@@ -308,9 +346,16 @@ def test_input_number_errors(error_mock, text):
 @patch("parse.Parser.error")
 @pytest.mark.parametrize("text", ["3num", ",num", "Num", "AND", "-7"])
 def test_device_name(error_mock, text):
+    """Tests device_name for error handling"""
     parser = return_parser(text)
     parser.device_name()
     error_mock.assert_any_call("DEVICE_NAME_EXPECTED")
 
 
-# error not tested locally due to extensive files needed. It would have been tested hand conducted end to end tests.
+@patch("parse.Parser.error")
+@pytest.mark.parametrize("text", ["num", "num3", "nuM"])
+def test_device_name(error_mock, text):
+    """Tests device_name for error handling"""
+    parser = return_parser(text)
+    parser.device_name()
+    error_mock.assert_not_called()
