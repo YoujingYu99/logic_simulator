@@ -118,6 +118,9 @@ class Gui(wx.Frame):
         self.switch_name_list = []
         self.switch_on_list = []
         self.switch_off_list = []
+        # All inputs and outputs in the network
+        self.input_list = []
+        self.output_list = []
 
         # Temporarily set file to be not parsed
         self.is_parsed = False
@@ -584,6 +587,8 @@ class Gui(wx.Frame):
         self.switch_name_list = []
         self.switch_on_list = []
         self.switch_off_list = []
+        self.input_list = []
+        self.output_list = []
 
         # Set file to be not parsed
         self.is_parsed = False
@@ -606,9 +611,42 @@ class Gui(wx.Frame):
         self.canvas.monitored_signal_list = []
         self.canvas.cycles_completed = 0
 
+    def get_inputs_outputs(self):
+        """Get all inputs and outputs in network"""
+        pass
+
     def on_make_connection_button(self):
         """Make connection between two inputs/outputs."""
-        pass
+        if self.is_parsed:
+            # Renew the names for monitors
+            self.get_inputs_outputs()
+            input_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Inputs You Wish to Connect",
+                "Input of Connection",
+                self.input_list,
+            )
+
+            if input_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_input = input_dlg.GetStringSelection()
+                chosen_input = selected_input
+            input_dlg.Destroy()
+
+            output_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Output You Wish to Connect",
+                "Output of Connection",
+                self.output_list,
+            )
+
+            if output_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_output = output_dlg.GetStringSelection()
+                chosen_output = selected_output
+            output_dlg.Destroy()
+
+
 
     def on_remove_connection_button(self):
         """Remove connection between two inputs/outputs."""
