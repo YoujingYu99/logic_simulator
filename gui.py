@@ -142,7 +142,7 @@ class Gui(wx.Frame):
 
         self.console_box = ConsoleBox(
             self, id=wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE
-            | wx.TE_RICH2
+                                      | wx.TE_RICH2
         )
         self.console_box.SetFont(self.console_font)
         self.console_box.SetBackgroundColour("white")
@@ -212,7 +212,7 @@ class Gui(wx.Frame):
         self.make_connection_button.Bind(wx.EVT_BUTTON,
                                          self.on_make_connection_button)
         self.remove_connection_button.Bind(wx.EVT_BUTTON,
-                                         self.on_remove_connection_button)
+                                           self.on_remove_connection_button)
 
         # Configure sizers for layout
         # Controls the entire screen
@@ -268,7 +268,7 @@ class Gui(wx.Frame):
         function_sizer.Add(connection_sizer, 5,
                            wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
         connection_sizer.Add(self.make_connection_button, 1,
-                                      wx.LEFT | wx.RIGHT, 3, 5)
+                             wx.LEFT | wx.RIGHT, 3, 5)
         connection_sizer.Add(self.remove_connection_button, 1,
                              wx.LEFT | wx.RIGHT, 3, 5)
 
@@ -441,7 +441,7 @@ class Gui(wx.Frame):
         self.unmonitored_list = self.monitors.get_signal_names()[1]
         # Append list to get a full list of monitor names
         self.monitor_names_list = self.monitored_list \
-            + self.unmonitored_list
+                                  + self.unmonitored_list
 
         # To get monitor ids
         for monitor_name in self.monitor_names_list:
@@ -613,6 +613,7 @@ class Gui(wx.Frame):
 
     def get_inputs_outputs(self):
         """Get all inputs and outputs in network"""
+        # TODO: Get inputs and outputs names in lists
         pass
 
     def on_make_connection_button(self):
@@ -622,7 +623,7 @@ class Gui(wx.Frame):
             self.get_inputs_outputs()
             input_dlg = wx.SingleChoiceDialog(
                 self,
-                "Choose the Inputs You Wish to Connect",
+                "Choose the Input You Wish to Connect",
                 "Input of Connection",
                 self.input_list,
             )
@@ -645,9 +646,52 @@ class Gui(wx.Frame):
                 selected_output = output_dlg.GetStringSelection()
                 chosen_output = selected_output
             output_dlg.Destroy()
+            # TODO: get device and port ids from the names
+            first_device_id = None
+            first_port_id = None
+            second_device_id = None
+            second_port_id = None
 
-
+            # Get output and port ids
+            self.network.make_connection(first_device_id, first_port_id,
+                                         second_device_id, second_port_id)
 
     def on_remove_connection_button(self):
         """Remove connection between two inputs/outputs."""
-        pass
+        if self.is_parsed:
+            # Renew the names for monitors
+            self.get_inputs_outputs()
+            input_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Input of the Connection You Wish to Remove",
+                "Input of Connection",
+                self.input_list,
+            )
+
+            if input_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_input = input_dlg.GetStringSelection()
+                chosen_input = selected_input
+            input_dlg.Destroy()
+
+            output_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Output of the Connection You Wish to Remove",
+                "Output of Connection",
+                self.output_list,
+            )
+
+            if output_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_output = output_dlg.GetStringSelection()
+                chosen_output = selected_output
+            output_dlg.Destroy()
+            # TODO: get device and port ids from the names
+            first_device_id = None
+            first_port_id = None
+            second_device_id = None
+            second_port_id = None
+
+            # Get output and port ids
+            self.network.remove_connection(first_device_id, first_port_id,
+                                         second_device_id, second_port_id)
