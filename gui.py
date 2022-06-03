@@ -52,6 +52,10 @@ class Gui(wx.Frame):
     update_switches(self): Event handler for when the switch state changes.
     clear_previous_file(self): Event handler for when the user opens another
                             definition file.
+    on_make_connection(self):Event handler for when the user makes
+                            connections.
+    on_remove_connection(self):Event handler for when the user removes
+                            connections.
     """
 
     def __init__(self, title, path, names, devices, network, monitors):
@@ -177,6 +181,10 @@ class Gui(wx.Frame):
         # Monitor and Switch Buttons
         self.monitor_button = wx.Button(self, wx.ID_ANY, "Choose Monitor")
         self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
+        self.make_connection_button = wx.Button(self, wx.ID_ANY,
+                                                "Make Connection")
+        self.remove_connection_button = wx.Button(self, wx.ID_ANY,
+                                                  "Remove Connection")
 
         # Set fonts for all
         self.run_button.SetFont(self.run_font)
@@ -185,6 +193,8 @@ class Gui(wx.Frame):
         self.clear_console_button.SetFont(self.run_font)
         self.monitor_button.SetFont(self.monitor_font)
         self.switch_button.SetFont(self.monitor_font)
+        self.make_connection_button.SetFont(self.monitor_font)
+        self.remove_connection_button.SetFont(self.monitor_font)
 
         # Bind events to widgets
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
@@ -195,6 +205,11 @@ class Gui(wx.Frame):
         self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button)
         self.monitor_button.Bind(wx.EVT_BUTTON, self.on_monitor_button)
         self.switch_button.Bind(wx.EVT_BUTTON, self.on_switch_button)
+        # Make and remove connections
+        self.make_connection_button.Bind(wx.EVT_BUTTON,
+                                         self.on_make_connection_button)
+        self.remove_connection_button.Bind(wx.EVT_BUTTON,
+                                         self.on_remove_connection_button)
 
         # Configure sizers for layout
         # Controls the entire screen
@@ -213,6 +228,7 @@ class Gui(wx.Frame):
         simulation_action_sizer_1 = wx.BoxSizer(wx.HORIZONTAL)
         simulation_action_sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         function_sizer = wx.StaticBoxSizer(wx.VERTICAL, self)
+        connection_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         top_level_sizer.Add(main_sizer, 5, wx.ALL | wx.EXPAND, 5)
         top_level_sizer.Add(console_sizer, 2, wx.ALL | wx.EXPAND, 5)
@@ -246,6 +262,12 @@ class Gui(wx.Frame):
                            wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
         function_sizer.Add(self.switch_button, 5,
                            wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        function_sizer.Add(connection_sizer, 5,
+                           wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        connection_sizer.Add(self.make_connection_button, 1,
+                                      wx.LEFT | wx.RIGHT, 3, 5)
+        connection_sizer.Add(self.remove_connection_button, 1,
+                             wx.LEFT | wx.RIGHT, 3, 5)
 
         # Console sizer configuration
         console_sizer.Add(self.console_box, 5, wx.EXPAND | wx.ALL, 5)
@@ -583,3 +605,11 @@ class Gui(wx.Frame):
         self.canvas.monitors = None
         self.canvas.monitored_signal_list = []
         self.canvas.cycles_completed = 0
+
+    def on_make_connection_button(self):
+        """Make connection between two inputs/outputs."""
+        pass
+
+    def on_remove_connection_button(self):
+        """Remove connection between two inputs/outputs."""
+        pass
