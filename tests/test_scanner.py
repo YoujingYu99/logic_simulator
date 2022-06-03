@@ -128,10 +128,8 @@ def test_get_number(input_string, expected_string):
         ("{", 5),
         ("Q", 6),
         ("DATA", 7),
-        ("I7", 12),
         ("123456", 10),
         ("DEVICES", 11),
-        ("QBAR", 7),
         ("dtypeName", 13),
         ("$$", 14),
         ("", 15),
@@ -167,7 +165,7 @@ def test_get_symbol_types(input_string, expected_string):
         ("", 15),
     ],
 )
-def test_get_symbol_types(input_string, expected_string):
+def test_get_symbol_types_2(input_string, expected_string):
     """Test if symbol types are correctly extracted."""
     file_string = input_string
     scanner = new_scanner(file_string)
@@ -231,7 +229,7 @@ def test_column_and_line_count():
     assert symbol.start_line == 2
 
 
-def test_column_and_line_count():
+def test_column_and_line_count_2():
     """Test if the column and line counter is correct."""
     file_string = "DEVICES{\n    DTYPE dtype;"
     scanner = new_scanner(file_string)
@@ -240,4 +238,4 @@ def test_column_and_line_count():
 
     with patch("builtins.open", mocked_open_function) as mock_file:
         error_line = scanner.get_error_line(2, 1)
-        assert '    DTYPE dtype;\n^' == error_line
+        assert "    DTYPE dtype;\n^" == error_line

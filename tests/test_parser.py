@@ -1,6 +1,4 @@
 """Tests the parser module"""
-import re
-from sqlite3 import paramstyle
 from names import Names
 from parse import Parser
 from devices import Devices
@@ -13,12 +11,12 @@ from unittest.mock import DEFAULT
 from unittest.mock import patch, mock_open
 import logging
 
+
 # creds to Niko for this mock
 def new_scanner(file_text):
     """Return a new scanner instance."""
     # Mocking open file as string even though path expected
     mocked_open_function = mock_open(read_data=file_text)
-
     with patch("builtins.open", mocked_open_function) as mock_file:
         names_instance = Names()
         scanner_logger = logging.getLogger("scanner")
@@ -123,7 +121,7 @@ def test_create_conn_errors(error_mock, text, error):
     parser = return_parser(text)
     parser.symbol = parser.scanner.get_symbol()
     parser.create_conn()
-    # note, no assertion of being called once as error skipping is not functional
+    # no assertion of being called once as error skipping is not functional
     error_mock.assert_any_call(error)
 
 
@@ -140,7 +138,7 @@ def test_create_conn_clean(error_mock, foo, text):
     parser = return_parser(text)
     parser.symbol = parser.scanner.get_symbol()
     parser.create_conn()
-    # note, no assertion of being called once as error skipping is not functional
+    # no assertion of being called once as error skipping is not functional
     error_mock.assert_not_called()
 
 
@@ -345,7 +343,7 @@ def test_input_number_clean(error_mock, text):
 
 @patch("parse.Parser.error")
 @pytest.mark.parametrize("text", ["3num", ",num", "Num", "AND", "-7"])
-def test_device_name(error_mock, text):
+def test_device_name_errors(error_mock, text):
     """Tests device_name for error handling"""
     parser = return_parser(text)
     parser.device_name()
@@ -354,7 +352,7 @@ def test_device_name(error_mock, text):
 
 @patch("parse.Parser.error")
 @pytest.mark.parametrize("text", ["num", "num3", "nuM"])
-def test_device_name(error_mock, text):
+def test_device_name_clean(error_mock, text):
     """Tests device_name for error handling"""
     parser = return_parser(text)
     parser.device_name()

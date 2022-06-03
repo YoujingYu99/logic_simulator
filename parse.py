@@ -1,4 +1,4 @@
-from scanner import Symbol, Scanner
+from scanner import Scanner
 from names import Names
 from devices import Devices
 from network import Network
@@ -204,9 +204,9 @@ class Parser:
                 device_id, output_id, cycles_completed=0
             )
             if monitor_return == self.monitors.NOT_OUTPUT:
-                self.error('NOT_OUTPUT')
+                self.error("NOT_OUTPUT")
             elif monitor_return == self.monitors.NOT_OUTPUT:
-                self.error('MONITOR_PRESENT')            
+                self.error("MONITOR_PRESENT")
 
         if self.symbol.type != self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -275,7 +275,6 @@ class Parser:
                         self.error("PORT_ABSENT")
                     elif network_return == self.network.DEVICE_ABSENT:
                         self.error("DEVICE_ABSENT")
-                    
 
             self.symbol = self.scanner.get_symbol()
         if self.symbol.type != self.scanner.SEMICOLON:
@@ -398,8 +397,9 @@ class Parser:
             self.device_name()
             self.symbol = self.scanner.get_symbol()
         # Create device
-        device_return = self.devices.make_device(device_id, 
-            device_kind, device_property=None)
+        device_return = self.devices.make_device(
+            device_id, device_kind, device_property=None
+        )
         self.device_semantic_error_check(device_return)
         if self.symbol.type == self.scanner.SEMICOLON:
             self.logger.debug("-End of DTYPE statement")
@@ -418,8 +418,9 @@ class Parser:
             self.device_name()
             self.symbol = self.scanner.get_symbol()
         # Create device
-        device_return = self.devices.make_device(device_id, 
-            device_kind, device_property=None)
+        device_return = self.devices.make_device(
+            device_id, device_kind, device_property=None
+        )
         self.device_semantic_error_check(device_return)
         if self.symbol.type == self.scanner.SEMICOLON:
             self.logger.debug("-End of XOR statement")
@@ -571,7 +572,6 @@ class Parser:
                             device_id, device_kind, device_property
                         )
                         self.device_semantic_error_check(device_return)
-                        
 
         if not self.symbol.type == self.scanner.SEMICOLON:
             self.error("SEMICOLON_EXPECTED")
@@ -642,16 +642,15 @@ class Parser:
     def device_semantic_error_check(self, error_type):
         """Check if defined devices have no semantic erros."""
         if error_type == self.devices.INVALID_QUALIFIER:
-            self.error('INVALID_QUALIFIER')
+            self.error("INVALID_QUALIFIER")
         elif error_type == self.devices.INVALID_QUALIFIER:
-            self.error('INVALID_QUALIFIER')
+            self.error("INVALID_QUALIFIER")
         elif error_type == self.devices.BAD_DEVICE:
-            self.error('BAD_DEVICE')
+            self.error("BAD_DEVICE")
         elif error_type == self.devices.QUALIFIER_PRESENT:
-            self.error('QUALIFIER_PRESENT')
+            self.error("QUALIFIER_PRESENT")
         elif error_type == self.devices.DEVICE_PRESENT:
-            self.error('DEVICE_PRESENT')
-
+            self.error("DEVICE_PRESENT")
 
     def device_name(self):
         """
@@ -952,44 +951,47 @@ parser_1 = Parser(
 )
 
 a = parser_1.parse_network()
-print('-----------')
-print(parser_1.scanner.get_error_line(2,3))
+print("-----------")
+print(parser_1.scanner.get_error_line(2, 3))
 
-errors = parser_1.error_string.split('$')
+errors = parser_1.error_string.split("$")
 for line in errors:
     print(line)
 
 
-print('--Confirm that and gate has been created')
+print("--Confirm that and gate has been created")
 print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
-print('--Confirm that switches have been created')
+print("--Confirm that switches have been created")
 print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
 
 
-print('--ANDg inputs')
+print("--ANDg inputs")
 print(parser_1.devices.get_device(42).inputs)
-print('--ANDg output')
+print("--ANDg output")
 print(parser_1.devices.get_device(42).outputs)
 
-print('--Check all network inputs are satisfied')
+print("--Check all network inputs are satisfied")
 print(parser_1.network.check_network())
 
-monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
+(
+    monitored_signal_list,
+    non_monitored_signal_list,
+) = parser_1.monitors.get_signal_names()
 
-print('--List monitor points')
+print("--List monitor points")
 print(monitored_signal_list, non_monitored_signal_list)
 
 for i in range(5):
-    print('--Try simulate network')
+    print("--Try simulate network")
     simulate = parser_1.network.execute_network()
     print(simulate)
 
-    print('--Try record signals')
+    print("--Try record signals")
     parser_1.monitors.record_signals()
 
-print('--Get output from andg')
-print(parser_1.monitors.get_monitor_signal( 42, None))
+print("--Get output from andg")
+print(parser_1.monitors.get_monitor_signal(42, None))
 
-print('--Get output from andg using display_signals')
+print("--Get output from andg using display_signals")
 
 parser_1.monitors.display_signals()
