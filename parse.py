@@ -5,6 +5,9 @@ from network import Network
 from monitors import Monitors
 import logging
 import sys
+import wx
+_ = wx.GetTranslation
+
 
 """Parse the definition file and build the logic network.
 
@@ -171,12 +174,14 @@ class Parser:
             self.error("MISSING_END_KEYWORD")
 
         if self.error_count > 0:
+            err_msg = str(self.error_count) 
+            err_msg += _("errors found, please resolve them and try again")
             print(
-                f"{self.error_count} errors found, please resolve them and try again"
+                err_msg
             )
             return False
         else:
-            print("No Errors found")
+            print(_("No Errors found"))
             return True
 
     def make_monitor(self):
@@ -679,6 +684,7 @@ class Parser:
                 self.scanner.current_line, self.scanner.current_col
             )
         )
+        # FIXME
         self.error_string += f"""Error location: line:{self.scanner.current_line}column:{self.scanner.current_col}$"""
         self.error_string += (
             self.scanner.get_error_line(
@@ -686,25 +692,28 @@ class Parser:
             )
             + "$"
         )
-        if error_type == "LEFT_CURLY_BRACE_EXPECTED":
-            print("Missing '{'")
-            self.error_string += "Missing '{'$"
+        if error_type == "LEFT_CURLY_BRACE_EXPECTED":#
+            er_msg = _("Missing '{'")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "RIGHT_CURLY_BRACE_EXPECTED":
-            print("Missing '}'")
-            self.error_string += "Missing '}'$"
+            er_msg = _("Missing '}'")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             if self.symbol.type == self.scanner.EOF:
                 return
             while self.symbol.type != self.scanner.KEYWORD:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "MISSING_END_KEYWORD":
-            print("Missing END to indicate end of definition file")
-            self.error_string += (
-                "Missing END to indicate end of definition file$"
-            )
+            er_msg = _("Missing END to indicate end of definition file")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             sys.exit()
         elif error_type == "DEVICE_NAME_EXPECTED":
-            print("Device not specified")
-            self.error_string += "Device output to monitor not specified$"
+            er_msg = _("Device not specified")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
+
             while self.symbol.id not in [
                 self.scanner.SEMICOLON_ID,
                 self.scanner.RIGHT_CURLY_BRACKET_ID,
@@ -715,8 +724,9 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "SEMICOLON_EXPECTED":
-            print("Semicolon expected at end of line.")
-            self.error_string += "Semicolon expected at end of line.$"
+            er_msg = _("Semicolon expected at end of line.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.CURLY_BRACKET,
                 self.scanner.KEYWORD,
@@ -725,8 +735,9 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "OUTPUT_PIN_EXPECTED":
-            print("Output pin not specified")
-            self.error_string += "Output pin not specified$"
+            er_msg = _("Output pin not specified")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -735,12 +746,14 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "RIGHT_ARROW_EXPECTED":
-            print("Right arrow expected to signify connect")
-            self.error_string += "Right arrow expected to signify connect$"
+            er_msg = _("Right arrow expected to signify connect")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
 
         elif error_type in ["INPUT_SPECIFICATION_EXPECTED", "NOT_VALID_INPUT"]:
-            print("Input expected but no specified")
-            self.error_string += "Input expected but no specified$"
+            er_msg = _("Input expected but no specified")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -749,8 +762,9 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "DEVICE_TYPE_NOT_DECLARED":
-            print("Device type not specified, please specify")
-            self.error_string += "Device type not specified, please specify$"
+            er_msg = _("Device type not specified, please specify")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -760,8 +774,9 @@ class Parser:
                 self.symbol = self.scanner.get_symbol()
 
         elif error_type == "LEFT_BRACKET_EXPECTED":
-            print("'(' expected but not present")
-            self.error_string += "'(' expected but not present$"
+            er_msg = _("'(' expected but not present")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -772,12 +787,14 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INVALID_INPUT_INITIALISATION":
-            print("Number of inputs incorrectly configured")
-            self.error_string += "Number of inputs incorrectly configured$"
+            er_msg = _("Number of inputs incorrectly configured")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             self.symbol = self.scanner.get_symbol()
         elif error_type == "RIGHT_BRACKET_EXPECTED":
-            print("')' expected at end of initialisaition")
-            self.error_string += "')' expected at end of initialisaition$"
+            er_msg = _("')' expected at end of initialisaition")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -788,8 +805,9 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INVALID_CYCLE_VALUE":
-            print("Invalid value of clock cycles")
-            self.error_string += "Invalid value of clock cycles$"
+            er_msg = _("Invalid value of clock cycles")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -801,8 +819,9 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INVALID_STATE_OF_SWITCH":
-            print("Invalid state of switch")
-            self.error_string += "Invalid state of switch$"
+            er_msg = _("Invalid state of switch")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -814,8 +833,9 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "UNKNOWN_INPUT":
-            print("Incorrect_input_pin")
-            self.error_string += "Incorrect_input_pin$"
+            er_msg = _("Incorrect_input_pin")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
             while self.symbol.type not in [
                 self.scanner.SEMICOLON,
                 self.scanner.CURLY_BRACKET,
@@ -824,41 +844,53 @@ class Parser:
             ]:
                 self.symbol = self.scanner.get_symbol()
         elif error_type == "INPUT_TO_INPUT":
-            print("Input is connected to an input.")
-            self.error_string += "Input is connected to an input.$"
+            er_msg = _("Input is connected to an input.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "OUTPUT_TO_OUTPUT":
-            print("Output is connected to an output.")
-            self.error_string += "Output is connected to an output.$"
+            er_msg = _("Output is connected to an output.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "INPUT_CONNECTED":
-            print("Input is already connected.")
-            self.error_string += "Input is already connected.$"
+            er_msg = _("Input is already connected.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "PORT_ABSENT":
-            print("Port accessed is absent.")
-            self.error_string += "Port accessed is absent.$"
+            er_msg = _("Port accessed is absent.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "DEVICE_ABSENT":
-            print("Device accessed is absent.")
-            self.error_string += "Device accessed is absent.$"
+            er_msg = _("Device accessed is absent.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "NOT_OUTPUT":
-            print("Monitoring point is not an output.")
-            self.error_string += "Monitoring point is not an output.$"
+            er_msg = _("Monitoring point is not an output.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "MONITOR_PRESENT":
-            print("Monitor is not present.")
-            self.error_string += "Monitor is not present.$"
+            er_msg = _("Monitor is not present.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "INVALID_QUALIFIER":
-            print("Qualifier is invalid.")
-            self.error_string += "Qualifier is invalid.$"
+            er_msg = _("Qualifier is invalid.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "NO_QUALIFIER":
-            print("No qualifier present.")
-            self.error_string += "No qualifier present.$"
+            er_msg = _("No qualifier present.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "BAD_DEVICE":
-            print("The device kind is incorrect.")
-            self.error_string += "The device kind is incorrect.$"
+            er_msg = _("The device kind is incorrect.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "QUALIFIER_PRESENT":
-            print("No qualifier should be present.")
-            self.error_string += "No qualifier should be present.$"
+            er_msg = _("No qualifier should be present.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         elif error_type == "DEVICE_PRESENT":
-            print("Device already created.")
-            self.error_string += "Device already created.$"
+            er_msg = _("Device already created.")
+            print(er_msg)
+            self.error_string += "".join((er_msg, "$"))
         else:
             raise NotImplementedError
 
@@ -930,68 +962,68 @@ class Parser:
 
 
 # For circuit 2
-path_definition = "definitions/circuit2.def.txt"
-scanner_logger = logging.getLogger("scanner")
-parser_logger = logging.getLogger("parser")
-logging.basicConfig(level=logging.DEBUG)
+# path_definition = "definitions/circuit2.def.txt"
+# scanner_logger = logging.getLogger("scanner")
+# parser_logger = logging.getLogger("parser")
+# logging.basicConfig(level=logging.DEBUG)
 
-names_instance = Names()
-scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-device_instance = Devices(names_instance)
-network_instance = Network(names_instance, device_instance)
-monitor_instance = Monitors(names_instance, device_instance, network_instance)
+# names_instance = Names()
+# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
+# device_instance = Devices(names_instance)
+# network_instance = Network(names_instance, device_instance)
+# monitor_instance = Monitors(names_instance, device_instance, network_instance)
 
-parser_1 = Parser(
-    names_instance,
-    device_instance,
-    network_instance,
-    monitor_instance,
-    scanner_instance,
-    parser_logger,
-)
+# parser_1 = Parser(
+#     names_instance,
+#     device_instance,
+#     network_instance,
+#     monitor_instance,
+#     scanner_instance,
+#     parser_logger,
+# )
 
-a = parser_1.parse_network()
-print("-----------")
-print(parser_1.scanner.get_error_line(2, 3))
+# a = parser_1.parse_network()
+# print("-----------")
+# print(parser_1.scanner.get_error_line(2, 3))
 
-errors = parser_1.error_string.split("$")
-for line in errors:
-    print(line)
-
-
-print("--Confirm that and gate has been created")
-print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
-print("--Confirm that switches have been created")
-print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
+# errors = parser_1.error_string.split("$")
+# for line in errors:
+#     print(line)
 
 
-print("--ANDg inputs")
-print(parser_1.devices.get_device(42).inputs)
-print("--ANDg output")
-print(parser_1.devices.get_device(42).outputs)
+# print("--Confirm that and gate has been created")
+# print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
+# print("--Confirm that switches have been created")
+# print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
 
-print("--Check all network inputs are satisfied")
-print(parser_1.network.check_network())
 
-(
-    monitored_signal_list,
-    non_monitored_signal_list,
-) = parser_1.monitors.get_signal_names()
+# print("--ANDg inputs")
+# print(parser_1.devices.get_device(42).inputs)
+# print("--ANDg output")
+# print(parser_1.devices.get_device(42).outputs)
 
-print("--List monitor points")
-print(monitored_signal_list, non_monitored_signal_list)
+# print("--Check all network inputs are satisfied")
+# print(parser_1.network.check_network())
 
-for i in range(5):
-    print("--Try simulate network")
-    simulate = parser_1.network.execute_network()
-    print(simulate)
+# (
+#     monitored_signal_list,
+#     non_monitored_signal_list,
+# ) = parser_1.monitors.get_signal_names()
 
-    print("--Try record signals")
-    parser_1.monitors.record_signals()
+# print("--List monitor points")
+# print(monitored_signal_list, non_monitored_signal_list)
 
-print("--Get output from andg")
-print(parser_1.monitors.get_monitor_signal(42, None))
+# for i in range(5):
+#     print("--Try simulate network")
+#     simulate = parser_1.network.execute_network()
+#     print(simulate)
 
-print("--Get output from andg using display_signals")
+#     print("--Try record signals")
+#     parser_1.monitors.record_signals()
 
-parser_1.monitors.display_signals()
+# print("--Get output from andg")
+# print(parser_1.monitors.get_monitor_signal(42, None))
+
+# print("--Get output from andg using display_signals")
+
+# parser_1.monitors.display_signals()
