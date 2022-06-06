@@ -57,8 +57,8 @@ def test_make_device(new_devices):
     """Test if make_device correctly makes devices with their properties."""
     names = new_devices.names
 
-    [NAND1_ID, CLOCK1_ID, D1_ID, I1_ID, I2_ID] = names.lookup(
-        ["Nand1", "Clock1", "D1", "I1", "I2"]
+    [NAND1_ID, CLOCK1_ID, D1_ID, I1_ID, I2_ID, NOT1_ID] = names.lookup(
+        ["Nand1", "Clock1", "D1", "I1", "I2", "not1"]
     )
     new_devices.make_device(NAND1_ID, new_devices.NAND, 2)  # 2-input NAND
     # Clock half period is 5
@@ -68,6 +68,7 @@ def test_make_device(new_devices):
     nand_device = new_devices.get_device(NAND1_ID)
     clock_device = new_devices.get_device(CLOCK1_ID)
     dtype_device = new_devices.get_device(D1_ID)
+    not_device = new_devices.get_device(NOT1_ID)
 
     assert nand_device.inputs == {I1_ID: None, I2_ID: None}
     assert clock_device.inputs == {}

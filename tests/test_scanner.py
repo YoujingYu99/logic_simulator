@@ -190,7 +190,7 @@ def test_get_symbol_types_2(input_string, expected_string):
         ("CLEAR", 17),
         ("QBAR", 13),
         ("1234", 1234),
-        ("I13", 38),
+        ("I13", 39),
     ],
 )
 def test_get_symbol_id(input_string, expected_string):

@@ -104,7 +104,7 @@ class Devices:
 
         self.devices_list = []
 
-        gate_strings = ["AND", "OR", "NAND", "NOR", "XOR"]
+        gate_strings = ["AND", "OR", "NAND", "NOR", "XOR", "NOT"]
         device_strings = ["CLOCK", "SWITCH", "DTYPE"]
         dtype_inputs = ["CLK", "SET", "CLEAR", "DATA"]
         dtype_outputs = ["Q", "QBAR"]
@@ -131,10 +131,13 @@ class Devices:
             self.NAND,
             self.NOR,
             self.XOR,
+            self.NOT,
         ] = self.names.lookup(gate_strings)
-        self.device_types = [self.CLOCK, self.SWITCH, self.D_TYPE] = self.names.lookup(
-            device_strings
-        )
+        self.device_types = [
+            self.CLOCK,
+            self.SWITCH,
+            self.D_TYPE,
+        ] = self.names.lookup(device_strings)
         self.dtype_input_ids = [
             self.CLK_ID,
             self.SET_ID,
@@ -293,9 +296,13 @@ class Devices:
 
             elif device.device_kind == self.CLOCK:
                 clock_signal = random.choice([self.LOW, self.HIGH])
-                self.add_output(device.device_id, output_id=None, signal=clock_signal)
+                self.add_output(
+                    device.device_id, output_id=None, signal=clock_signal
+                )
                 # Initialise it to a random point in its cycle.
-                device.clock_counter = random.randrange(device.clock_half_period)
+                device.clock_counter = random.randrange(
+                    device.clock_half_period
+                )
 
     def make_device(self, device_id, device_kind, device_property=None):
         """Create the specified device.
@@ -333,6 +340,12 @@ class Devices:
                     error_type = self.QUALIFIER_PRESENT
                 else:
                     self.make_gate(device_id, device_kind, 2)
+                    error_type = self.NO_ERROR
+            elif device_kind == self.NOT:
+                if device_property is not None:
+                    error_type = self.QUALIFIER_PRESENT
+                else:
+                    self.make_gate(device_id, device_kind, 1),
                     error_type = self.NO_ERROR
             else:  # other gates
                 if device_property is None:

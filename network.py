@@ -135,7 +135,10 @@ class Network:
                 error_type = self.INPUT_TO_INPUT
             elif second_port_id in second_device.outputs:
                 # Make connection
-                first_device.inputs[first_port_id] = (second_device_id, second_port_id)
+                first_device.inputs[first_port_id] = (
+                    second_device_id,
+                    second_port_id,
+                )
                 error_type = self.NO_ERROR
             else:  # second_port_id is not a valid input or output port
                 error_type = self.PORT_ABSENT
@@ -239,6 +242,7 @@ class Network:
                 return False
             input_signal_list.append(input_signal)
 
+            # assume not gate only ever has one input hence the list will have a single input
             if device.device_kind != self.devices.XOR:
                 if input_signal != x:
                     output_signal = self.invert_signal(y)
@@ -345,7 +349,9 @@ class Network:
             device = self.devices.get_device(device_id)
             if device.clock_counter == device.clock_half_period:
                 device.clock_counter = 0
-                output_signal = self.get_output_signal(device_id, output_id=None)
+                output_signal = self.get_output_signal(
+                    device_id, output_id=None
+                )
                 if output_signal == self.devices.HIGH:
                     device.outputs[None] = self.devices.FALLING
                 elif output_signal == self.devices.LOW:
@@ -365,6 +371,7 @@ class Network:
         nand_devices = self.devices.find_devices(self.devices.NAND)
         nor_devices = self.devices.find_devices(self.devices.NOR)
         xor_devices = self.devices.find_devices(self.devices.XOR)
+        not_devices = self.devices.find_devices(self.devices.NOT)
 
         # This sets clock signals to RISING or FALLING, where necessary
         self.update_clocks()
@@ -395,7 +402,9 @@ class Network:
                 ):
                     return False
             for device_id in or_devices:  # execute OR gate devices
-                if not self.execute_gate(device_id, self.devices.LOW, self.devices.LOW):
+                if not self.execute_gate(
+                    device_id, self.devices.LOW, self.devices.LOW
+                ):
                     return False
             for device_id in nand_devices:  # execute NAND gate devices
                 if not self.execute_gate(
@@ -409,6 +418,11 @@ class Network:
                     return False
             for device_id in xor_devices:  # execute XOR devices
                 if not self.execute_gate(device_id, None, None):
+                    return False
+            for device_id in not_devices:  # execute NOT devices
+                if not self.execute_gate(
+                    device_id, self.devices.HIGH, self.devices.LOW
+                ):
                     return False
             if self.steady_state:
                 break
