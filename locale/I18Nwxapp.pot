@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-06-06 11:36+0100\n"
+"POT-Creation-Date: 2022-06-07 09:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,427 +15,435 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:58
+#: frame_elements.py:58
 msgid "Open"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:68
+#: frame_elements.py:68
 msgid "Save Trace"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:69
+#: frame_elements.py:69
 msgid "Save the Trace"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:79
+#: frame_elements.py:79
 msgid "Save Console"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:80
+#: frame_elements.py:80
 msgid "Save the Console Output"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:91
+#: frame_elements.py:91
 msgid "Quit"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:100
+#: frame_elements.py:97
+msgid "files"
+msgstr ""
+
+#: frame_elements.py:100
 msgid "Open Text Files"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:109
+#: frame_elements.py:109
 msgid "Loading"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:152
+#: frame_elements.py:152
 msgid "File cannot be parsed. Please check yourdefinition file"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:160
+#: frame_elements.py:160
 msgid "A total of "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:161
+#: frame_elements.py:161
 msgid " Error(s) in File. Please correct them andtry again."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:194
+#: frame_elements.py:194
 msgid "Save file as ..."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:205
+#: frame_elements.py:205
 msgid "Canvas image successfully saved."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:211
+#: frame_elements.py:211
 msgid "Save your console output"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:225
+#: frame_elements.py:225
 msgid "Console output successfully saved."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:253
+#: frame_elements.py:253
 msgid "Start"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:261
+#: frame_elements.py:261
 msgid "Documetation"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:271
+#: frame_elements.py:271
 msgid ""
 "Start by uploading your definition file by selecting 'File/Open'.\n"
 "Choose the number of cycles you wish to run by spinning the button.Then press 'Run' to run the simulation.\n"
 "Click on 'Choose Monitor' or 'Choose Switch' to choose the signals to be displayed or state of switches."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:277
+#: frame_elements.py:277
 msgid "How to Use Logic Simulator App"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:306
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:153
+#: frame_elements.py:306
+#: gui.py:153
 msgid "About"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:314
+#: frame_elements.py:313
 msgid "Logic Simulator created by Mojisola Agboola"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:315
+#: frame_elements.py:314
 msgid "Developed and completed by Nikodem, Youjing and Gleb, "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:316
+#: frame_elements.py:315
 msgid "the most brilliant engineers of the 2019 cohort."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:317
+#: frame_elements.py:317
 msgid "About Logsim"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:374
+#: frame_elements.py:374
 msgid "New Simulation!"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:162
+#: gl_canvas.py:162
 msgid "Canvas redrawn on paint event, size is "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:189
+#: gl_canvas.py:189
 msgid "Mouse button pressed at: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:198
+#: gl_canvas.py:198
 msgid "Mouse button released at: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:206
+#: gl_canvas.py:206
 msgid "Mouse left canvas at: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:217
+#: gl_canvas.py:217
 msgid "Mouse dragged to: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:221
+#: gl_canvas.py:221
 msgid ". Pan is now: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:235
+#: gl_canvas.py:235
 msgid "Negative mouse wheel rotation. Zoom is now: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:246
+#: gl_canvas.py:246
 msgid "Positive mouse wheel rotation. Zoom is now: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:345
+#: gl_canvas.py:345
 msgid "No. of Cycles"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:441
+#: gl_canvas.py:441
 msgid "Monitor Name"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:151
+#: gui.py:151
 msgid "File"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:152
+#: gui.py:152
 msgid "Help"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:159
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:575
+#: gui.py:159
+#: gui.py:574
 msgid "Welcome to Logic Simulation App!"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:162
+#: gui.py:162
 msgid "Number of Cycles"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:173
+#: gui.py:173
 msgid "Run"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:174
+#: gui.py:174
 msgid "Continue"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:175
+#: gui.py:175
 msgid "Rerun"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:177
+#: gui.py:177
 msgid "Clear Console"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:179
+#: gui.py:179
 msgid "Choose Monitor"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:180
+#: gui.py:180
 msgid "Choose Switch"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:271
+#: gui.py:271
 msgid "New spin control value: "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:282
-msgid "More than 1000 cycles set to be run. Please "
+#: gui.py:282
+msgid "More than 1000 cycles set to be run. Please change to a lower value of runs."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:283
-msgid "change to a lower value of runs."
-msgstr ""
-
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:284
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:296
+#: gui.py:283
+#: gui.py:295
 msgid "Warning"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:294
+#: gui.py:293
 msgid "More than 100 cycles set to be run! Are you sure you "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:295
+#: gui.py:294
 msgid "want to continue?"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:315
+#: gui.py:314
 msgid "Error! Network oscillating."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:336
+#: gui.py:335
 msgid "Running for "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:337
+#: gui.py:336
 msgid " cycles."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:341
+#: gui.py:340
 msgid "Cannot run simulation. Please check your definition file."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:355
+#: gui.py:354
 msgid "Error! No previous simulation. "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:356
+#: gui.py:355
 msgid "Please run first."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:365
+#: gui.py:364
 msgid "Continuing for "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:367
+#: gui.py:366
 msgid " cycles,"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:368
+#: gui.py:367
 msgid " a total of "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:370
+#: gui.py:369
 msgid " cycles run."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:380
+#: gui.py:379
 msgid "Cannot continue running simulation. Please check"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:381
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:404
+#: gui.py:380
+#: gui.py:403
 msgid "your definition file."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:403
+#: gui.py:402
 msgid "Cannot rerun simulation. Please check "
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:435
+#: gui.py:434
 msgid "Choose the Signals You Wish to Monitor"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:436
+#: gui.py:435
 msgid "Monitored Signals"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:449
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:521
+#: gui.py:448
+#: gui.py:520
 msgid "Cannot Show on Monitor. Please check your definition file."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:471
+#: gui.py:470
 msgid "Successfully made monitor."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:475
+#: gui.py:474
 msgid "Error! Could not make monitor."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:508
+#: gui.py:507
 msgid "Choose the switches to be set to 1"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:509
+#: gui.py:508
 msgid "Switch Settings"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:547
+#: gui.py:546
 msgid "Successfully set the state of switches."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:178
+#: parse.py:178
 msgid "errors found, please resolve them and try again"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:184
+#: parse.py:184
 msgid "No Errors found"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:696
+#: parse.py:688
+msgid "Error location: line:"
+msgstr ""
+
+#: parse.py:688
+msgid "column:"
+msgstr ""
+
+#: parse.py:697
 msgid "Missing '{'"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:700
+#: parse.py:701
 msgid "Missing '}'"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:708
+#: parse.py:709
 msgid "Missing END to indicate end of definition file"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:713
+#: parse.py:714
 msgid "Device not specified"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:727
+#: parse.py:728
 msgid "Semicolon expected at end of line."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:738
+#: parse.py:739
 msgid "Output pin not specified"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:749
+#: parse.py:750
 msgid "Right arrow expected to signify connect"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:754
+#: parse.py:755
 msgid "Input expected but no specified"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:765
+#: parse.py:766
 msgid "Device type not specified, please specify"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:777
+#: parse.py:778
 msgid "'(' expected but not present"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:790
+#: parse.py:791
 msgid "Number of inputs incorrectly configured"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:795
+#: parse.py:796
 msgid "')' expected at end of initialisaition"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:808
+#: parse.py:809
 msgid "Invalid value of clock cycles"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:822
+#: parse.py:823
 msgid "Invalid state of switch"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:836
+#: parse.py:837
 msgid "Incorrect_input_pin"
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:847
+#: parse.py:848
 msgid "Input is connected to an input."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:851
+#: parse.py:852
 msgid "Output is connected to an output."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:855
+#: parse.py:856
 msgid "Input is already connected."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:859
+#: parse.py:860
 msgid "Port accessed is absent."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:863
+#: parse.py:864
 msgid "Device accessed is absent."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:867
+#: parse.py:868
 msgid "Monitoring point is not an output."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:871
+#: parse.py:872
 msgid "Monitor is not present."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:875
+#: parse.py:876
 msgid "Qualifier is invalid."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:879
+#: parse.py:880
 msgid "No qualifier present."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:883
+#: parse.py:884
 msgid "The device kind is incorrect."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:887
+#: parse.py:888
 msgid "No qualifier should be present."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:891
+#: parse.py:892
 msgid "Device already created."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\prelim\exercise.py:99
+#: prelim\exercise.py:99
 msgid "Now opening file..."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\prelim\exercise.py:106
+#: prelim\exercise.py:106
 msgid "Now reading file..."
 msgstr ""
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\prelim\exercise.py:115
+#: prelim\exercise.py:115
 msgid "Now skipping spaces..."
 msgstr ""
 

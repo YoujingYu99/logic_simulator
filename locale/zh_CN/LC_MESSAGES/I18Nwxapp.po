@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-06 11:36+0100\n"
-"PO-Revision-Date: 2022-06-06 11:41+0100\n"
+"POT-Creation-Date: 2022-06-07 09:21+0100\n"
+"PO-Revision-Date: 2022-06-07 09:23+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -17,75 +17,79 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:58
+#: frame_elements.py:58
 msgid "Open"
 msgstr "打开"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:68
+#: frame_elements.py:68
 msgid "Save Trace"
 msgstr "保存跟踪"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:69
+#: frame_elements.py:69
 msgid "Save the Trace"
 msgstr "保存跟踪"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:79
+#: frame_elements.py:79
 msgid "Save Console"
 msgstr "清除控制台"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:80
+#: frame_elements.py:80
 msgid "Save the Console Output"
 msgstr "保存控制台输出"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:91
+#: frame_elements.py:91
 msgid "Quit"
 msgstr "退出"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:100
+#: frame_elements.py:97
+msgid "files"
+msgstr "文件"
+
+#: frame_elements.py:100
 msgid "Open Text Files"
 msgstr "打开文本文件"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:109
+#: frame_elements.py:109
 msgid "Loading"
 msgstr "正在加载"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:152
+#: frame_elements.py:152
 msgid "File cannot be parsed. Please check yourdefinition file"
 msgstr "无法解析文件。请检查您的定义文件"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:160
+#: frame_elements.py:160
 msgid "A total of "
 msgstr "总共 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:161
+#: frame_elements.py:161
 msgid " Error(s) in File. Please correct them andtry again."
 msgstr " 发现错误，请解决并重试."
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:194
+#: frame_elements.py:194
 msgid "Save file as ..."
 msgstr "将文件另存为..."
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:205
+#: frame_elements.py:205
 msgid "Canvas image successfully saved."
 msgstr "画布图像已成功保存。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:211
+#: frame_elements.py:211
 msgid "Save your console output"
 msgstr "保存控制台输出"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:225
+#: frame_elements.py:225
 msgid "Console output successfully saved."
 msgstr "控制台输出成功保存。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:253
+#: frame_elements.py:253
 msgid "Start"
 msgstr "开始"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:261
+#: frame_elements.py:261
 msgid "Documetation"
 msgstr "文档"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:271
+#: frame_elements.py:271
 msgid ""
 "Start by uploading your definition file by selecting 'File/Open'.\n"
 "Choose the number of cycles you wish to run by spinning the button.Then "
@@ -97,351 +101,359 @@ msgstr ""
 "通过旋转按钮选择您希望运行的循环数。然后按“运行”运行模拟。\n"
 "单击“选择监视器”或“选择开关”以选择要显示的信号或开关的状态。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:277
+#: frame_elements.py:277
 msgid "How to Use Logic Simulator App"
 msgstr "欢迎来到逻辑仿真应用程序"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:306
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:153
+#: frame_elements.py:306
+#: gui.py:153
 msgid "About"
 msgstr "关于"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:314
+#: frame_elements.py:313
 msgid "Logic Simulator created by Mojisola Agboola"
 msgstr "Mojisola Agboola 创建的逻辑模拟器"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:315
+#: frame_elements.py:314
 msgid "Developed and completed by Nikodem, Youjing and Gleb, "
 msgstr "由 Nikodem、Youjing 和 Gleb 开发完成, "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:316
+#: frame_elements.py:315
 msgid "the most brilliant engineers of the 2019 cohort."
 msgstr "2019 年最杰出的工程师。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:317
+#: frame_elements.py:317
 msgid "About Logsim"
 msgstr "关于 Logsim"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\frame_elements.py:374
+#: frame_elements.py:374
 msgid "New Simulation!"
 msgstr "新模拟！"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:162
+#: gl_canvas.py:162
 msgid "Canvas redrawn on paint event, size is "
 msgstr "画布在绘画事件上重绘，大小为 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:189
+#: gl_canvas.py:189
 msgid "Mouse button pressed at: "
 msgstr "按下鼠标按钮的时间 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:198
+#: gl_canvas.py:198
 msgid "Mouse button released at: "
 msgstr "鼠标按钮在以下位置释放 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:206
+#: gl_canvas.py:206
 msgid "Mouse left canvas at: "
 msgstr "鼠标左画布位于 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:217
+#: gl_canvas.py:217
 msgid "Mouse dragged to: "
 msgstr "鼠标拖动到 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:221
+#: gl_canvas.py:221
 msgid ". Pan is now: "
 msgstr ".平移现在是 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:235
+#: gl_canvas.py:235
 msgid "Negative mouse wheel rotation. Zoom is now: "
 msgstr "鼠标滚轮旋转为负值。缩放现在是 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:246
+#: gl_canvas.py:246
 msgid "Positive mouse wheel rotation. Zoom is now: "
 msgstr "正向鼠标滚轮旋转。缩放现在是 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:345
+#: gl_canvas.py:345
 msgid "No. of Cycles"
 msgstr "不。周期数"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gl_canvas.py:441
+#: gl_canvas.py:441
 msgid "Monitor Name"
 msgstr "监视器名称"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:151
+#: gui.py:151
 msgid "File"
-msgstr "&文件"
+msgstr "文件"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:152
+#: gui.py:152
 msgid "Help"
 msgstr "帮助"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:159
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:575
+#: gui.py:159
+#: gui.py:574
 msgid "Welcome to Logic Simulation App!"
 msgstr "欢迎来到逻辑仿真应用程序！"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:162
+#: gui.py:162
 msgid "Number of Cycles"
 msgstr "循环数"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:173
+#: gui.py:173
 msgid "Run"
 msgstr "跑"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:174
+#: gui.py:174
 msgid "Continue"
 msgstr "继续"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:175
+#: gui.py:175
 msgid "Rerun"
 msgstr "重新运行"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:177
+#: gui.py:177
 msgid "Clear Console"
 msgstr "清除控制台"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:179
+#: gui.py:179
 msgid "Choose Monitor"
 msgstr "选择显示器"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:180
+#: gui.py:180
 msgid "Choose Switch"
 msgstr "选择开关"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:271
+#: gui.py:271
 msgid "New spin control value: "
 msgstr "新的旋转控制值 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:282
-msgid "More than 1000 cycles set to be run. Please "
-msgstr "设置运行超过 1000 个循环。请 "
+#: gui.py:282
+msgid ""
+"More than 1000 cycles set to be run. Please change to a lower value of runs."
+msgstr "设置运行超过 1000 个循环。请更改为较低的运行值。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:283
-msgid "change to a lower value of runs."
-msgstr "更改为较低的运行值。"
-
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:284
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:296
+#: gui.py:283
+#: gui.py:295
 msgid "Warning"
 msgstr "警告"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:294
+#: gui.py:293
 msgid "More than 100 cycles set to be run! Are you sure you "
 msgstr "将运行 100 多个循环！你确定你 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:295
+#: gui.py:294
 msgid "want to continue?"
 msgstr "想继续吗？"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:315
+#: gui.py:314
 msgid "Error! Network oscillating."
 msgstr "错误！网络震荡。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:336
+#: gui.py:335
 msgid "Running for "
 msgstr "为 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:337
+#: gui.py:336
 msgid " cycles."
 msgstr " 循环."
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:341
+#: gui.py:340
 msgid "Cannot run simulation. Please check your definition file."
 msgstr "无法重新运行模拟。请检查."
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:355
+#: gui.py:354
 msgid "Error! No previous simulation. "
 msgstr "欢迎来到逻辑仿真应用程序 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:356
+#: gui.py:355
 msgid "Please run first."
 msgstr "请先跑。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:365
+#: gui.py:364
 msgid "Continuing for "
 msgstr "继续 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:367
+#: gui.py:366
 msgid " cycles,"
 msgstr " 循环,"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:368
+#: gui.py:367
 msgid " a total of "
 msgstr " 总共 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:370
+#: gui.py:369
 msgid " cycles run."
 msgstr " 循环运行。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:380
+#: gui.py:379
 msgid "Cannot continue running simulation. Please check"
 msgstr "无法继续运行模拟。请检查"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:381
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:404
+#: gui.py:380
+#: gui.py:403
 msgid "your definition file."
 msgstr "文件."
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:403
+#: gui.py:402
 msgid "Cannot rerun simulation. Please check "
 msgstr "无法重新运行模拟。请检查 "
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:435
+#: gui.py:434
 msgid "Choose the Signals You Wish to Monitor"
 msgstr "选择您要监控的信号"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:436
+#: gui.py:435
 msgid "Monitored Signals"
 msgstr "监控信号"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:449
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:521
+#: gui.py:448
+#: gui.py:520
 msgid "Cannot Show on Monitor. Please check your definition file."
 msgstr "无法在监视器上显示。请检查您的定义文件。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:471
+#: gui.py:470
 msgid "Successfully made monitor."
 msgstr "成功制作监视器。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:475
+#: gui.py:474
 msgid "Error! Could not make monitor."
 msgstr "错误！无法制作监视器。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:508
+#: gui.py:507
 msgid "Choose the switches to be set to 1"
 msgstr "选择要设置为 1 的开关"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:509
+#: gui.py:508
 msgid "Switch Settings"
 msgstr "开关设置"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\gui.py:547
+#: gui.py:546
 msgid "Successfully set the state of switches."
 msgstr "成功设置开关状态。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:178
+#: parse.py:178
 msgid "errors found, please resolve them and try again"
 msgstr "发现错误，请解决并重试"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:184
+#: parse.py:184
 msgid "No Errors found"
 msgstr "未发现错误"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:696
+#: parse.py:688
+msgid "Error location: line:"
+msgstr "错误位置：行:"
+
+#: parse.py:688
+msgid "column:"
+msgstr "列:"
+
+#: parse.py:697
 msgid "Missing '{'"
 msgstr "失踪 '{'"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:700
+#: parse.py:701
 msgid "Missing '}'"
 msgstr "失踪 '}'"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:708
+#: parse.py:709
 msgid "Missing END to indicate end of definition file"
 msgstr "缺少 END 表示定义文件结束"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:713
+#: parse.py:714
 msgid "Device not specified"
 msgstr "未指定设备"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:727
+#: parse.py:728
 msgid "Semicolon expected at end of line."
 msgstr "分号应在行尾。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:738
+#: parse.py:739
 msgid "Output pin not specified"
 msgstr "未指定输出引脚"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:749
+#: parse.py:750
 msgid "Right arrow expected to signify connect"
 msgstr "右箭头预计表示连接"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:754
+#: parse.py:755
 msgid "Input expected but no specified"
 msgstr "输入预期但未指定"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:765
+#: parse.py:766
 msgid "Device type not specified, please specify"
 msgstr "未指定设备类型，请指定"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:777
+#: parse.py:778
 msgid "'(' expected but not present"
 msgstr "'(' 预期但不存在"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:790
+#: parse.py:791
 msgid "Number of inputs incorrectly configured"
 msgstr "错误配置的输入数量"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:795
+#: parse.py:796
 msgid "')' expected at end of initialisaition"
 msgstr "')' 预计在初始化结束时"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:808
+#: parse.py:809
 msgid "Invalid value of clock cycles"
 msgstr "时钟周期值无效"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:822
+#: parse.py:823
 msgid "Invalid state of switch"
 msgstr "开关状态无效"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:836
+#: parse.py:837
 msgid "Incorrect_input_pin"
 msgstr "不正确的_input_pin"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:847
+#: parse.py:848
 msgid "Input is connected to an input."
 msgstr "输入连接到输入。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:851
+#: parse.py:852
 msgid "Output is connected to an output."
 msgstr "输出连接到输出。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:855
+#: parse.py:856
 msgid "Input is already connected."
 msgstr "输入已连接。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:859
+#: parse.py:860
 msgid "Port accessed is absent."
 msgstr "访问的端口不存在。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:863
+#: parse.py:864
 msgid "Device accessed is absent."
 msgstr "访问的设备不存在。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:867
+#: parse.py:868
 msgid "Monitoring point is not an output."
 msgstr "监控点不是输出。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:871
+#: parse.py:872
 msgid "Monitor is not present."
 msgstr "监视器不存在。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:875
+#: parse.py:876
 msgid "Qualifier is invalid."
 msgstr "限定符无效。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:879
+#: parse.py:880
 msgid "No qualifier present."
 msgstr "没有限定符。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:883
+#: parse.py:884
 msgid "The device kind is incorrect."
 msgstr "设备种类不正确。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:887
+#: parse.py:888
 msgid "No qualifier should be present."
 msgstr "不应存在​​限定符。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\parse.py:891
+#: parse.py:892
 msgid "Device already created."
 msgstr "设备已创建。"
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\prelim\exercise.py:99
+#: prelim\exercise.py:99
 msgid "Now opening file..."
 msgstr "现在打开文件..."
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\prelim\exercise.py:106
+#: prelim\exercise.py:106
 msgid "Now reading file..."
 msgstr "现在正在读取文件..."
 
-#: C:\Users\NCzar\OneDrive\Documents\GitHub\GF2_11\prelim\exercise.py:115
+#: prelim\exercise.py:115
 msgid "Now skipping spaces..."
 msgstr "现在跳过空格..."
+
+#~ msgid "change to a lower value of runs."
+#~ msgstr "更改为较低的运行值。"

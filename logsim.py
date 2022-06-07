@@ -93,7 +93,6 @@ def main(arg_list):
 
     # no options, use GUI
     if not options:
-
         # if arguments were given
         if arguments:
             print("Error: No input should be given for Graphic "

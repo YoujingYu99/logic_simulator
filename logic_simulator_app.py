@@ -31,8 +31,6 @@ class LogicSimulatorApp(wx.App):
     def on_init(self):
         """Initialise the app when called."""
 
-        
-
         # Chinese = 45
         SUPPORTED_LANGS_INTS = [wx.LANGUAGE_CHINESE_SIMPLIFIED, wx.LANGUAGE_ENGLISH]
         

@@ -685,7 +685,8 @@ class Parser:
             )
         )
         # FIXME
-        self.error_string += f"""Error location: line:{self.scanner.current_line}column:{self.scanner.current_col}$"""
+        location_txt = _("Error location: line:") + str(self.scanner.current_line) + _("column:") + str(self.scanner.current_col) +"$"
+        self.error_string += location_txt
         self.error_string += (
             self.scanner.get_error_line(
                 self.scanner.current_line, self.scanner.current_col

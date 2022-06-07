@@ -279,8 +279,7 @@ class Gui(wx.Frame):
         if self.spin_value >= 1000:
             dlg = wx.MessageDialog(
                 self,
-                _("More than 1000 cycles set to be run. Please "),
-                _("change to a lower value of runs."),
+                _("More than 1000 cycles set to be run. Please change to a lower value of runs."),
                 _("Warning"),
                 wx.OK | wx.ICON_WARNING,
             )

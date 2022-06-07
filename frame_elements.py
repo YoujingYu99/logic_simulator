@@ -94,7 +94,7 @@ class FileMenu(wx.Menu):
 
     def on_open(self, event):
         """Open definition file uploaded by user."""
-        wildcard = "TXT files (*.txt)|*.txt"
+        wildcard = "TXT " + _("files") +"( *.txt)|*.txt"
         dialog = wx.FileDialog(
             self.parentFrame,
             _("Open Text Files"),
@@ -309,11 +309,11 @@ class AboutMenu(wx.Menu):
 
     def on_about(self, event):
         """Display about information."""
-        # FIXME
         wx.MessageBox(
-            "".join((_("Logic Simulator created by Mojisola Agboola"), "\n2017\n")),
-            _("Developed and completed by Nikodem, Youjing and Gleb, "),
-            _("the most brilliant engineers of the 2019 cohort."),
+            "".join((_("Logic Simulator created by Mojisola Agboola"), 
+            "\n2017\n", _("Developed and completed by Nikodem, Youjing and Gleb, "),
+            _("the most brilliant engineers of the 2019 cohort.")
+            )),
             _("About Logsim"),
             wx.ICON_INFORMATION | wx.OK,
         )
