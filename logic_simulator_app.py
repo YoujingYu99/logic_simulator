@@ -11,6 +11,7 @@ import wx
 import stylesheet
 from pathlib import Path
 
+
 # create App class
 class LogicSimulatorApp(wx.App):
     """This class creates a LogicSimulatorApp of the type wx.App.
@@ -30,19 +31,16 @@ class LogicSimulatorApp(wx.App):
 
     def on_init(self):
         """Initialise the app when called."""
-
         # Chinese = 45
-        SUPPORTED_LANGS_INTS = [wx.LANGUAGE_CHINESE_SIMPLIFIED, wx.LANGUAGE_ENGLISH]
-        
+        SUPPORTED_LANGS_INTS = [wx.LANGUAGE_CHINESE_SIMPLIFIED,
+                                wx.LANGUAGE_ENGLISH]
         system_lang = wx.Locale.GetSystemLanguage()
-        
         # Test if simplified chinese works
         # system_lang = wx.LANGUAGE_CHINESE_SIMPLIFIED
         if system_lang in SUPPORTED_LANGS_INTS:
             app_lang = system_lang
         else:
             app_lang = wx.LANGUAGE_ENGLISH
-            
 
         wx.Locale.AddCatalogLookupPathPrefix(
             str(Path(__file__).resolve().with_name("locale"))
@@ -57,4 +55,3 @@ class LogicSimulatorApp(wx.App):
             print('FATAL ERROR: failed to initialise wx.Locale.')
 
         return True
-

@@ -142,7 +142,7 @@ class Gui(wx.Frame):
 
         self.console_box = ConsoleBox(
             self, id=wx.ID_ANY, style=wx.TE_READONLY | wx.TE_MULTILINE
-                                      | wx.TE_RICH2
+            | wx.TE_RICH2
         )
         self.console_box.SetFont(self.console_font)
         self.console_box.SetBackgroundColour("white")
@@ -441,7 +441,7 @@ class Gui(wx.Frame):
         self.unmonitored_list = self.monitors.get_signal_names()[1]
         # Append list to get a full list of monitor names
         self.monitor_names_list = self.monitored_list \
-                                  + self.unmonitored_list
+            + self.unmonitored_list
 
         # To get monitor ids
         for monitor_name in self.monitor_names_list:
@@ -547,8 +547,7 @@ class Gui(wx.Frame):
             self.console_box.print_console_message(text)
 
     def update_switches(self, selections):
-        """Update states of the switches in devices and pass into canvas
-        element."""
+        """Update states of the switches in devices and pass into canvas."""
         # Reset the list of switches on depending on user selection
         self.switch_on_list = [self.switch_name_list[i] for i in selections]
         # Unchosen switches in switch_off_list
@@ -612,8 +611,7 @@ class Gui(wx.Frame):
         self.canvas.cycles_completed = 0
 
     def get_inputs_outputs(self):
-        """Get all inputs and outputs in network"""
-        # Test here
+        """Get all inputs and outputs in network."""
         input_list = []
         output_list = []
         for device in self.devices.devices_list:
@@ -674,15 +672,17 @@ class Gui(wx.Frame):
                     self.devices.get_signal_ids(chosen_input)
                 second_device_id, second_port_id = \
                     self.devices.get_signal_ids(
-                    chosen_output)
+                        chosen_output)
                 # Get output and port ids
                 print('input name', chosen_input)
                 print('output name', chosen_output)
-                print('first device, port',first_device_id, first_port_id)
-                print('second device, port', second_device_id, second_port_id)
-                connection_error = self.network.make_connection\
-                    (first_device_id, first_port_id,
-                    second_device_id, second_port_id)
+                print('first device, port', first_device_id, first_port_id)
+                print('second device, port', second_device_id,
+                      second_port_id)
+                connection_error = self.network.make_connection(
+                    first_device_id, first_port_id,
+                    second_device_id, second_port_id
+                )
 
                 if connection_error == self.network.NO_ERROR:
                     self.console_box.print_console_message(
@@ -732,9 +732,10 @@ class Gui(wx.Frame):
                     self.devices.get_signal_ids(chosen_input)
                 second_device_id, second_port_id = \
                     self.devices.get_signal_ids(chosen_output)
-                connection_error = self.network.remove_connection\
-                    (first_device_id, first_port_id,
-                    second_device_id, second_port_id)
+                connection_error = self.network.remove_connection(
+                    first_device_id, first_port_id,
+                    second_device_id, second_port_id
+                )
                 if connection_error == self.network.NO_ERROR:
                     self.console_box.print_console_message(
                         "Successfully removed connection.\n"
@@ -743,6 +744,3 @@ class Gui(wx.Frame):
                     self.console_box.print_console_message(
                         "Error! Could not remove connection.\n"
                     )
-
-
-
