@@ -140,8 +140,24 @@ class FileMenu(wx.Menu):
                 input_list = []
                 output_list = []
                 for device in self.parentFrame.devices.devices_list:
+                    device_name = self.parentFrame.names.get_name_string(device.device_id)
                     for key in device.inputs.keys():
-                        input_list.append(self.parentFrame.names.get_name_string(key))
+                        full_input_name = device_name+ "." + self.parentFrame.names.get_name_string(key)
+                        input_list.append(full_input_name)
+                        # Check outputs
+                    for key in device.outputs.keys():
+                        try:
+                            output_name = self.parentFrame.names.get_name_string(key)
+                            full_output_name = device_name + "." + output_name
+                        except:
+                            full_output_name = device_name
+                        output_list.append(full_output_name)
+
+
+
+
+                print(input_list)
+                print(output_list)
 
 
 
