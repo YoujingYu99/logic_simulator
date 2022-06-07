@@ -5,6 +5,7 @@ DEVICES{
     NAND nand1(2);
     SWITCH sw1(1);
     XOR xor1;
+    NOT not1;
 }
 CONNECT{
     sw1 => and1.I1;
@@ -17,6 +18,7 @@ CONNECT{
     or1 => nand1.I2;
     sw1 => xor1.I1;
     sw1 => xor1.I2;
+    sw1 => not1.I1;
 }
 MONITOR{
     and1;
