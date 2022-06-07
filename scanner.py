@@ -93,6 +93,7 @@ class Scanner:
             "NOR",
             "DTYPE",
             "XOR",
+            "NOT",
         ]
 
         self.dtype_output_pin_list = ["Q", "QBAR"]
@@ -130,9 +131,10 @@ class Scanner:
             self.bracket_list
         )
 
-        [self.LEFT_CURLY_BRACKET_ID,
-            self.RIGHT_CURLY_BRACKET_ID] = self.names.lookup(
-                self.curly_bracket_list)
+        [
+            self.LEFT_CURLY_BRACKET_ID,
+            self.RIGHT_CURLY_BRACKET_ID,
+        ] = self.names.lookup(self.curly_bracket_list)
 
         [
             self.DEVICES_ID,
@@ -142,10 +144,15 @@ class Scanner:
         ] = self.names.lookup(self.keywords_list)
 
         [self.Q_ID, self.QBAR_ID] = self.names.lookup(
-            self.dtype_output_pin_list)
+            self.dtype_output_pin_list
+        )
 
-        [self.DATA_ID, self.CLK_ID, self.SET_ID,
-            self.CLEAR_ID] = self.names.lookup(self.dtype_pin_list)
+        [
+            self.DATA_ID,
+            self.CLK_ID,
+            self.SET_ID,
+            self.CLEAR_ID,
+        ] = self.names.lookup(self.dtype_pin_list)
 
         [
             self.CLOCK_ID,
@@ -156,6 +163,7 @@ class Scanner:
             self.NOR_ID,
             self.DTYPE_ID,
             self.XOR_ID,
+            self.NOT_ID,
         ] = self.names.lookup(self.gate_name_list)
 
         [
@@ -262,8 +270,8 @@ class Scanner:
         """Return the line with error and put marker under error column."""
         f = open(self.path)
         data = f.read()
-        data = data.split('\n')
-        
+        data = data.split("\n")
+
         output_string = data[line_num - 1]
         white_space = " "
 
