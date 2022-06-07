@@ -185,8 +185,6 @@ class Network:
                     and second_device.outputs[second_port_id] is not None:
                 # Remove connection
                 first_device.inputs[first_port_id] = None
-                # second_device.outputs[second_port_id] = None
-                # second_device.outputs.pop(second_port_id)
                 error_type = self.NO_ERROR
             else:  # second_port_id is not a valid input or output port
                 error_type = self.PORT_ABSENT
