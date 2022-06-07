@@ -136,31 +136,6 @@ class FileMenu(wx.Menu):
                 self.parentFrame.devices = parser.devices
                 self.parentFrame.monitors = parser.monitors
 
-                # Test here
-                input_list = []
-                output_list = []
-                for device in self.parentFrame.devices.devices_list:
-                    device_name = self.parentFrame.names.get_name_string(device.device_id)
-                    for key in device.inputs.keys():
-                        full_input_name = device_name+ "." + self.parentFrame.names.get_name_string(key)
-                        input_list.append(full_input_name)
-                        # Check outputs
-                    for key in device.outputs.keys():
-                        try:
-                            output_name = self.parentFrame.names.get_name_string(key)
-                            full_output_name = device_name + "." + output_name
-                        except:
-                            full_output_name = device_name
-                        output_list.append(full_output_name)
-
-
-
-
-                print(input_list)
-                print(output_list)
-
-
-
 
                 # Update canvas objects
                 self.parentFrame.canvas.names = parser.names
@@ -170,6 +145,7 @@ class FileMenu(wx.Menu):
 
                 self.parentFrame.get_switch_names()
                 self.parentFrame.get_monitor_names()
+                self.parentFrame.get_inputs_outputs()
 
             else:
                 self.parentFrame.console_box.print_console_message(

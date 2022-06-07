@@ -127,17 +127,18 @@ class Network:
 
         if first_device is None or second_device is None:
             error_type = self.DEVICE_ABSENT
-
         elif first_port_id in first_device.inputs:
             if first_device.inputs[first_port_id] is not None:
                 # Input is already in a connection
                 error_type = self.INPUT_CONNECTED
+
             elif second_port_id in second_device.inputs:
                 # Both ports are inputs
                 error_type = self.INPUT_TO_INPUT
             elif second_port_id in second_device.outputs:
                 # Make connection
-                first_device.inputs[first_port_id] = (second_device_id, second_port_id)
+                first_device.inputs[first_port_id] = \
+                    (second_device_id, second_port_id)
                 error_type = self.NO_ERROR
             else:  # second_port_id is not a valid input or output port
                 error_type = self.PORT_ABSENT
@@ -179,12 +180,13 @@ class Network:
 
         # If valid port ids
         elif first_port_id in first_device.inputs \
-                and second_port_id in second_device.inputs:
+                and second_port_id in second_device.outputs:
             if first_device.inputs[first_port_id] is not None \
-                    and second_device.inputs[second_port_id] is not None:
+                    and second_device.outputs[second_port_id] is not None:
                 # Remove connection
-                first_device.inputs.pop(first_port_id)
-                second_device.inputs.pop(second_port_id)
+                first_device.inputs[first_port_id] = None
+                # second_device.outputs[second_port_id] = None
+                # second_device.outputs.pop(second_port_id)
                 error_type = self.NO_ERROR
             else:  # second_port_id is not a valid input or output port
                 error_type = self.PORT_ABSENT
