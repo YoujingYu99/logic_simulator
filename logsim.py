@@ -13,6 +13,7 @@ Graphical user interface: logsim.py <file path>
 import getopt
 import sys
 import logging
+import wx
 
 from names import Names
 from devices import Devices
@@ -23,6 +24,8 @@ from parse import Parser
 from userint import UserInterface
 from gui import Gui
 from logic_simulator_app import LogicSimulatorApp
+
+_ = wx.GetTranslation
 
 
 def main(arg_list):
@@ -90,7 +93,6 @@ def main(arg_list):
 
     # no options, use GUI
     if not options:
-
         # if arguments were given
         if arguments:
             print("Error: No input should be given for Graphic "

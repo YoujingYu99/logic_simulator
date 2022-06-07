@@ -8,6 +8,7 @@ MyGLCanvas - handles all canvas drawing operations.
 import wx
 import wx.glcanvas as wxcanvas
 from OpenGL import GL, GLUT
+_ = wx.GetTranslation
 
 
 class MyGLCanvas(wxcanvas.GLCanvas):
@@ -158,7 +159,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         size = self.GetClientSize()
         text = "".join(
             [
-                "Canvas redrawn on paint event, size is ",
+                _("Canvas redrawn on paint event, size is "),
                 str(size.width),
                 ", ",
                 str(size.height),
@@ -185,7 +186,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.last_mouse_y = event.GetY()
             text = "".join(
                 [
-                    "Mouse button pressed at: ",
+                    _("Mouse button pressed at: "),
                     str(event.GetX()),
                     ", ",
                     str(event.GetY()),
@@ -194,7 +195,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
         if event.ButtonUp():
             text = "".join(
                 [
-                    "Mouse button released at: ",
+                    _("Mouse button released at: "),
                     str(event.GetX()),
                     ", ",
                     str(event.GetY()),
@@ -202,7 +203,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             )
         if event.Leaving():
             text = "".join(
-                ["Mouse left canvas at: ", str(event.GetX()), ", ",
+                [_("Mouse left canvas at: "), str(event.GetX()), ", ",
                  str(event.GetY())]
             )
         if event.Dragging():
@@ -213,11 +214,11 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.init = False
             text = "".join(
                 [
-                    "Mouse dragged to: ",
+                    _("Mouse dragged to: "),
                     str(event.GetX()),
                     ", ",
                     str(event.GetY()),
-                    ". Pan is now: ",
+                    _(". Pan is now: "),
                     str(self.pan_x),
                     ", ",
                     str(self.pan_y),
@@ -231,7 +232,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.pan_y -= (self.zoom - old_zoom) * oy
             self.init = False
             text = "".join(
-                ["Negative mouse wheel rotation. Zoom is now: ",
+                [_("Negative mouse wheel rotation. Zoom is now: "),
                  str(self.zoom)]
             )
         if event.GetWheelRotation() > 0:
@@ -242,7 +243,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             self.pan_y -= (self.zoom - old_zoom) * oy
             self.init = False
             text = "".join(
-                ["Positive mouse wheel rotation. Zoom is now: ",
+                [_("Positive mouse wheel rotation. Zoom is now: "),
                  str(self.zoom)]
             )
         if text:
@@ -341,7 +342,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
                 GLUT.glutBitmapCharacter(font, ord(character))
 
         # Label x axis
-        text = "No. of Cycles"
+        text = _("No. of Cycles")
         font = self.label_font
         x_pos_x_label = x_right + self.y_axis_offset / 2
         y_pos_x_label = y_bottom + self.x_axis_offset
@@ -437,7 +438,7 @@ class MyGLCanvas(wxcanvas.GLCanvas):
             GLUT.glutBitmapCharacter(font, ord(label_one))
 
         # Label y axis
-        text = "Monitor Name"
+        text = _("Monitor Name")
         font = self.label_font
         x_pos_y_label = self.canvas_origin[0] + self.y_axis_offset / 2
         y_pos_y_label = y_top + self.y_axis_offset / 2

@@ -21,6 +21,7 @@ from monitors import Monitors
 from scanner import Scanner
 from parse import Parser
 
+_ = wx.GetTranslation
 
 class FileMenu(wx.Menu):
     """This class contains all the methods for creating the menu
@@ -53,7 +54,8 @@ class FileMenu(wx.Menu):
         """Initialise menu and menu items."""
         # Open item
         openItem = wx.MenuItem(
-            parentMenu=self, id=wx.ID_OPEN, text="&Open\tCtrl+O",
+            parentMenu=self, id=wx.ID_OPEN, 
+            text= "".join(("&", _("Open"),"\tCtrl+O" )),
             kind=wx.ITEM_NORMAL
         )
         self.Append(openItem)
@@ -63,8 +65,8 @@ class FileMenu(wx.Menu):
         saveTraceItem = wx.MenuItem(
             parentMenu=self,
             id=wx.ID_ANY,
-            text="&Save Trace\tCtrl+S",
-            helpString="Save the Trace",
+            text= "".join(("&", _("Save Trace"),"\tCtrl+S" )),
+            helpString=_("Save the Trace"),
             kind=wx.ITEM_NORMAL,
         )
         self.Append(saveTraceItem)
@@ -74,8 +76,8 @@ class FileMenu(wx.Menu):
         saveConsoleItem = wx.MenuItem(
             parentMenu=self,
             id=wx.ID_ANY,
-            text="&Save Console\tCtrl+C",
-            helpString="Save the Console Output",
+            text= "".join(("&", _("Save Console"),"\tCtrl+C" )),
+            helpString=_("Save the Console Output"),
             kind=wx.ITEM_NORMAL,
         )
         self.Append(saveConsoleItem)
@@ -86,16 +88,16 @@ class FileMenu(wx.Menu):
 
         # Quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT,
-                               text="&Quit\tCtrl+Q")
+            text= "".join(("&", _("Quit"),"\tCtrl+Q" )))
         self.Append(quitItem)
         self.Bind(wx.EVT_MENU, handler=self.on_quit, source=quitItem)
 
     def on_open(self, event):
         """Open definition file uploaded by user."""
-        wildcard = "TXT files (*.txt)|*.txt"
+        wildcard = "TXT " + _("files") +"( *.txt)|*.txt"
         dialog = wx.FileDialog(
             self.parentFrame,
-            "Open Text Files",
+            _("Open Text Files"),
             wildcard=wildcard,
             style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST,
         )
@@ -104,7 +106,8 @@ class FileMenu(wx.Menu):
 
         path = dialog.GetPath()
         if os.path.exists(path):
-            text = "Loading {file_name:}.\n".format(file_name=path)
+            text = _("Loading")
+            text += " {file_name:}.\n".format(file_name=path)
             self.parentFrame.console_box.print_console_message(text)
             # Clear memories from the previous file
             self.parentFrame.clear_previous_file()
@@ -146,17 +149,17 @@ class FileMenu(wx.Menu):
 
             else:
                 self.parentFrame.console_box.print_console_message(
-                    "File cannot be parsed. Please check your "
-                    "definition file.\n"
+                    "".join((_("File cannot be parsed. Please check your"
+                        "definition file"), "\n"))
                 )
                 error_list = parser.error_string.split("$")
                 for error in error_list:
                     self.parentFrame.console_box.\
                         print_console_message(error+os.linesep)
                 self.parentFrame.console_box.print_console_message(
-                    "A total of " + str(parser.error_count)
-                    + " Error(s) in File. Please correct them and "
-                      "try again.\n"
+                    _("A total of ") + str(parser.error_count)
+                    + _(" Error(s) in File. Please correct them and"
+                    "try again.") + "\n"
                 )
 
         dialog.Destroy()
@@ -188,7 +191,7 @@ class FileMenu(wx.Menu):
         im = self.get_screenshot()
         save_dialog = wx.FileDialog(
             self.parentFrame,
-            "Save file as ...",
+            _("Save file as ..."),
             defaultFile="",
             wildcard=".png",
             style=wx.FD_SAVE,
@@ -199,13 +202,13 @@ class FileMenu(wx.Menu):
                 path = path + ".png"
             im.SaveFile(path)
             self.parentFrame.console_box.print_console_message(
-                "Canvas image successfully saved.\n")
+                "".join((_("Canvas image successfully saved."), "\n")))
 
     def on_save_console(self, event=None):
         """Capture the console messages in one txt file."""
         dialog = wx.FileDialog(
             self.parentFrame,
-            "Save your console output",
+            _("Save your console output"),
             defaultFile="",
             wildcard=".txt",
             style=wx.FD_SAVE,
@@ -219,7 +222,7 @@ class FileMenu(wx.Menu):
             for line in data:
                 myfile.write(str(line) + "\n")
         self.parentFrame.console_box.print_console_message(
-            "Console output successfully saved.\n")
+            "".join((_("Console output successfully saved."), "\n")))
 
     def on_quit(self, event):
         """Quit the system."""
@@ -247,14 +250,15 @@ class HelpMenu(wx.Menu):
         """Initialise menu and menu items."""
         # Display starting information/documentation
         infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO,
-                               text="&Start\tCtrl+H")
+            text= "".join(("&", _("Start"),"\tCtrl+H" )))
         self.Append(infoItem)
         self.Bind(wx.EVT_MENU, handler=self.on_info, source=infoItem)
         self.AppendSeparator()
 
         # Information about app
         documentationItem = wx.MenuItem(
-            parentMenu=self, id=wx.ID_ANY, text="&Documetation\tCtrl+D"
+            parentMenu=self, id=wx.ID_ANY,
+            text= "".join(("&", _("Documetation"),"\tCtrl+D" ))
         )
         self.Append(documentationItem)
         self.Bind(wx.EVT_MENU, handler=self.on_documentation,
@@ -262,14 +266,15 @@ class HelpMenu(wx.Menu):
 
     def on_info(self, event):
         """Display Basic Help information."""
+        # FIXME
         wx.MessageBox(
-            "Start by uploading your definition file by selecting "
+            _("Start by uploading your definition file by selecting "
             "'File/Open'.\nChoose the number of cycles you wish "
             "to run by spinning the button.Then press 'Run' to run the "
             "simulation.\nClick on 'Choose Monitor' or "
             "'Choose Switch' to choose the signals to be displayed or "
-            "state of switches.",
-            "How to Use Logic Simulator App",
+            "state of switches."),
+            _("How to Use Logic Simulator App"),
             wx.ICON_INFORMATION | wx.OK,
         )
         return
@@ -298,17 +303,18 @@ class AboutMenu(wx.Menu):
     def on_init(self):
         """Initialise menu and menu items."""
         aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT,
-                                text="&About\tCtrl+A")
+            text= "".join(("&", _("About"),"\tCtrl+A" )))
         self.Append(aboutItem)
         self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
 
     def on_about(self, event):
         """Display about information."""
         wx.MessageBox(
-            "Logic Simulator created by Mojisola Agboola\n2017\n"
-            "Developed and completed by Niko, Youjing and Gleb, "
-            "the most brilliant engineers of the 2019 cohort.",
-            "About Logsim",
+            "".join((_("Logic Simulator created by Mojisola Agboola"), 
+            "\n2017\n", _("Developed and completed by Nikodem, Youjing and Gleb, "),
+            _("the most brilliant engineers of the 2019 cohort.")
+            )),
+            _("About Logsim"),
             wx.ICON_INFORMATION | wx.OK,
         )
         return
@@ -365,7 +371,7 @@ class ConsoleBox(wx.TextCtrl):
 
     def clear_console(self):
         """Clear the console output."""
-        self.console_text = "New simulation!\n"
+        self.console_text = "".join((_("New Simulation!"), "\n"))
         self.print_console_message(input_text=self.console_text, clear=True)
 
     def all_console_messages(self):
