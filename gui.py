@@ -14,6 +14,7 @@ from gl_canvas import MyGLCanvas
 from frame_elements import FileMenu, HelpMenu, AboutMenu, \
     ConsoleBox, CycleNumberText
 
+_ = wx.GetTranslation
 
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
@@ -147,18 +148,18 @@ class Gui(wx.Frame):
         # Set AboutMenu
         aboutMenu = AboutMenu(parentFrame=self)
         menuBar = wx.MenuBar()
-        menuBar.Append(fileMenu, "&File")
-        menuBar.Append(helpMenu, "&Help")
-        menuBar.Append(aboutMenu, "&About")
+        menuBar.Append(fileMenu, "".join(('&', _('File'))))
+        menuBar.Append(helpMenu, "".join(('&', _('Help'))))
+        menuBar.Append(aboutMenu, "".join(('&', _('About'))))
 
         # Set menubar
         self.SetMenuBar(menuBar)
 
         # Configure console properties
-        self.console_text = "Welcome to Logic Simulation App!"
+        self.console_text = _("Welcome to Logic Simulation App!")
 
         # Configure the widgets
-        self.text = CycleNumberText(self, wx.ID_ANY, "Number of Cycles")
+        self.text = CycleNumberText(self, wx.ID_ANY, _("Number of Cycles"))
         self.text.SetFont(self.cycle_font)
         self.text.SetForegroundColour(wx.Colour(self.cycle_text_colour))
         self.spin = wx.SpinCtrl(
@@ -169,14 +170,14 @@ class Gui(wx.Frame):
             min=0,
             max=1000,
         )
-        self.run_button = wx.Button(self, wx.ID_ANY, "Run")
-        self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
-        self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
+        self.run_button = wx.Button(self, wx.ID_ANY, _("Run"))
+        self.continue_button = wx.Button(self, wx.ID_ANY, _("Continue"))
+        self.rerun_button = wx.Button(self, wx.ID_ANY, _("Rerun"))
         self.clear_console_button = \
-            wx.Button(self, wx.ID_ANY, "Clear Console")
+            wx.Button(self, wx.ID_ANY, _("Clear Console"))
         # Monitor and Switch Buttons
-        self.monitor_button = wx.Button(self, wx.ID_ANY, "Choose Monitor")
-        self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
+        self.monitor_button = wx.Button(self, wx.ID_ANY, _("Choose Monitor"))
+        self.switch_button = wx.Button(self, wx.ID_ANY, _("Choose Switch"))
 
         # Set fonts for all
         self.run_button.SetFont(self.run_font)
@@ -267,7 +268,7 @@ class Gui(wx.Frame):
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
         spin_value = self.spin.GetValue()
-        text = "".join(["New spin control value: ", str(spin_value)])
+        text = "".join([_("New spin control value: "), str(spin_value)])
         # Update spin values in frame and canvas
         self.canvas.render(text)
         self.spin_value = spin_value
@@ -278,9 +279,8 @@ class Gui(wx.Frame):
         if self.spin_value >= 1000:
             dlg = wx.MessageDialog(
                 self,
-                "More than 1000 cycles set to be run. Please "
-                "change to a lower value of runs.",
-                "Warning",
+                _("More than 1000 cycles set to be run. Please change to a lower value of runs."),
+                _("Warning"),
                 wx.OK | wx.ICON_WARNING,
             )
             dlg.ShowModal()
@@ -290,9 +290,9 @@ class Gui(wx.Frame):
         elif 100 < self.spin_value < 1000:
             dlg = wx.MessageDialog(
                 self,
-                "More than 100 cycles set to be run! Are you sure you "
-                "want to continue?",
-                "Warning",
+                _("More than 100 cycles set to be run! Are you sure you "),
+                _("want to continue?"),
+                _("Warning"),
                 wx.YES_NO | wx.ICON_QUESTION,
             )
             dlg.ShowModal()
@@ -311,7 +311,7 @@ class Gui(wx.Frame):
             if self.network.execute_network():
                 self.monitors.record_signals()
             else:
-                text = "Error! Network oscillating.\n"
+                text = "".join(( _('Error! Network oscillating.'), '\n'))
                 self.console_box.print_console_message(text)
                 return False
         return True
@@ -332,13 +332,13 @@ class Gui(wx.Frame):
                     self.canvas.monitored_signal_list = self.monitored_list
                     # Update cycles run
                     self.canvas.cycles_completed = self.cycles_completed
-                    text = "".join(["Running for ",
-                                    str(self.spin_value), " cycles.\n"])
+                    text = "".join([_("Running for "),
+                                    str(self.spin_value), _(" cycles."),"\n"])
                     self.console_box.print_console_message(text)
             else:
                 # Show error if file was not parsed correctly
-                text = "Cannot run simulation. Please check your " \
-                       "definition file.\n"
+                text = "".join((_("Cannot run simulation. Please check your "
+                    "definition file."), "\n"))
                 self.console_box.print_console_message(text)
 
     def on_continue_button(self, event):
@@ -351,8 +351,8 @@ class Gui(wx.Frame):
                     # If no previous cycles have run
                     if self.cycles_completed == 0:
                         self.console_box.print_console_message(
-                            "Error! No previous simulation. "
-                            "Please run first.\n"
+                            _("Error! No previous simulation. "),
+                            "".join((_("Please run first."), "\n"))
                         )
                     # If the network is successfully run.
                     elif self.run_network(cycles=self.spin_value):
@@ -361,12 +361,12 @@ class Gui(wx.Frame):
                         self.canvas.cycles_completed = self.cycles_completed
                         text = "".join(
                             [
-                                "Continuing for ",
+                                _("Continuing for "),
                                 str(self.spin_value),
-                                " cycles,",
-                                " a total of ",
+                                _(" cycles,"),
+                                _(" a total of "),
                                 str(self.cycles_completed),
-                                " cycles run.\n",
+                                _(" cycles run."), "\n",
                             ]
                         )
                         self.console_box.print_console_message(text)
@@ -375,10 +375,10 @@ class Gui(wx.Frame):
 
             else:
                 # Show error if file was not parsed correctly
-                text = (
-                    "Cannot continue running simulation. Please check"
-                    " your definition file.\n"
-                )
+                text = "".join((
+                    _("Cannot continue running simulation. Please check"),
+                    _("your definition file.") , "\n"
+                ))
                 self.console_box.print_console_message(text)
 
     def on_clear_console_button(self, event):
@@ -398,10 +398,10 @@ class Gui(wx.Frame):
                 self.console_box.clear_console()
                 self.on_run_button(None)
             else:
-                text = (
-                    "Cannot rerun simulation. Please check "
-                    "your definition file.\n"
-                )
+                text = "".join((
+                    _("Cannot rerun simulation. Please check "),
+                    _("your definition file."),"\n"
+                ))
                 self.console_box.print_console_message(text)
 
     def get_monitor_names(self):
@@ -431,8 +431,8 @@ class Gui(wx.Frame):
             self.get_monitor_names()
             dlg = wx.MultiChoiceDialog(
                 self,
-                "Choose the Signals You Wish to Monitor",
-                "Monitored Signals",
+                _("Choose the Signals You Wish to Monitor"),
+                _("Monitored Signals"),
                 self.monitor_names_list,
             )
 
@@ -445,8 +445,8 @@ class Gui(wx.Frame):
             dlg.Destroy()
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot Show on Monitor. Please check " \
-                   "your definition file.\n"
+            text = "".join((_("Cannot Show on Monitor. Please check your "
+                   "definition file."), "\n"))
             self.console_box.print_console_message(text)
 
     def update_monitors(self, selections):
@@ -467,11 +467,11 @@ class Gui(wx.Frame):
                 )
                 if monitor_error == self.monitors.NO_ERROR:
                     self.console_box.print_console_message(
-                        "Successfully made monitor.\n"
+                        "".join((_("Successfully made monitor."), "\n"))
                     )
                 else:
                     self.console_box.print_console_message(
-                        "Error! Could not make monitor.\n"
+                        "".join((_("Error! Could not make monitor."), "\n"))
                     )
         # Update the monitored list
         self.monitored_list = new_monitored_list
@@ -504,8 +504,8 @@ class Gui(wx.Frame):
         if self.is_parsed:
             dlg = wx.MultiChoiceDialog(
                 self,
-                "Choose the switches to be set to 1",
-                "Switch Settings",
+                _("Choose the switches to be set to 1"),
+                _("Switch Settings"),
                 self.switch_name_list,
             )
 
@@ -517,8 +517,8 @@ class Gui(wx.Frame):
 
         else:
             # Show error if file was not parsed correctly
-            text = "Cannot Show on Monitor. Please check " \
-                   "your definition file.\n"
+            text = "".join((_("Cannot Show on Monitor. Please check your "
+                    "definition file."), "\n"))
             self.console_box.print_console_message(text)
 
     def update_switches(self, selections):
@@ -542,8 +542,8 @@ class Gui(wx.Frame):
 
         # Update devices in the canvas element
         self.canvas.devices = self.devices
-        self.console_box.print_console_message("Successfully set the state"
-                                               "of switches.\n")
+        self.console_box.print_console_message(
+            "".join((_("Successfully set the state of switches."),"\n" )))
 
     def clear_previous_file(self):
         """Reinitialise everything when new definition file chosen."""
@@ -571,7 +571,7 @@ class Gui(wx.Frame):
         self.cycles_completed = 0
 
         # Configure console properties
-        self.console_text = "Welcome to Logic Simulation App!"
+        self.console_text = _("Welcome to Logic Simulation App!")
 
         # Configure the loggers
         self.scanner_logger = logging.getLogger("scanner")

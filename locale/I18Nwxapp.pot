@@ -1,0 +1,449 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-06-07 09:21+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=cp1252\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: frame_elements.py:58
+msgid "Open"
+msgstr ""
+
+#: frame_elements.py:68
+msgid "Save Trace"
+msgstr ""
+
+#: frame_elements.py:69
+msgid "Save the Trace"
+msgstr ""
+
+#: frame_elements.py:79
+msgid "Save Console"
+msgstr ""
+
+#: frame_elements.py:80
+msgid "Save the Console Output"
+msgstr ""
+
+#: frame_elements.py:91
+msgid "Quit"
+msgstr ""
+
+#: frame_elements.py:97
+msgid "files"
+msgstr ""
+
+#: frame_elements.py:100
+msgid "Open Text Files"
+msgstr ""
+
+#: frame_elements.py:109
+msgid "Loading"
+msgstr ""
+
+#: frame_elements.py:152
+msgid "File cannot be parsed. Please check yourdefinition file"
+msgstr ""
+
+#: frame_elements.py:160
+msgid "A total of "
+msgstr ""
+
+#: frame_elements.py:161
+msgid " Error(s) in File. Please correct them andtry again."
+msgstr ""
+
+#: frame_elements.py:194
+msgid "Save file as ..."
+msgstr ""
+
+#: frame_elements.py:205
+msgid "Canvas image successfully saved."
+msgstr ""
+
+#: frame_elements.py:211
+msgid "Save your console output"
+msgstr ""
+
+#: frame_elements.py:225
+msgid "Console output successfully saved."
+msgstr ""
+
+#: frame_elements.py:253
+msgid "Start"
+msgstr ""
+
+#: frame_elements.py:261
+msgid "Documetation"
+msgstr ""
+
+#: frame_elements.py:271
+msgid ""
+"Start by uploading your definition file by selecting 'File/Open'.\n"
+"Choose the number of cycles you wish to run by spinning the button.Then press 'Run' to run the simulation.\n"
+"Click on 'Choose Monitor' or 'Choose Switch' to choose the signals to be displayed or state of switches."
+msgstr ""
+
+#: frame_elements.py:277
+msgid "How to Use Logic Simulator App"
+msgstr ""
+
+#: frame_elements.py:306
+#: gui.py:153
+msgid "About"
+msgstr ""
+
+#: frame_elements.py:313
+msgid "Logic Simulator created by Mojisola Agboola"
+msgstr ""
+
+#: frame_elements.py:314
+msgid "Developed and completed by Nikodem, Youjing and Gleb, "
+msgstr ""
+
+#: frame_elements.py:315
+msgid "the most brilliant engineers of the 2019 cohort."
+msgstr ""
+
+#: frame_elements.py:317
+msgid "About Logsim"
+msgstr ""
+
+#: frame_elements.py:374
+msgid "New Simulation!"
+msgstr ""
+
+#: gl_canvas.py:162
+msgid "Canvas redrawn on paint event, size is "
+msgstr ""
+
+#: gl_canvas.py:189
+msgid "Mouse button pressed at: "
+msgstr ""
+
+#: gl_canvas.py:198
+msgid "Mouse button released at: "
+msgstr ""
+
+#: gl_canvas.py:206
+msgid "Mouse left canvas at: "
+msgstr ""
+
+#: gl_canvas.py:217
+msgid "Mouse dragged to: "
+msgstr ""
+
+#: gl_canvas.py:221
+msgid ". Pan is now: "
+msgstr ""
+
+#: gl_canvas.py:235
+msgid "Negative mouse wheel rotation. Zoom is now: "
+msgstr ""
+
+#: gl_canvas.py:246
+msgid "Positive mouse wheel rotation. Zoom is now: "
+msgstr ""
+
+#: gl_canvas.py:345
+msgid "No. of Cycles"
+msgstr ""
+
+#: gl_canvas.py:441
+msgid "Monitor Name"
+msgstr ""
+
+#: gui.py:151
+msgid "File"
+msgstr ""
+
+#: gui.py:152
+msgid "Help"
+msgstr ""
+
+#: gui.py:159
+#: gui.py:574
+msgid "Welcome to Logic Simulation App!"
+msgstr ""
+
+#: gui.py:162
+msgid "Number of Cycles"
+msgstr ""
+
+#: gui.py:173
+msgid "Run"
+msgstr ""
+
+#: gui.py:174
+msgid "Continue"
+msgstr ""
+
+#: gui.py:175
+msgid "Rerun"
+msgstr ""
+
+#: gui.py:177
+msgid "Clear Console"
+msgstr ""
+
+#: gui.py:179
+msgid "Choose Monitor"
+msgstr ""
+
+#: gui.py:180
+msgid "Choose Switch"
+msgstr ""
+
+#: gui.py:271
+msgid "New spin control value: "
+msgstr ""
+
+#: gui.py:282
+msgid "More than 1000 cycles set to be run. Please change to a lower value of runs."
+msgstr ""
+
+#: gui.py:283
+#: gui.py:295
+msgid "Warning"
+msgstr ""
+
+#: gui.py:293
+msgid "More than 100 cycles set to be run! Are you sure you "
+msgstr ""
+
+#: gui.py:294
+msgid "want to continue?"
+msgstr ""
+
+#: gui.py:314
+msgid "Error! Network oscillating."
+msgstr ""
+
+#: gui.py:335
+msgid "Running for "
+msgstr ""
+
+#: gui.py:336
+msgid " cycles."
+msgstr ""
+
+#: gui.py:340
+msgid "Cannot run simulation. Please check your definition file."
+msgstr ""
+
+#: gui.py:354
+msgid "Error! No previous simulation. "
+msgstr ""
+
+#: gui.py:355
+msgid "Please run first."
+msgstr ""
+
+#: gui.py:364
+msgid "Continuing for "
+msgstr ""
+
+#: gui.py:366
+msgid " cycles,"
+msgstr ""
+
+#: gui.py:367
+msgid " a total of "
+msgstr ""
+
+#: gui.py:369
+msgid " cycles run."
+msgstr ""
+
+#: gui.py:379
+msgid "Cannot continue running simulation. Please check"
+msgstr ""
+
+#: gui.py:380
+#: gui.py:403
+msgid "your definition file."
+msgstr ""
+
+#: gui.py:402
+msgid "Cannot rerun simulation. Please check "
+msgstr ""
+
+#: gui.py:434
+msgid "Choose the Signals You Wish to Monitor"
+msgstr ""
+
+#: gui.py:435
+msgid "Monitored Signals"
+msgstr ""
+
+#: gui.py:448
+#: gui.py:520
+msgid "Cannot Show on Monitor. Please check your definition file."
+msgstr ""
+
+#: gui.py:470
+msgid "Successfully made monitor."
+msgstr ""
+
+#: gui.py:474
+msgid "Error! Could not make monitor."
+msgstr ""
+
+#: gui.py:507
+msgid "Choose the switches to be set to 1"
+msgstr ""
+
+#: gui.py:508
+msgid "Switch Settings"
+msgstr ""
+
+#: gui.py:546
+msgid "Successfully set the state of switches."
+msgstr ""
+
+#: parse.py:178
+msgid "errors found, please resolve them and try again"
+msgstr ""
+
+#: parse.py:184
+msgid "No Errors found"
+msgstr ""
+
+#: parse.py:688
+msgid "Error location: line:"
+msgstr ""
+
+#: parse.py:688
+msgid "column:"
+msgstr ""
+
+#: parse.py:697
+msgid "Missing '{'"
+msgstr ""
+
+#: parse.py:701
+msgid "Missing '}'"
+msgstr ""
+
+#: parse.py:709
+msgid "Missing END to indicate end of definition file"
+msgstr ""
+
+#: parse.py:714
+msgid "Device not specified"
+msgstr ""
+
+#: parse.py:728
+msgid "Semicolon expected at end of line."
+msgstr ""
+
+#: parse.py:739
+msgid "Output pin not specified"
+msgstr ""
+
+#: parse.py:750
+msgid "Right arrow expected to signify connect"
+msgstr ""
+
+#: parse.py:755
+msgid "Input expected but no specified"
+msgstr ""
+
+#: parse.py:766
+msgid "Device type not specified, please specify"
+msgstr ""
+
+#: parse.py:778
+msgid "'(' expected but not present"
+msgstr ""
+
+#: parse.py:791
+msgid "Number of inputs incorrectly configured"
+msgstr ""
+
+#: parse.py:796
+msgid "')' expected at end of initialisaition"
+msgstr ""
+
+#: parse.py:809
+msgid "Invalid value of clock cycles"
+msgstr ""
+
+#: parse.py:823
+msgid "Invalid state of switch"
+msgstr ""
+
+#: parse.py:837
+msgid "Incorrect_input_pin"
+msgstr ""
+
+#: parse.py:848
+msgid "Input is connected to an input."
+msgstr ""
+
+#: parse.py:852
+msgid "Output is connected to an output."
+msgstr ""
+
+#: parse.py:856
+msgid "Input is already connected."
+msgstr ""
+
+#: parse.py:860
+msgid "Port accessed is absent."
+msgstr ""
+
+#: parse.py:864
+msgid "Device accessed is absent."
+msgstr ""
+
+#: parse.py:868
+msgid "Monitoring point is not an output."
+msgstr ""
+
+#: parse.py:872
+msgid "Monitor is not present."
+msgstr ""
+
+#: parse.py:876
+msgid "Qualifier is invalid."
+msgstr ""
+
+#: parse.py:880
+msgid "No qualifier present."
+msgstr ""
+
+#: parse.py:884
+msgid "The device kind is incorrect."
+msgstr ""
+
+#: parse.py:888
+msgid "No qualifier should be present."
+msgstr ""
+
+#: parse.py:892
+msgid "Device already created."
+msgstr ""
+
+#: prelim\exercise.py:99
+msgid "Now opening file..."
+msgstr ""
+
+#: prelim\exercise.py:106
+msgid "Now reading file..."
+msgstr ""
+
+#: prelim\exercise.py:115
+msgid "Now skipping spaces..."
+msgstr ""
+
