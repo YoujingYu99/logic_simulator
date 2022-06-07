@@ -196,8 +196,8 @@ class Gui(wx.Frame):
         self.clear_console_button.SetFont(self.run_font)
         self.monitor_button.SetFont(self.monitor_font)
         self.switch_button.SetFont(self.monitor_font)
-        self.make_connection_button.SetFont(self.monitor_font)
-        self.remove_connection_button.SetFont(self.monitor_font)
+        self.make_connection_button.SetFont(self.run_font)
+        self.remove_connection_button.SetFont(self.run_font)
 
         # Bind events to widgets
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
