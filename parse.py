@@ -450,7 +450,7 @@ class Parser:
             self.logger.debug("-End of XOR statement")
 
         else:
-            self.error("SEMILCOLON_EXPECTED")
+            self.error("SEMICOLON_EXPECTED")
         # uses same structure as XOR one
 
     def switch_devices(self, device_kind):
