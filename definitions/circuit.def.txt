@@ -12,5 +12,5 @@ CONNECT{
 MONITOR{
     dtype.Q;
     dtype.QBAR;
-
+}
 END
