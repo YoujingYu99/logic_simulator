@@ -460,6 +460,10 @@ class Gui(wx.Frame):
                 "Monitored Signals",
                 self.monitor_names_list,
             )
+            monitor_on_ids = [self.monitor_names_list.index(j)
+                             for j in self.monitored_list]
+            # Preselet
+            dlg.SetSelections(monitor_on_ids)
 
             if dlg.ShowModal() == wx.ID_OK:
                 # Return indexes selected by the user
@@ -533,6 +537,9 @@ class Gui(wx.Frame):
                 "Switch Settings",
                 self.switch_name_list,
             )
+            switch_on_ids = [self.switch_name_list.index(j)
+                             for j in self.switch_on_list]
+            dlg.SetSelections(switch_on_ids)
 
             if dlg.ShowModal() == wx.ID_OK:
                 selections = dlg.GetSelections()
