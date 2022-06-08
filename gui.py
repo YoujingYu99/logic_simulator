@@ -50,12 +50,13 @@ class Gui(wx.Frame):
     on_switch_button(self): Event handler for when the user chooses a few
                             switches.
     update_switches(self): Event handler for when the switch state changes.
+    get_inputs_output(self): Get all inputs and output names in network.
+    on_make_connection_button(self):Event handler for when the user makes
+                            connections.
+    on_remove_connection_button(self):Event handler for when the user removes
+                            connections.
     clear_previous_file(self): Event handler for when the user opens another
                             definition file.
-    on_make_connection(self):Event handler for when the user makes
-                            connections.
-    on_remove_connection(self):Event handler for when the user removes
-                            connections.
     """
 
     def __init__(self, title, path, names, devices, network, monitors):
@@ -461,7 +462,7 @@ class Gui(wx.Frame):
                 self.monitor_names_list,
             )
             monitor_on_ids = [self.monitor_names_list.index(j)
-                             for j in self.monitored_list]
+                              for j in self.monitored_list]
             # Preselet
             dlg.SetSelections(monitor_on_ids)
 
@@ -575,47 +576,6 @@ class Gui(wx.Frame):
         self.canvas.devices = self.devices
         self.console_box.print_console_message("Successfully set the state"
                                                "of switches.\n")
-
-    def clear_previous_file(self):
-        """Reinitialise everything when new definition file chosen."""
-        # Set all input parameters to None/empty
-        self.network = None
-        self.names = None
-        self.devices = None
-        self.monitors = None
-        self.monitor_names_list = []
-        self.monitor_id_list = []
-        self.monitored_list = []
-        self.unmonitored_list = []
-
-        # Switch names and IDs set empty
-        self.switch_id_list = []
-        self.switch_name_list = []
-        self.switch_on_list = []
-        self.switch_off_list = []
-        self.input_list = []
-        self.output_list = []
-
-        # Set file to be not parsed
-        self.is_parsed = False
-
-        # Set default spin value
-        self.spin_value = 10
-        self.cycles_completed = 0
-
-        # Configure console properties
-        self.console_text = "Welcome to Logic Simulation App!"
-
-        # Configure the loggers
-        self.scanner_logger = logging.getLogger("scanner")
-        self.parser_logger = logging.getLogger("parser")
-        logging.basicConfig(level=logging.DEBUG)
-
-        # Reinitialise the canvas elements
-        self.canvas.devices = None
-        self.canvas.monitors = None
-        self.canvas.monitored_signal_list = []
-        self.canvas.cycles_completed = 0
 
     def get_inputs_outputs(self):
         """Get all inputs and outputs in network."""
@@ -751,3 +711,44 @@ class Gui(wx.Frame):
                     self.console_box.print_console_message(
                         "Error! Could not remove connection.\n"
                     )
+
+    def clear_previous_file(self):
+        """Reinitialise everything when new definition file chosen."""
+        # Set all input parameters to None/empty
+        self.network = None
+        self.names = None
+        self.devices = None
+        self.monitors = None
+        self.monitor_names_list = []
+        self.monitor_id_list = []
+        self.monitored_list = []
+        self.unmonitored_list = []
+
+        # Switch names and IDs set empty
+        self.switch_id_list = []
+        self.switch_name_list = []
+        self.switch_on_list = []
+        self.switch_off_list = []
+        self.input_list = []
+        self.output_list = []
+
+        # Set file to be not parsed
+        self.is_parsed = False
+
+        # Set default spin value
+        self.spin_value = 10
+        self.cycles_completed = 0
+
+        # Configure console properties
+        self.console_text = "Welcome to Logic Simulation App!"
+
+        # Configure the loggers
+        self.scanner_logger = logging.getLogger("scanner")
+        self.parser_logger = logging.getLogger("parser")
+        logging.basicConfig(level=logging.DEBUG)
+
+        # Reinitialise the canvas elements
+        self.canvas.devices = None
+        self.canvas.monitors = None
+        self.canvas.monitored_signal_list = []
+        self.canvas.cycles_completed = 0
