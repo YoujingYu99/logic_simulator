@@ -87,8 +87,8 @@ Start by clicking `Menu`, then choose `Open`. Upload your circuit definition fil
 Set the number of cycles to run in the spin control box and click `run` to see the signal displayed.
 Click `continue` to run more cycles from the current point or `Rerun` to start the simulation fresh. Click `Clear Console` to clear the user messages displayed in the console output.
 
-### GUI Switch and Monitor Settings
-To change the signals to be dislayed, click `Choose Monitor` and select the signals you wish to display on screen by ticking the checkbox near them. To change the state of the switches in the network, click `Choose Switch` and select the switches you wish to be in the state of OPEN.
+### GUI Switch, Monitor and Connection Settings
+To change the signals to be dislayed, click `Choose Monitor` and select the signals you wish to display on screen by ticking the checkbox near them. To change the state of the switches in the network, click `Choose Switch` and select the switches you wish to be in the state of OPEN. To add a connection, click `Add Connection` and choose the input and output of the new connection. To remove a connection, click `Remove Connection` and choose the input and output of the connection to be removed. 
 
 ### GUI File Functions
 Save the canvas plot as an image file by clicking `Menu`, then choose `Save Canvas`. Save the text file containing the console output messages by cllicking `Menu`, then choose `Save Console`. A dialogue box will pop up where you can choose the local destination for the canvas image or text file to be saved to.
