@@ -45,6 +45,21 @@ class Scanner:
 
     Public methods
     -------------
+    advance(self): Read next character and update current character.
+
+    skip_spaces(self): Assign next non whitespace character to current
+                       character.
+
+    get_device_name(self): Extract the device name in the following seq of
+                           characters.
+
+    get_capital_name(self): Extract name in sequence of capital characters.
+
+    get_number(self): Extract number in the next sequence of characters.
+
+    get_error_line(self, line_num, line_col): Return the line with error and
+                                              put marker under error column.
+
     get_symbol(self): Translates the next sequence of characters into a symbol
                       and returns the symbol.
     """
@@ -195,7 +210,7 @@ class Scanner:
         self.logger.info("\nNow reading file...")
         self.logger.info("File name:  " + self.file.name)
 
-    def advance(self, read_error_file=False):
+    def advance(self):
         """Read next character and update current character."""
         self.current_character = self.file.read(1)
         self.current_col += 1

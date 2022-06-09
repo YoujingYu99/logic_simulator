@@ -1,3 +1,14 @@
+"""Parse the definition file and build the logic network.
+
+Used in the Logic Simulator project to analyse the syntactic and semantic
+correctness of the symbols received from the scanner and then builds the
+logic network.
+
+Classes
+-------
+Parser - parses the definition file and builds the logic network.
+"""
+
 from scanner import Scanner
 from names import Names
 from devices import Devices
@@ -10,20 +21,7 @@ import wx
 _ = wx.GetTranslation
 
 
-"""Parse the definition file and build the logic network.
-
-Used in the Logic Simulator project to analyse the syntactic and semantic
-correctness of the symbols received from the scanner and then builds the
-logic network.
-
-Classes
--------
-Parser - parses the definition file and builds the logic network.
-"""
-
-
 class Parser:
-
     """Parse the definition file and build the logic network.
 
     The parser deals with error handling. It analyses the syntactic and
@@ -42,7 +40,37 @@ class Parser:
 
     Public methods
     --------------
-    parse_network(self): Parses the circuit definition file.
+    parse_network(self): Parses the circuit definition file as per EBNF spec.
+
+    make_monitor(self): Parse the monitor line.
+
+    create_conn(self): Parse connection creation.
+
+    device(self): Parse devices.
+
+    gate_devices(self, device_kind): Parse and create device.
+
+    dtype_devices(self, device_kind): Parse dtype latches.
+
+    xor_devices(self, device_kind): Parse xor gates.
+
+    not_devices(self, device_kind): Parse not gate.
+
+    switch_devices(self, device_kind): Parse switch defenitions.
+
+    clock_devices(self, device_kind): Parse clock devices.
+
+    input_number(self): Parse input numbers.
+
+    device_semantic_error_check(self, error_type): Check if defined devices
+                                                   have no semantic erros.
+
+    device_name(self): Parse device names.
+
+    error(self, error_type): Handle errors and skip to next appropriate symbol.
+
+
+
     """
 
     def __init__(self, names, devices, network, monitors, scanner, logger):
@@ -57,6 +85,21 @@ class Parser:
         self.error_count = 0
         self.error_string = ""  # when new error encountered add $
         self.logger = logger
+
+        self.semantic_error_dict = {
+            "INPUT_TO_INPUT": _("Input is connected to an input."),
+            "OUTPUT_TO_OUTPUT": _("Output is connected to an output."),
+            "INPUT_CONNECTED": _("Input is already connected."),
+            "PORT_ABSENT": _("Port accessed is absent."),
+            "DEVICE_ABSENT": _("Device accessed is absent."),
+            "NOT_OUTPUT": _("Monitoring point is not an output."),
+            "MONITOR_PRESENT": _("Monitor is not present."),
+            "INVALID_QUALIFIER": _("Qualifier is invalid."),
+            "NO_QUALIFIER": _("No qualifier present."),
+            "BAD_DEVICE": _("The device kind is incorrect."),
+            "QUALIFIER_PRESENT": _("No qualifier should be present."),
+            "DEVICE_PRESENT": _("Device already created.")
+        }
 
     def parse_network(self):
         """Parse the circuit definition file."""
@@ -163,7 +206,8 @@ class Parser:
         else:
             self.symbol = self.scanner.get_symbol()
             self.logger.debug(
-                f"{self.symbol.type}, {self.names.get_name_string(self.symbol.id)}"
+                "".join((str(self.symbol.type), ",",
+                        self.names.get_name_string(self.symbol.id)))
             )
 
         if (
@@ -184,9 +228,7 @@ class Parser:
             return True
 
     def make_monitor(self):
-        """
-        Function to parse the monitor line as per the EBNF spec
-        """
+        """Parse the monitor line as per the EBNF spec."""
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
         else:
@@ -219,9 +261,7 @@ class Parser:
         self.logger.debug("-Monitor point ended")
 
     def create_conn(self):
-        """
-        Method to parse connection creation as per EBNF spec
-        """
+        """Parse connection creation as per EBNF spec."""
         if self.symbol.type != self.scanner.DEVICE_NAME:
             self.error("DEVICE_NAME_EXPECTED")
         else:
@@ -287,9 +327,7 @@ class Parser:
         self.logger.debug("-Connection Ended")
 
     def device(self):
-        """
-        Method to parse devices
-        """
+        """Parse devices as per EBNF spec."""
         if self.symbol.id == self.scanner.CLOCK_ID:
             self.logger.debug("-CLOCK found, start to parse CLOCK")
             self.clock_devices(self.symbol.id)
@@ -317,9 +355,7 @@ class Parser:
             self.error("DEVICE_TYPE_NOT_DECLARED")
 
     def gate_devices(self, device_kind):
-        """
-        Method to parse and create device.
-        """
+        """Parse and create device."""
         # First Gate
         self.device_name()
         device_id = self.symbol.id
@@ -392,9 +428,7 @@ class Parser:
         self.logger.debug("-End of GATE statement")
 
     def dtype_devices(self, device_kind):
-        """
-        Method to parse dtype latches
-        """
+        """Parse dtype latches."""
         self.device_name()
         device_id = self.symbol.id
         self.symbol = self.scanner.get_symbol()
@@ -413,9 +447,7 @@ class Parser:
             self.error("SEMICOLON_EXPECTED")
 
     def xor_devices(self, device_kind):
-        """
-        Method to parse xor gates
-        """
+        """Parse xor gates."""
         self.device_name()
         device_id = self.symbol.id
         self.symbol = self.scanner.get_symbol()
@@ -434,6 +466,7 @@ class Parser:
             self.error("SEMICOLON_EXPECTED")
 
     def not_devices(self, device_kind):
+        """Parse not gate."""
         # due to the different nature of NOT gate, it gets it's own parser
         self.device_name()
         device_id = self.symbol.id
@@ -454,9 +487,7 @@ class Parser:
         # uses same structure as XOR one
 
     def switch_devices(self, device_kind):
-        """
-        Method to parse switch defenitions
-        """
+        """Parse switch defenitions."""
         # First device
         self.device_name()
         device_id = self.symbol.id
@@ -529,9 +560,7 @@ class Parser:
         self.logger.debug("-End of SWITCH statement")
 
     def clock_devices(self, device_kind):
-        """
-        Method to parse clock devices
-        """
+        """Parse clock devices."""
         # First Device
         self.device_name()
         device_id = self.symbol.id
@@ -603,47 +632,8 @@ class Parser:
 
         self.logger.debug("-End of CLOCK statement")
 
-    # def output_pin(self):
-    #     """
-    #     Method to parse output pins
-    #     """
-    #     if self.symbol == self.scanner.Q:
-    #         self.symbol = self.scanner.getsymbol()
-    #     elif self.symbol == self.scanner.QBAR:
-    #         self.symbol = self.scanner.getsymbol()
-    #     else:
-    #         # output pin specified but not describes
-    #         self.error("OUTPUT_PIN_NOT_DESCRIBED")
-
-    # def input_pin(self):
-    #     if self.symbol == self.scanner.I:
-    #         self.symbol = self.scanner.getsymbol()
-    #         self.input_number()
-    #     elif (
-    #         self.symbol.type == self.scanner.KEYWORDS
-    #         and self.symbol.id == self.scanner.DATA_ID
-    #     ):
-    #         self.symbol = self.scanner.getsymbol()
-    #     elif (
-    #         self.symbol.type == self.scanner.KEYWORDS
-    #         and self.symbol.id == self.scanner.CLK_ID
-    #     ):
-    #         self.symbol = self.scanner.getsymbol()
-    #     elif (
-    #         self.symbol.type == self.scanner.KEYWORDS
-    #         and self.symbol.id == self.scanner.SET_ID
-    #     ):
-    #         self.symbol = self.scanner.getsymbol()
-    #     elif (
-    #         self.symbol.type == self.scanner.KEYWORDS
-    #         and self.symbol.id == self.scanner.CLEAR_ID
-    #     ):
-    #         self.symbol = self.scanner.getsymbol()
-    #     else:
-    #         # unknown symbol or not specified
-    #         self.error("UNKOWN_SYMBOL")
-
     def input_number(self):
+        """Parse input numbers."""
         if self.symbol.type == self.scanner.NUMBER and (
             int(self.symbol.id) in range(1, 17)
         ):
@@ -651,18 +641,6 @@ class Parser:
         else:
             # error of invalid input
             self.error("INVALID_INPUT_INITIALISATION")
-
-    # def on_off(self):
-    #     """
-    #     Method to parse on/off parameter
-    #     """
-    #     if self.symbol == self.scanner.ZERO:
-    #         self.symbol = self.scanner.getsymbol()
-    #     elif self.symol == self.scanner.ONE:
-    #         self.symbol = self.scanner.getsymbol()
-    #     else:
-    #         # error: 0 or 1 expected
-    #         self.error("0_OR_1_EXPECTED")
 
     def device_semantic_error_check(self, error_type):
         """Check if defined devices have no semantic erros."""
@@ -678,9 +656,7 @@ class Parser:
             self.error("DEVICE_PRESENT")
 
     def device_name(self):
-        """
-        Method to parse device names
-        """
+        """Parse device names."""
         # Identifier EBNF statement implicity defined by DEVICE_NAME type
         self.symbol = self.scanner.get_symbol()
         if self.symbol.type == self.scanner.DEVICE_NAME:
@@ -689,23 +665,18 @@ class Parser:
             self.error("DEVICE_NAME_EXPECTED")
 
     def error(self, error_type):
-        """
-        Method to handle errors and skip to next appropriate symbol"
-        """
-        # TODO make this less repetetive by passing stopping symbols in
+        """Handle errors and skip to next appropriate symbol."""
         self.error_count += 1
         self.logger.error(error_type)
         self.logger.error(
             f"""Error location: line:{self.scanner.current_line}
                              column:{self.scanner.current_col}"""
         )
-        # current col is incorrect
         self.logger.error(
             self.scanner.get_error_line(
                 self.scanner.current_line, self.scanner.current_col
             )
         )
-        # FIXME
         location_txt = (
             _("Error location: line:")
             + str(self.scanner.current_line)
@@ -871,188 +842,9 @@ class Parser:
                 self.scanner.KEYWORD,
             ]:
                 self.symbol = self.scanner.get_symbol()
-        elif error_type == "INPUT_TO_INPUT":
-            er_msg = _("Input is connected to an input.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "OUTPUT_TO_OUTPUT":
-            er_msg = _("Output is connected to an output.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "INPUT_CONNECTED":
-            er_msg = _("Input is already connected.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "PORT_ABSENT":
-            er_msg = _("Port accessed is absent.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "DEVICE_ABSENT":
-            er_msg = _("Device accessed is absent.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "NOT_OUTPUT":
-            er_msg = _("Monitoring point is not an output.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "MONITOR_PRESENT":
-            er_msg = _("Monitor is not present.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "INVALID_QUALIFIER":
-            er_msg = _("Qualifier is invalid.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "NO_QUALIFIER":
-            er_msg = _("No qualifier present.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "BAD_DEVICE":
-            er_msg = _("The device kind is incorrect.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "QUALIFIER_PRESENT":
-            er_msg = _("No qualifier should be present.")
-            print(er_msg)
-            self.error_string += "".join((er_msg, "$"))
-        elif error_type == "DEVICE_PRESENT":
-            er_msg = _("Device already created.")
+        elif error_type in self.semantic_error_dict:
+            er_msg = self.semantic_error_dict[error_type]
             print(er_msg)
             self.error_string += "".join((er_msg, "$"))
         else:
             raise NotImplementedError
-
-
-# configure the loggers, they should always be configured in top level file and
-# then passed into the following classes so that the level can be configured
-
-# Uncomment to run
-#
-# path_definition = "definitions/circuit.def"
-# scanner_logger = logging.getLogger("scanner")
-# parser_logger = logging.getLogger("parser")
-# logging.basicConfig(level=logging.DEBUG)
-#
-#
-# names_instance = Names()
-# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-# device_instance = Devices(names_instance)
-# network_instance = Network(names_instance, device_instance)
-# monitor_instance = Monitors(names_instance, device_instance, network_instance)
-#
-#
-# parser_1 = Parser(
-#     names_instance,
-#     device_instance,
-#     network_instance,
-#     monitor_instance,
-#     scanner_instance,
-#     parser_logger,
-# )
-#
-#
-#
-# a = parser_1.parse_network()
-#
-# print(parser_1.error_string)
-#
-#
-# print('--Check all devices have been created')
-# print(parser_1.devices.find_devices())
-# print(parser_1.devices.get_device(42).inputs)  # This is the DTYPE device
-# print(parser_1.devices.get_device(42).outputs)  # DTYPE
-# print(parser_1.devices.get_device(46).inputs)
-
-
-# print("--Check all network inputs are satisfied")
-# print(parser_1.network.check_network())
-#
-# for i in range(5):
-#     print('--Try simulate network')
-#     simulate = parser_1.network.execute_network()
-#     print(simulate)
-#
-#     print('--Try record signals')
-#     parser_1.monitors.record_signals()
-#
-# monitored_signal_list, non_monitored_signal_list = parser_1.monitors.get_signal_names()
-#
-# print('--List monitor points')
-# print(monitored_signal_list)
-#
-# print('--Pring input and outputs')
-# print(parser_1.devices.get_device(42).outputs) # DTYPE
-# print(parser_1.devices.get_device(42).inputs)
-#
-#
-# print('--Get output from andg using display_signals')
-# parser_1.monitors.display_signals()
-
-
-# # For circuit 2
-# path_definition = "definitions/circuit2.def.txt"
-# scanner_logger = logging.getLogger("scanner")
-# parser_logger = logging.getLogger("parser")
-# logging.basicConfig(level=logging.DEBUG)
-#
-# names_instance = Names()
-# scanner_instance = Scanner(path_definition, names_instance, scanner_logger)
-# device_instance = Devices(names_instance)
-# network_instance = Network(names_instance, device_instance)
-# monitor_instance = Monitors(names_instance, device_instance, network_instance)
-#
-# parser_1 = Parser(
-#     names_instance,
-#     device_instance,
-#     network_instance,
-#     monitor_instance,
-#     scanner_instance,
-#     parser_logger,
-# )
-#
-# a = parser_1.parse_network()
-# print("-----------")
-# print(parser_1.scanner.get_error_line(2, 3))
-#
-# errors = parser_1.error_string.split("$")
-# for line in errors:
-#     print(line)
-#
-#
-# print("--Confirm that and gate has been created")
-# print(parser_1.devices.find_devices(parser_1.scanner.AND_ID))
-# print("--Confirm that switches have been created")
-# print(parser_1.devices.find_devices(parser_1.scanner.SWITCH_ID))
-#
-#
-# print("--ANDg inputs")
-# print(parser_1.devices.get_device(42).inputs)
-# print("--ANDg output")
-# print(parser_1.devices.get_device(42).outputs)
-#
-# print("--Check all network inputs are satisfied")
-# print(parser_1.network.check_network())
-#
-# (
-#     monitored_signal_list,
-#     non_monitored_signal_list,
-# ) = parser_1.monitors.get_signal_names()
-#
-# print("--List monitor points")
-# print(monitored_signal_list, non_monitored_signal_list)
-#
-# for i in range(5):
-#     print("--Try simulate network")
-#     simulate = parser_1.network.execute_network()
-#     print(simulate)
-#
-#     print("--Try record signals")
-#     parser_1.monitors.record_signals()
-#
-# print("--Get output from andg")
-# print(parser_1.monitors.get_monitor_signal(42, None))
-#
-# print("--Get output from andg using display_signals")
-#
-# parser_1.monitors.display_signals()
-#
