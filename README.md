@@ -5,41 +5,17 @@ The aim of our project is to design a logic simulator. The logic network is defi
 
 
 
-## Installation
+## Installation to run on Linux
 
-You can install required packages by running the following command
+A conda virtual environment is recommended to run the software to ensure the correct dependencies are included. The list of requirements is provides in **requirements.txt**. The enviroment can be created with the required dependencies by running the following bash commands using anaconda shell within the project directory.
 
 
-```python
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+```bash
+conda create --name <name_of_environment> --file requirements.txt
+source activate <name of environment>
 ```
-The packages should be automatically installed in the environment. Alternatively, you can install packages following the requirement list below.
+The packages should be automatically installed in the environment. Note that the environment creation can take some time to install all the dependencies.
 
-
-### Requirements
-
-```python
-atomicwrites==1.4.0
-attrs==21.4.0
-colorama==0.4.4
-iniconfig==1.1.1
-numpy==1.22.3
-packaging==21.3
-Pillow==9.1.0
-pluggy==1.0.0
-py==1.11.0
-python==3.7.13
-pycodestyle==2.8.0
-pydocstyle==6.1.1
-pyparsing==3.0.9
-pytest==7.1.2
-six==1.16.0
-snowballstemmer==2.2.0
-tomli==2.0.1
-wxPython==4.1.1
-
-```
 
 ## Installing PyOpenGL
 ### Windows
