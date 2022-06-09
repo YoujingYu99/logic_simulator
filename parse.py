@@ -330,9 +330,6 @@ class Parser:
         else:
 
             self.symbol = self.scanner.get_symbol()
-            # FIXME type of symbol ID behaves a bit weirdly
-            # not sure if this is intentional
-            # self.input_number()
 
             if self.symbol.type == self.scanner.NUMBER and (
                 int(self.symbol.id) in range(1, 17)
@@ -413,7 +410,7 @@ class Parser:
             self.logger.debug("-End of DTYPE statement")
 
         else:
-            self.error("SEMILCOLON_EXPECTED")
+            self.error("SEMICOLON_EXPECTED")
 
     def xor_devices(self, device_kind):
         """
@@ -434,7 +431,7 @@ class Parser:
             self.logger.debug("-End of XOR statement")
 
         else:
-            self.error("SEMILCOLON_EXPECTED")
+            self.error("SEMICOLON_EXPECTED")
 
     def not_devices(self, device_kind):
         # due to the different nature of NOT gate, it gets it's own parser
@@ -453,7 +450,7 @@ class Parser:
             self.logger.debug("-End of XOR statement")
 
         else:
-            self.error("SEMILCOLON_EXPECTED")
+            self.error("SEMICOLON_EXPECTED")
         # uses same structure as XOR one
 
     def switch_devices(self, device_kind):
@@ -992,7 +989,7 @@ class Parser:
 # parser_1.monitors.display_signals()
 
 
-# For circuit 2
+# # For circuit 2
 # path_definition = "definitions/circuit2.def.txt"
 # scanner_logger = logging.getLogger("scanner")
 # parser_logger = logging.getLogger("parser")

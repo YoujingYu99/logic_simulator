@@ -14,7 +14,6 @@ from gl_canvas import MyGLCanvas
 from frame_elements import FileMenu, HelpMenu, AboutMenu, \
     ConsoleBox, CycleNumberText
 
-_ = wx.GetTranslation
 
 class Gui(wx.Frame):
     """Configure the main window and all the widgets.
@@ -51,6 +50,11 @@ class Gui(wx.Frame):
     on_switch_button(self): Event handler for when the user chooses a few
                             switches.
     update_switches(self): Event handler for when the switch state changes.
+    get_inputs_output(self): Get all inputs and output names in network.
+    on_make_connection_button(self):Event handler for when the user makes
+                            connections.
+    on_remove_connection_button(self):Event handler for when the user removes
+                            connections.
     clear_previous_file(self): Event handler for when the user opens another
                             definition file.
     """
@@ -115,6 +119,9 @@ class Gui(wx.Frame):
         self.switch_name_list = []
         self.switch_on_list = []
         self.switch_off_list = []
+        # All inputs and outputs in the network
+        self.input_list = []
+        self.output_list = []
 
         # Temporarily set file to be not parsed
         self.is_parsed = False
@@ -148,18 +155,18 @@ class Gui(wx.Frame):
         # Set AboutMenu
         aboutMenu = AboutMenu(parentFrame=self)
         menuBar = wx.MenuBar()
-        menuBar.Append(fileMenu, "".join(('&', _('File'))))
-        menuBar.Append(helpMenu, "".join(('&', _('Help'))))
-        menuBar.Append(aboutMenu, "".join(('&', _('About'))))
+        menuBar.Append(fileMenu, "&File")
+        menuBar.Append(helpMenu, "&Help")
+        menuBar.Append(aboutMenu, "&About")
 
         # Set menubar
         self.SetMenuBar(menuBar)
 
         # Configure console properties
-        self.console_text = _("Welcome to Logic Simulation App!")
+        self.console_text = "Welcome to Logic Simulation App!"
 
         # Configure the widgets
-        self.text = CycleNumberText(self, wx.ID_ANY, _("Number of Cycles"))
+        self.text = CycleNumberText(self, wx.ID_ANY, "Number of Cycles")
         self.text.SetFont(self.cycle_font)
         self.text.SetForegroundColour(wx.Colour(self.cycle_text_colour))
         self.spin = wx.SpinCtrl(
@@ -170,14 +177,18 @@ class Gui(wx.Frame):
             min=0,
             max=1000,
         )
-        self.run_button = wx.Button(self, wx.ID_ANY, _("Run"))
-        self.continue_button = wx.Button(self, wx.ID_ANY, _("Continue"))
-        self.rerun_button = wx.Button(self, wx.ID_ANY, _("Rerun"))
+        self.run_button = wx.Button(self, wx.ID_ANY, "Run")
+        self.continue_button = wx.Button(self, wx.ID_ANY, "Continue")
+        self.rerun_button = wx.Button(self, wx.ID_ANY, "Rerun")
         self.clear_console_button = \
-            wx.Button(self, wx.ID_ANY, _("Clear Console"))
+            wx.Button(self, wx.ID_ANY, "Clear Console")
         # Monitor and Switch Buttons
-        self.monitor_button = wx.Button(self, wx.ID_ANY, _("Choose Monitor"))
-        self.switch_button = wx.Button(self, wx.ID_ANY, _("Choose Switch"))
+        self.monitor_button = wx.Button(self, wx.ID_ANY, "Choose Monitor")
+        self.switch_button = wx.Button(self, wx.ID_ANY, "Choose Switch")
+        self.make_connection_button = wx.Button(self, wx.ID_ANY,
+                                                "Make Connection")
+        self.remove_connection_button = wx.Button(self, wx.ID_ANY,
+                                                  "Remove Connection")
 
         # Set fonts for all
         self.run_button.SetFont(self.run_font)
@@ -186,6 +197,8 @@ class Gui(wx.Frame):
         self.clear_console_button.SetFont(self.run_font)
         self.monitor_button.SetFont(self.monitor_font)
         self.switch_button.SetFont(self.monitor_font)
+        self.make_connection_button.SetFont(self.run_font)
+        self.remove_connection_button.SetFont(self.run_font)
 
         # Bind events to widgets
         self.spin.Bind(wx.EVT_SPINCTRL, self.on_spin)
@@ -196,6 +209,11 @@ class Gui(wx.Frame):
         self.continue_button.Bind(wx.EVT_BUTTON, self.on_continue_button)
         self.monitor_button.Bind(wx.EVT_BUTTON, self.on_monitor_button)
         self.switch_button.Bind(wx.EVT_BUTTON, self.on_switch_button)
+        # Make and remove connections
+        self.make_connection_button.Bind(wx.EVT_BUTTON,
+                                         self.on_make_connection_button)
+        self.remove_connection_button.Bind(wx.EVT_BUTTON,
+                                           self.on_remove_connection_button)
 
         # Configure sizers for layout
         # Controls the entire screen
@@ -214,6 +232,7 @@ class Gui(wx.Frame):
         simulation_action_sizer_1 = wx.BoxSizer(wx.HORIZONTAL)
         simulation_action_sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         function_sizer = wx.StaticBoxSizer(wx.VERTICAL, self)
+        connection_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         top_level_sizer.Add(main_sizer, 5, wx.ALL | wx.EXPAND, 5)
         top_level_sizer.Add(console_sizer, 2, wx.ALL | wx.EXPAND, 5)
@@ -247,6 +266,12 @@ class Gui(wx.Frame):
                            wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
         function_sizer.Add(self.switch_button, 5,
                            wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        function_sizer.Add(connection_sizer, 5,
+                           wx.EXPAND | wx.TOP | wx.BOTTOM, 5)
+        connection_sizer.Add(self.make_connection_button, 1,
+                             wx.LEFT | wx.RIGHT, 3, 5)
+        connection_sizer.Add(self.remove_connection_button, 1,
+                             wx.LEFT | wx.RIGHT, 3, 5)
 
         # Console sizer configuration
         console_sizer.Add(self.console_box, 5, wx.EXPAND | wx.ALL, 5)
@@ -268,7 +293,7 @@ class Gui(wx.Frame):
     def on_spin(self, event):
         """Handle the event when the user changes the spin control value."""
         spin_value = self.spin.GetValue()
-        text = "".join([_("New spin control value: "), str(spin_value)])
+        text = "".join(["New spin control value: ", str(spin_value)])
         # Update spin values in frame and canvas
         self.canvas.render(text)
         self.spin_value = spin_value
@@ -279,8 +304,9 @@ class Gui(wx.Frame):
         if self.spin_value >= 1000:
             dlg = wx.MessageDialog(
                 self,
-                _("More than 1000 cycles set to be run. Please change to a lower value of runs."),
-                _("Warning"),
+                "More than 1000 cycles set to be run. Please "
+                "change to a lower value of runs.",
+                "Warning",
                 wx.OK | wx.ICON_WARNING,
             )
             dlg.ShowModal()
@@ -290,9 +316,9 @@ class Gui(wx.Frame):
         elif 100 < self.spin_value < 1000:
             dlg = wx.MessageDialog(
                 self,
-                _("More than 100 cycles set to be run! Are you sure you "),
-                _("want to continue?"),
-                _("Warning"),
+                "More than 100 cycles set to be run! Are you sure you "
+                "want to continue?",
+                "Warning",
                 wx.YES_NO | wx.ICON_QUESTION,
             )
             dlg.ShowModal()
@@ -311,7 +337,7 @@ class Gui(wx.Frame):
             if self.network.execute_network():
                 self.monitors.record_signals()
             else:
-                text = "".join(( _('Error! Network oscillating.'), '\n'))
+                text = "Error! Network oscillating.\n"
                 self.console_box.print_console_message(text)
                 return False
         return True
@@ -332,13 +358,13 @@ class Gui(wx.Frame):
                     self.canvas.monitored_signal_list = self.monitored_list
                     # Update cycles run
                     self.canvas.cycles_completed = self.cycles_completed
-                    text = "".join([_("Running for "),
-                                    str(self.spin_value), _(" cycles."),"\n"])
+                    text = "".join(["Running for ",
+                                    str(self.spin_value), " cycles.\n"])
                     self.console_box.print_console_message(text)
             else:
                 # Show error if file was not parsed correctly
-                text = "".join((_("Cannot run simulation. Please check your "
-                    "definition file."), "\n"))
+                text = "Cannot run simulation. Please check your " \
+                       "definition file.\n"
                 self.console_box.print_console_message(text)
 
     def on_continue_button(self, event):
@@ -351,8 +377,8 @@ class Gui(wx.Frame):
                     # If no previous cycles have run
                     if self.cycles_completed == 0:
                         self.console_box.print_console_message(
-                            _("Error! No previous simulation. "),
-                            "".join((_("Please run first."), "\n"))
+                            "Error! No previous simulation. "
+                            "Please run first.\n"
                         )
                     # If the network is successfully run.
                     elif self.run_network(cycles=self.spin_value):
@@ -361,12 +387,12 @@ class Gui(wx.Frame):
                         self.canvas.cycles_completed = self.cycles_completed
                         text = "".join(
                             [
-                                _("Continuing for "),
+                                "Continuing for ",
                                 str(self.spin_value),
-                                _(" cycles,"),
-                                _(" a total of "),
+                                " cycles,",
+                                " a total of ",
                                 str(self.cycles_completed),
-                                _(" cycles run."), "\n",
+                                " cycles run.\n",
                             ]
                         )
                         self.console_box.print_console_message(text)
@@ -375,10 +401,10 @@ class Gui(wx.Frame):
 
             else:
                 # Show error if file was not parsed correctly
-                text = "".join((
-                    _("Cannot continue running simulation. Please check"),
-                    _("your definition file.") , "\n"
-                ))
+                text = (
+                    "Cannot continue running simulation. Please check"
+                    " your definition file.\n"
+                )
                 self.console_box.print_console_message(text)
 
     def on_clear_console_button(self, event):
@@ -398,10 +424,10 @@ class Gui(wx.Frame):
                 self.console_box.clear_console()
                 self.on_run_button(None)
             else:
-                text = "".join((
-                    _("Cannot rerun simulation. Please check "),
-                    _("your definition file."),"\n"
-                ))
+                text = (
+                    "Cannot rerun simulation. Please check "
+                    "your definition file.\n"
+                )
                 self.console_box.print_console_message(text)
 
     def get_monitor_names(self):
@@ -431,10 +457,14 @@ class Gui(wx.Frame):
             self.get_monitor_names()
             dlg = wx.MultiChoiceDialog(
                 self,
-                _("Choose the Signals You Wish to Monitor"),
-                _("Monitored Signals"),
+                "Choose the Signals You Wish to Monitor",
+                "Monitored Signals",
                 self.monitor_names_list,
             )
+            monitor_on_ids = [self.monitor_names_list.index(j)
+                              for j in self.monitored_list]
+            # Preselet
+            dlg.SetSelections(monitor_on_ids)
 
             if dlg.ShowModal() == wx.ID_OK:
                 # Return indexes selected by the user
@@ -445,8 +475,8 @@ class Gui(wx.Frame):
             dlg.Destroy()
         else:
             # Show error if file was not parsed correctly
-            text = "".join((_("Cannot Show on Monitor. Please check your "
-                   "definition file."), "\n"))
+            text = "Cannot Show on Monitor. Please check " \
+                   "your definition file.\n"
             self.console_box.print_console_message(text)
 
     def update_monitors(self, selections):
@@ -467,11 +497,11 @@ class Gui(wx.Frame):
                 )
                 if monitor_error == self.monitors.NO_ERROR:
                     self.console_box.print_console_message(
-                        "".join((_("Successfully made monitor."), "\n"))
+                        "Successfully made monitor.\n"
                     )
                 else:
                     self.console_box.print_console_message(
-                        "".join((_("Error! Could not make monitor."), "\n"))
+                        "Error! Could not make monitor.\n"
                     )
         # Update the monitored list
         self.monitored_list = new_monitored_list
@@ -504,10 +534,13 @@ class Gui(wx.Frame):
         if self.is_parsed:
             dlg = wx.MultiChoiceDialog(
                 self,
-                _("Choose the switches to be set to 1"),
-                _("Switch Settings"),
+                "Choose the switches to be set to 1",
+                "Switch Settings",
                 self.switch_name_list,
             )
+            switch_on_ids = [self.switch_name_list.index(j)
+                             for j in self.switch_on_list]
+            dlg.SetSelections(switch_on_ids)
 
             if dlg.ShowModal() == wx.ID_OK:
                 selections = dlg.GetSelections()
@@ -517,13 +550,12 @@ class Gui(wx.Frame):
 
         else:
             # Show error if file was not parsed correctly
-            text = "".join((_("Cannot Show on Monitor. Please check your "
-                    "definition file."), "\n"))
+            text = "Cannot Show on Monitor. Please check " \
+                   "your definition file.\n"
             self.console_box.print_console_message(text)
 
     def update_switches(self, selections):
-        """Update states of the switches in devices and pass into canvas
-        element."""
+        """Update states of the switches in devices and pass into canvas."""
         # Reset the list of switches on depending on user selection
         self.switch_on_list = [self.switch_name_list[i] for i in selections]
         # Unchosen switches in switch_off_list
@@ -542,8 +574,143 @@ class Gui(wx.Frame):
 
         # Update devices in the canvas element
         self.canvas.devices = self.devices
-        self.console_box.print_console_message(
-            "".join((_("Successfully set the state of switches."),"\n" )))
+        self.console_box.print_console_message("Successfully set the state"
+                                               "of switches.\n")
+
+    def get_inputs_outputs(self):
+        """Get all inputs and outputs in network."""
+        input_list = []
+        output_list = []
+        for device in self.devices.devices_list:
+            device_name = self.names.get_name_string(
+                device.device_id)
+            for key in device.inputs.keys():
+                full_input_name = device_name + "." \
+                                  + self.names.get_name_string(key)
+                input_list.append(full_input_name)
+                # Check outputs
+            for key in device.outputs.keys():
+                try:
+                    output_name = self.names.get_name_string(
+                        key)
+                    full_output_name = device_name + "." + output_name
+                except:
+                    full_output_name = device_name
+                output_list.append(full_output_name)
+
+        self.input_list = input_list
+        self.output_list = output_list
+
+    def on_make_connection_button(self, event):
+        """Make connection between two inputs/outputs."""
+        chosen_input = None
+        chosen_output = None
+        if self.is_parsed:
+            # Dialog for choosing input
+            input_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Input You Wish to Connect",
+                "Input of Connection",
+                self.input_list,
+            )
+
+            if input_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_input = input_dlg.GetStringSelection()
+                chosen_input = selected_input
+            input_dlg.Destroy()
+
+            output_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Output You Wish to Connect",
+                "Output of Connection",
+                self.output_list,
+            )
+
+            if output_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_output = output_dlg.GetStringSelection()
+                chosen_output = selected_output
+            output_dlg.Destroy()
+
+            # If both chosen
+            if chosen_input and chosen_output:
+                first_device_id, first_port_id = \
+                    self.devices.get_signal_ids(chosen_input)
+                second_device_id, second_port_id = \
+                    self.devices.get_signal_ids(
+                        chosen_output)
+                # Get output and port ids
+                print('input name', chosen_input)
+                print('output name', chosen_output)
+                print('first device, port', first_device_id, first_port_id)
+                print('second device, port', second_device_id,
+                      second_port_id)
+                connection_error = self.network.make_connection(
+                    first_device_id, first_port_id,
+                    second_device_id, second_port_id
+                )
+
+                if connection_error == self.network.NO_ERROR:
+                    self.console_box.print_console_message(
+                        "Successfully made connection.\n"
+                    )
+                else:
+                    self.console_box.print_console_message(
+                        "Error! Could not make connection.\n"
+                    )
+
+    def on_remove_connection_button(self, event):
+        """Remove connection between two inputs/outputs."""
+        chosen_input = None
+        chosen_output = None
+        if self.is_parsed:
+            # Dialog for choosing input
+            self.get_inputs_outputs()
+            input_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Input of the Connection You Wish to Remove",
+                "Input of Connection",
+                self.input_list,
+            )
+
+            if input_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_input = input_dlg.GetStringSelection()
+                chosen_input = selected_input
+            input_dlg.Destroy()
+
+            output_dlg = wx.SingleChoiceDialog(
+                self,
+                "Choose the Output of the Connection You Wish to Remove",
+                "Output of Connection",
+                self.output_list,
+            )
+
+            if output_dlg.ShowModal() == wx.ID_OK:
+                # Return indexes selected by the user
+                selected_output = output_dlg.GetStringSelection()
+                chosen_output = selected_output
+            output_dlg.Destroy()
+            # If both chosen
+            if chosen_input and chosen_output:
+                # Get output and port ids
+                first_device_id, first_port_id = \
+                    self.devices.get_signal_ids(chosen_input)
+                second_device_id, second_port_id = \
+                    self.devices.get_signal_ids(chosen_output)
+                connection_error = self.network.remove_connection(
+                    first_device_id, first_port_id,
+                    second_device_id, second_port_id
+                )
+                if connection_error == self.network.NO_ERROR:
+                    self.console_box.print_console_message(
+                        "Successfully removed connection.\n"
+                    )
+                else:
+                    self.console_box.print_console_message(
+                        "Error! Could not remove connection.\n"
+                    )
 
     def clear_previous_file(self):
         """Reinitialise everything when new definition file chosen."""
@@ -562,6 +729,8 @@ class Gui(wx.Frame):
         self.switch_name_list = []
         self.switch_on_list = []
         self.switch_off_list = []
+        self.input_list = []
+        self.output_list = []
 
         # Set file to be not parsed
         self.is_parsed = False
@@ -571,7 +740,7 @@ class Gui(wx.Frame):
         self.cycles_completed = 0
 
         # Configure console properties
-        self.console_text = _("Welcome to Logic Simulation App!")
+        self.console_text = "Welcome to Logic Simulation App!"
 
         # Configure the loggers
         self.scanner_logger = logging.getLogger("scanner")

@@ -57,6 +57,8 @@ def main(arg_list):
     scanner_logger = logging.getLogger("scanner")
     parser_logger = logging.getLogger("parser")
     logging.basicConfig(level=logging.DEBUG)
+    scanner_logger.propagate = False
+    parser_logger.propagate = False
 
     for option, path in options:
         if option == "-h":  # print the usage message

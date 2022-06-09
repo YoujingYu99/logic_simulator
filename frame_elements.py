@@ -23,9 +23,9 @@ from parse import Parser
 
 _ = wx.GetTranslation
 
+
 class FileMenu(wx.Menu):
-    """This class contains all the methods for creating the menu
-    named 'File'.
+    """This class contains all the methods for creating the 'File' menu.
 
     Parameters
     ----------
@@ -54,8 +54,9 @@ class FileMenu(wx.Menu):
         """Initialise menu and menu items."""
         # Open item
         openItem = wx.MenuItem(
-            parentMenu=self, id=wx.ID_OPEN, 
-            text= "".join(("&", _("Open"),"\tCtrl+O" )),
+            parentMenu=self,
+            id=wx.ID_OPEN,
+            text="".join(("&", _("Open"), "\tCtrl+O")),
             kind=wx.ITEM_NORMAL
         )
         self.Append(openItem)
@@ -65,7 +66,7 @@ class FileMenu(wx.Menu):
         saveTraceItem = wx.MenuItem(
             parentMenu=self,
             id=wx.ID_ANY,
-            text= "".join(("&", _("Save Trace"),"\tCtrl+S" )),
+            text="".join(("&", _("Save Trace"), "\tCtrl+S")),
             helpString=_("Save the Trace"),
             kind=wx.ITEM_NORMAL,
         )
@@ -76,7 +77,7 @@ class FileMenu(wx.Menu):
         saveConsoleItem = wx.MenuItem(
             parentMenu=self,
             id=wx.ID_ANY,
-            text= "".join(("&", _("Save Console"),"\tCtrl+C" )),
+            text="".join(("&", _("Save Console"), "\tCtrl+C")),
             helpString=_("Save the Console Output"),
             kind=wx.ITEM_NORMAL,
         )
@@ -88,13 +89,13 @@ class FileMenu(wx.Menu):
 
         # Quit project
         quitItem = wx.MenuItem(parentMenu=self, id=wx.ID_EXIT,
-            text= "".join(("&", _("Quit"),"\tCtrl+Q" )))
+                               text="".join(("&", _("Quit"), "\tCtrl+Q")))
         self.Append(quitItem)
         self.Bind(wx.EVT_MENU, handler=self.on_quit, source=quitItem)
 
     def on_open(self, event):
         """Open definition file uploaded by user."""
-        wildcard = "TXT " + _("files") +"( *.txt)|*.txt"
+        wildcard = "TXT " + _("files") + "( *.txt)|*.txt"
         dialog = wx.FileDialog(
             self.parentFrame,
             _("Open Text Files"),
@@ -138,6 +139,7 @@ class FileMenu(wx.Menu):
                 self.parentFrame.network = parser.network
                 self.parentFrame.devices = parser.devices
                 self.parentFrame.monitors = parser.monitors
+
                 # Update canvas objects
                 self.parentFrame.canvas.names = parser.names
                 self.parentFrame.canvas.network = parser.network
@@ -146,20 +148,25 @@ class FileMenu(wx.Menu):
 
                 self.parentFrame.get_switch_names()
                 self.parentFrame.get_monitor_names()
+                self.parentFrame.get_inputs_outputs()
 
             else:
                 self.parentFrame.console_box.print_console_message(
-                    "".join((_("File cannot be parsed. Please check your"
-                        "definition file"), "\n"))
+                    "".join(
+                        (_("File cannot be parsed. Please check your"
+                           "definition file"),
+                         "\n"))
                 )
                 error_list = parser.error_string.split("$")
                 for error in error_list:
-                    self.parentFrame.console_box.\
-                        print_console_message(error+os.linesep)
+                    self.parentFrame.console_box. \
+                        print_console_message(error + os.linesep)
                 self.parentFrame.console_box.print_console_message(
-                    _("A total of ") + str(parser.error_count)
+                    _("A total of ")
+                    + str(parser.error_count)
                     + _(" Error(s) in File. Please correct them and"
-                    "try again.") + "\n"
+                        "try again.")
+                    + "\n"
                 )
 
         dialog.Destroy()
@@ -230,8 +237,8 @@ class FileMenu(wx.Menu):
 
 
 class HelpMenu(wx.Menu):
-    """This class contains all the methods for creating the menu
-    named 'Help'.
+    """
+    This class contains all the methods for creating the menu named 'Help'.
 
     Public methods
     --------------
@@ -250,7 +257,7 @@ class HelpMenu(wx.Menu):
         """Initialise menu and menu items."""
         # Display starting information/documentation
         infoItem = wx.MenuItem(parentMenu=self, id=wx.ID_INFO,
-            text= "".join(("&", _("Start"),"\tCtrl+H" )))
+                               text="".join(("&", _("Start"), "\tCtrl+H")))
         self.Append(infoItem)
         self.Bind(wx.EVT_MENU, handler=self.on_info, source=infoItem)
         self.AppendSeparator()
@@ -258,7 +265,7 @@ class HelpMenu(wx.Menu):
         # Information about app
         documentationItem = wx.MenuItem(
             parentMenu=self, id=wx.ID_ANY,
-            text= "".join(("&", _("Documetation"),"\tCtrl+D" ))
+            text="".join(("&", _("Documetation"), "\tCtrl+D"))
         )
         self.Append(documentationItem)
         self.Bind(wx.EVT_MENU, handler=self.on_documentation,
@@ -269,11 +276,11 @@ class HelpMenu(wx.Menu):
         # FIXME
         wx.MessageBox(
             _("Start by uploading your definition file by selecting "
-            "'File/Open'.\nChoose the number of cycles you wish "
-            "to run by spinning the button.Then press 'Run' to run the "
-            "simulation.\nClick on 'Choose Monitor' or "
-            "'Choose Switch' to choose the signals to be displayed or "
-            "state of switches."),
+              "'File/Open'.\nChoose the number of cycles you wish "
+              "to run by spinning the button.Then press 'Run' to run the "
+              "simulation.\nClick on 'Choose Monitor' or "
+              "'Choose Switch' to choose the signals to be displayed or "
+              "state of switches."),
             _("How to Use Logic Simulator App"),
             wx.ICON_INFORMATION | wx.OK,
         )
@@ -285,8 +292,8 @@ class HelpMenu(wx.Menu):
 
 
 class AboutMenu(wx.Menu):
-    """This class contains all the methods for creating the menu
-    named 'About'.
+    """
+    This class contains all the methods for creating the menu named 'About'.
 
     Public methods
     --------------
@@ -303,17 +310,18 @@ class AboutMenu(wx.Menu):
     def on_init(self):
         """Initialise menu and menu items."""
         aboutItem = wx.MenuItem(parentMenu=self, id=wx.ID_ABOUT,
-            text= "".join(("&", _("About"),"\tCtrl+A" )))
+                                text="".join(("&", _("About"), "\tCtrl+A")))
         self.Append(aboutItem)
         self.Bind(wx.EVT_MENU, handler=self.on_about, source=aboutItem)
 
     def on_about(self, event):
         """Display about information."""
         wx.MessageBox(
-            "".join((_("Logic Simulator created by Mojisola Agboola"), 
-            "\n2017\n", _("Developed and completed by Nikodem, Youjing and Gleb, "),
-            _("the most brilliant engineers of the 2019 cohort.")
-            )),
+            "".join((_("Logic Simulator created by Mojisola Agboola"),
+                     "\n2017\n",
+                     _("Developed and completed by Niko, Youjing and Gleb,"),
+                     _(" the most brilliant engineers of the 2019 cohort."))
+                    ),
             _("About Logsim"),
             wx.ICON_INFORMATION | wx.OK,
         )
@@ -321,8 +329,8 @@ class AboutMenu(wx.Menu):
 
 
 class ConsoleBox(wx.TextCtrl):
-    """This class contains all the methods for creating the menu
-    named 'File'.
+    """
+    This class contains all the methods for creating the menu named 'File'.
 
     Public methods
     --------------
@@ -333,16 +341,17 @@ class ConsoleBox(wx.TextCtrl):
     """
 
     def __init__(
-        self,
-        parent,
-        id=wx.ID_ANY,
-        label="",
-        pos=wx.DefaultPosition,
-        size=wx.DefaultSize,
-        style=0,
+            self,
+            parent,
+            id=wx.ID_ANY,
+            label="",
+            pos=wx.DefaultPosition,
+            size=wx.DefaultSize,
+            style=0,
     ):
         """Initialise properties."""
-        super(ConsoleBox, self).__init__(parent, id, label, pos, size, style)
+        super(ConsoleBox, self).__init__(parent, id, label, pos, size,
+                                         style)
         self.token = "console_box"
         if parent:
             self.token = parent.token + self.token
@@ -380,8 +389,8 @@ class ConsoleBox(wx.TextCtrl):
 
 
 class CycleNumberText(wx.StaticText):
-    """This class contains all the methods for displaying the static
-     number of cycles.
+    """
+    This class contains all the methods for displaying the number of cycles.
 
     Public methods
     --------------
@@ -389,14 +398,14 @@ class CycleNumberText(wx.StaticText):
     """
 
     def __init__(
-        self,
-        parent,
-        id=wx.ID_ANY,
-        label="",
-        pos=wx.DefaultPosition,
-        size=wx.DefaultSize,
-        style=0,
-        name=wx.StaticTextNameStr,
+            self,
+            parent,
+            id=wx.ID_ANY,
+            label="",
+            pos=wx.DefaultPosition,
+            size=wx.DefaultSize,
+            style=0,
+            name=wx.StaticTextNameStr,
     ):
         """Initialise properties."""
         super(CycleNumberText, self).__init__(parent, id, label, pos,
