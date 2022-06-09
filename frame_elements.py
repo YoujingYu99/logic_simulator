@@ -153,7 +153,7 @@ class FileMenu(wx.Menu):
             else:
                 self.parentFrame.console_box.print_console_message(
                     "".join(
-                        (_("File cannot be parsed. Please check your"
+                        (_("File cannot be parsed. Please check your "
                            "definition file"),
                          "\n"))
                 )
