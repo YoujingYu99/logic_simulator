@@ -1,6 +1,6 @@
-# SOME DESCRIPTIVE TITLE.
+# Logic Simulator Chinese Translations.
 # Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Nikodem Czarlinski ntc28@cam.ac.uk, 2022.
 #
 msgid ""
 msgstr ""
