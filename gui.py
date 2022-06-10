@@ -72,7 +72,7 @@ class Gui(wx.Frame):
 
     on_remove_connection_button(self):Event handler for when the user removes
                             connections.
-                            
+
     clear_previous_file(self): Event handler for when the user opens another
                             definition file.
     """
@@ -176,7 +176,6 @@ class Gui(wx.Frame):
         menuBar.Append(fileMenu, "".join(("&", _("File"))))
         menuBar.Append(helpMenu, "".join(("&", _("Help"))))
         menuBar.Append(aboutMenu, "".join(("&", _("About"))))
-
 
         # Set menubar
         self.SetMenuBar(menuBar)
@@ -323,8 +322,8 @@ class Gui(wx.Frame):
         if self.spin_value >= 1000:
             dlg = wx.MessageDialog(
                 self,
-                _("More than 1000 cycles set to be run. " 
-                "Please change to a lower value of runs."),
+                _("More than 1000 cycles set to be run. "
+                  "Please change to a lower value of runs."),
                 _("Warning"),
                 wx.OK | wx.ICON_WARNING,
             )
@@ -335,8 +334,8 @@ class Gui(wx.Frame):
         elif 100 < self.spin_value < 1000:
             dlg = wx.MessageDialog(
                 self,
-                _("More than 100 cycles set to be run! Are you sure you" 
-                " want to continue?"),
+                _("More than 100 cycles set to be run! Are you sure you"
+                  " want to continue?"),
                 _("Warning"),
                 wx.YES_NO | wx.ICON_QUESTION,
             )
@@ -383,7 +382,7 @@ class Gui(wx.Frame):
             else:
                 # Show error if file was not parsed correctly
                 text = "".join((_("Cannot run simulation. Please check your "
-                    "definition file."), "\n"))
+                                  "definition file."), "\n"))
                 self.console_box.print_console_message(text)
 
     def on_continue_button(self, event):
@@ -411,7 +410,7 @@ class Gui(wx.Frame):
                                 _(" cycles,"),
                                 _(" a total of "),
                                 str(self.cycles_completed),
-                                _(" cycles run.") , "\n",
+                                _(" cycles run."), "\n",
                             ]
                         )
                         self.console_box.print_console_message(text)
@@ -422,7 +421,7 @@ class Gui(wx.Frame):
                 # Show error if file was not parsed correctly
                 text = "".join((
                     _("Cannot continue running simulation. Please check"),
-                    _("your definition file.") , "\n"
+                    _("your definition file."), "\n"
                 ))
                 self.console_box.print_console_message(text)
 
@@ -445,7 +444,7 @@ class Gui(wx.Frame):
             else:
                 text = "".join((
                     _("Cannot rerun simulation. Please check "),
-                    _("your definition file."),"\n"
+                    _("your definition file."), "\n"
                 ))
                 self.console_box.print_console_message(text)
 
@@ -495,7 +494,7 @@ class Gui(wx.Frame):
         else:
             # Show error if file was not parsed correctly
             text = "".join((_("Cannot Show on Monitor. Please check your "
-                   "definition file."), "\n"))
+                              "definition file."), "\n"))
             self.console_box.print_console_message(text)
 
     def update_monitors(self, selections):
@@ -517,12 +516,12 @@ class Gui(wx.Frame):
                 if monitor_error == self.monitors.NO_ERROR:
                     self.console_box.print_console_message(
                         "".join((_("Successfully made monitor."),
-                             "\n"))
+                                 "\n"))
                     )
                 else:
                     self.console_box.print_console_message(
                         "".join((_("Error! Could not make monitor."),
-                             "\n"))
+                                 "\n"))
                     )
         # Update the monitored list
         self.monitored_list = new_monitored_list
@@ -572,7 +571,7 @@ class Gui(wx.Frame):
         else:
             # Show error if file was not parsed correctly
             text = "".join((_("Cannot Show on Monitor. Please check your "
-                    "definition file."), "\n"))
+                              "definition file."), "\n"))
             self.console_box.print_console_message(text)
 
     def update_switches(self, selections):
@@ -597,7 +596,7 @@ class Gui(wx.Frame):
         self.canvas.devices = self.devices
         self.console_box.print_console_message(
             "".join((_("Successfully set the state of switches."),
-                "\n")))
+                     "\n")))
 
     def get_inputs_outputs(self):
         """Get all inputs and outputs in network."""
@@ -608,7 +607,7 @@ class Gui(wx.Frame):
                 device.device_id)
             for key in device.inputs.keys():
                 full_input_name = device_name + "." \
-                                  + self.names.get_name_string(key)
+                    + self.names.get_name_string(key)
                 input_list.append(full_input_name)
                 # Check outputs
             for key in device.outputs.keys():
@@ -616,7 +615,7 @@ class Gui(wx.Frame):
                     output_name = self.names.get_name_string(
                         key)
                     full_output_name = device_name + "." + output_name
-                except:
+                except BaseException:
                     full_output_name = device_name
                 output_list.append(full_output_name)
 
@@ -676,12 +675,12 @@ class Gui(wx.Frame):
                 if connection_error == self.network.NO_ERROR:
                     self.console_box.print_console_message(
                         "".join((_("Successfully made connection."),
-                             "\n"))
+                                 "\n"))
                     )
                 else:
                     self.console_box.print_console_message(
                         "".join((_("Error! Could not make connection."),
-                             "\n"))
+                                 "\n"))
                     )
 
     def on_remove_connection_button(self, event):
@@ -730,12 +729,12 @@ class Gui(wx.Frame):
                 if connection_error == self.network.NO_ERROR:
                     self.console_box.print_console_message(
                         "".join((_("Successfully removed connection."),
-                             "\n"))
+                                 "\n"))
                     )
                 else:
                     self.console_box.print_console_message(
                         "".join((_("Error! Could not remove connection."),
-                             "\n"))
+                                 "\n"))
                     )
 
     def clear_previous_file(self):
