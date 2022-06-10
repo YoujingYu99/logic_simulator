@@ -9,7 +9,7 @@ Names - maps variable names and string names to unique integers.
 """
 
 
-from typing import Type
+from typing import Type, List
 
 
 class Names:
