@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-06-10 09:30+0100\n"
-"PO-Revision-Date: 2022-06-10 09:33+0100\n"
+"POT-Creation-Date: 2022-06-10 10:12+0100\n"
+"PO-Revision-Date: 2022-06-10 10:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -178,208 +178,216 @@ msgstr "文件"
 msgid "Help"
 msgstr "帮助"
 
-#: gui.py:185
-#: gui.py:769
+#: gui.py:184
+#: gui.py:768
 msgid "Welcome to Logic Simulation App!"
 msgstr "欢迎来到逻辑仿真应用程序！"
 
-#: gui.py:188
+#: gui.py:187
 msgid "Number of Cycles"
 msgstr "循环数"
 
-#: gui.py:199
+#: gui.py:198
 msgid "Run"
 msgstr "跑"
 
-#: gui.py:200
+#: gui.py:199
 msgid "Continue"
 msgstr "继续"
 
-#: gui.py:201
+#: gui.py:200
 msgid "Rerun"
 msgstr "重新运行"
 
-#: gui.py:203
+#: gui.py:202
 msgid "Clear Console"
 msgstr "清除控制台"
 
-#: gui.py:205
+#: gui.py:204
 msgid "Choose Monitor"
 msgstr "选择显示器"
 
-#: gui.py:206
+#: gui.py:205
 msgid "Choose Switch"
 msgstr "选择开关"
 
-#: gui.py:208
+#: gui.py:207
 msgid "Make Connection"
 msgstr "错误！无法制作监视器。"
 
-#: gui.py:210
+#: gui.py:209
 msgid "Remove Connection"
 msgstr "错误！无法制作监视器。"
 
-#: gui.py:315
+#: gui.py:314
 msgid "New spin control value: "
 msgstr "新的旋转控制值 "
 
-#: gui.py:326
+#: gui.py:325
 msgid ""
 "More than 1000 cycles set to be run. Please change to a lower value of runs."
 msgstr "设置运行超过 1000 个循环。请更改为较低的运行值。"
 
-#: gui.py:328
-#: gui.py:340
+#: gui.py:327
+#: gui.py:339
 msgid "Warning"
 msgstr "警告"
 
-#: gui.py:338
+#: gui.py:337
 msgid "More than 100 cycles set to be run! Are you sure you want to continue?"
 msgstr "将运行 100 多个循环！你确定你 ?"
 
-#: gui.py:359
+#: gui.py:358
 msgid "Error! Network oscillating."
 msgstr "错误！网络震荡。"
 
-#: gui.py:380
+#: gui.py:379
 msgid "Running for "
 msgstr "为 "
 
-#: gui.py:381
+#: gui.py:380
 msgid " cycles."
 msgstr " 循环."
 
-#: gui.py:385
+#: gui.py:384
 msgid "Cannot run simulation. Please check your definition file."
 msgstr "无法重新运行模拟。请检查."
 
-#: gui.py:399
+#: gui.py:398
 msgid "Error! No previous simulation. "
 msgstr "欢迎来到逻辑仿真应用程序 "
 
-#: gui.py:400
+#: gui.py:399
 msgid "Please run first."
 msgstr "请先跑。"
 
-#: gui.py:409
+#: gui.py:408
 msgid "Continuing for "
 msgstr "继续 "
 
-#: gui.py:411
+#: gui.py:410
 msgid " cycles,"
 msgstr " 循环,"
 
-#: gui.py:412
+#: gui.py:411
 msgid " a total of "
 msgstr " 总共 "
 
-#: gui.py:414
+#: gui.py:413
 msgid " cycles run."
 msgstr " 循环运行。"
 
-#: gui.py:424
+#: gui.py:423
 msgid "Cannot continue running simulation. Please check"
 msgstr "无法继续运行模拟。请检查"
 
-#: gui.py:425
-#: gui.py:448
+#: gui.py:424
+#: gui.py:447
 msgid "your definition file."
 msgstr "文件."
 
-#: gui.py:447
+#: gui.py:446
 msgid "Cannot rerun simulation. Please check "
 msgstr "无法重新运行模拟。请检查 "
 
-#: gui.py:479
+#: gui.py:478
 msgid "Choose the Signals You Wish to Monitor"
 msgstr "选择您要监控的信号"
 
-#: gui.py:480
+#: gui.py:479
 msgid "Monitored Signals"
 msgstr "监控信号"
 
-#: gui.py:497
-#: gui.py:574
+#: gui.py:496
+#: gui.py:573
 msgid "Cannot Show on Monitor. Please check your definition file."
 msgstr "无法在监视器上显示。请检查您的定义文件。"
 
-#: gui.py:519
+#: gui.py:518
 msgid "Successfully made monitor."
 msgstr "成功制作监视器。"
 
-#: gui.py:524
+#: gui.py:523
 msgid "Error! Could not make monitor."
 msgstr "错误！无法制作监视器。"
 
-#: gui.py:558
+#: gui.py:557
 msgid "Choose the switches to be set to 1"
 msgstr "选择要设置为 1 的开关"
 
-#: gui.py:559
+#: gui.py:558
 msgid "Switch Settings"
 msgstr "开关设置"
 
-#: gui.py:599
+#: gui.py:598
 msgid "Successfully set the state of switches."
 msgstr "成功设置开关状态。"
 
-#: gui.py:634
+#: gui.py:633
 msgid "Choose the Input You Wish to Connect"
 msgstr "选择您要监控的信号"
 
-#: gui.py:635
-#: gui.py:697
+#: gui.py:634
+#: gui.py:696
 msgid "Input of Connection"
 msgstr "输入连接到输入"
 
-#: gui.py:647
+#: gui.py:646
 msgid "Choose the Output You Wish to Connect"
 msgstr "选择您要监控的信号"
 
-#: gui.py:648
-#: gui.py:710
+#: gui.py:647
+#: gui.py:709
 msgid "Output of Connection"
 msgstr "输出连接到输出"
 
-#: gui.py:666
+#: gui.py:665
 msgid "input name"
 msgstr "输入名称"
 
-#: gui.py:667
+#: gui.py:666
 msgid "output name"
 msgstr "输出名称"
 
-#: gui.py:668
+#: gui.py:667
 msgid "first device, port"
 msgstr "第一个设备，端口"
 
-#: gui.py:669
+#: gui.py:668
 msgid "second device, port"
 msgstr "第二个设备，端口"
 
-#: gui.py:678
+#: gui.py:677
 msgid "Successfully made connection."
 msgstr "成功制作监视器。"
 
-#: gui.py:683
+#: gui.py:682
 msgid "Error! Could not make connection."
 msgstr "错误！无法制作监视器。"
 
-#: gui.py:696
+#: gui.py:695
 msgid "Choose the Input of the Connection You Wish to Remove"
 msgstr "选择你希望删除的连接的输入端"
 
-#: gui.py:709
+#: gui.py:708
 msgid "Choose the Output of the Connection You Wish to Remove"
 msgstr "选择你希望删除的连接的输出"
 
-#: gui.py:732
+#: gui.py:731
 msgid "Successfully removed connection."
 msgstr "画布图像已成功保存。"
 
-#: gui.py:737
+#: gui.py:736
 msgid "Error! Could not remove connection."
 msgstr "错误！无法制作监视器。"
+
+#: logsim.py:46
+msgid "Error: invalid command line arguments."
+msgstr "错误：无效的命令行参数。"
+
+#: logsim.py:100
+msgid "Error: No input should be given for Graphic User Interface"
+msgstr "错误。不应该为图形用户界面提供输入"
 
 #: parse.py:90
 msgid "Input is connected to an input."

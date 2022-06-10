@@ -43,7 +43,7 @@ def main(arg_list):
     try:
         options, arguments = getopt.getopt(arg_list, "hc:")
     except getopt.GetoptError:
-        print("Error: invalid command line arguments\n")
+        print("".join((_("Error: invalid command line arguments."), "\n")))
         print(usage_message)
         sys.exit()
 
@@ -97,8 +97,8 @@ def main(arg_list):
     if not options:
         # if arguments were given
         if arguments:
-            print("Error: No input should be given for Graphic "
-                  "User Interface\n")
+            print("".join((_("Error: No input should be given for Graphic "
+                "User Interface"), "\n")))
             print(usage_message)
             sys.exit()
 
