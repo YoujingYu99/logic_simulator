@@ -13,7 +13,6 @@ from typing import Type
 
 
 class Names:
-
     """Map variable names and string names to unique integers.
 
     This class deals with storing grammatical keywords and user-defined words,
@@ -49,17 +48,21 @@ class Names:
 
     def unique_error_codes(self, num_error_codes):
         """Return a list of unique integer error codes.
+
         Args
         num_error_codes - number of error codes present
 
-        returns: list with unique integer error codes"""
+        returns: list with unique integer error codes
+        """
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
         self.error_code_count += num_error_codes
-        return range(self.error_code_count - num_error_codes, self.error_code_count)
+        return range(self.error_code_count - num_error_codes,
+                     self.error_code_count)
 
     def query(self, name_string):
         """Return the corresponding name ID for name_string.
+
         If the name string is not present in the names list, return None.
 
         Args:
