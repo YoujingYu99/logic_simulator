@@ -1,0 +1,25 @@
+DEVICES{
+    SWITCH sw1(1);
+    SWITCH sw2(0);
+    OR orG(2);
+    AND andG(2);
+    NAND nandG(2);
+    NOR norG(2);
+}
+CONNECT{
+    sw1 => andG.I1;
+    sw1 => andG.I2;
+    sw1 => orG.I1;
+    sw1 => orG.I2;
+    sw2 => nandG.I1;
+    sw2 => nandG.I1;
+    sw2 => norG.I1;
+    sw2 => norG.I2;
+}
+MONITOR{
+    andG;
+    orG;
+    nandG;
+    norG;
+}
+END
