@@ -1,0 +1,27 @@
+DEVICES{
+    AND and1(2);
+    OR or1(2);
+    NOR nor1(2);
+    NAND nand1(2);
+    SWITCH sw1(1);
+    XOR xor1;
+    NOT not1;
+}
+CONNECT{
+    sw1 => and1.I1;
+    sw1 => and1.I2;
+    sw1 => or1.I1;
+    sw1 => or1.I2;
+    sw1 => nor1.I1;
+    sw1 => nor1.I2;
+    and1 => nand1.I1;
+    or1 => nand1.I2;
+    sw1 => xor1.I1;
+    sw1 => xor1.I2;
+    sw1 => not1.I1;
+}
+MONITOR{
+    and1;
+}
+END
+

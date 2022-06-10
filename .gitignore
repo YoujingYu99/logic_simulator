@@ -1,7 +1,10 @@
-/PyOpenGL-3.1.6-cp38-cp38-win_amd64.whl
-/PyOpenGL_accelerate-3.1.6-cp39-cp39-win_amd64.whl
+
 /.idea
-.vscode/settings.json
-__pycache__/names.cpython-39.pyc
-/tests/__pycache__
-.vscode
+/PyOpenGL_accelerate-3.1.6-cp39-cp39-win_amd64.whl
+/PyOpenGL-3.1.6-cp39-cp39-win_amd64.whl
+/PyOpenGL_accelerate-3.1.6-cp39-cp39-win_amd64.whl
+/PyOpenGL-3.1.6-cp37-cp37m-win_amd64.whl
+__pycache__/
+.vscode/
+.pytest_cache/
+GF2_P3_2022.pdf

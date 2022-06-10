@@ -1,0 +1,16 @@
+DEVICES{
+    DTYPE dtype;
+    SWITCH sw1(0), sw2(1), sw3(0);
+    CLOCK clock(10);
+}
+CONNECT{
+    sw1 => dtype.SET;
+    sw2 => dtype.DATA;
+    sw3 => dtype.CLEAR;
+    clock => dtype.CLK;
+}
+MONITOR{
+    dtype.Q;
+    dtype.QBAR;
+}
+END

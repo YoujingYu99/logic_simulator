@@ -13,7 +13,6 @@ from typing import Type, List
 
 
 class Names:
-
     """Map variable names and string names to unique integers.
 
     This class deals with storing grammatical keywords and user-defined words,
@@ -47,19 +46,23 @@ class Names:
         # initialise a private list to store names
         self.__names_list = []
 
-    def unique_error_codes(self, num_error_codes: int) -> list:
+    def unique_error_codes(self, num_error_codes):
         """Return a list of unique integer error codes.
+
         Args
         num_error_codes - number of error codes present
 
-        returns: list with unique integer error codes"""
+        returns: list with unique integer error codes
+        """
         if not isinstance(num_error_codes, int):
             raise TypeError("Expected num_error_codes to be an integer.")
         self.error_code_count += num_error_codes
-        return range(self.error_code_count - num_error_codes, self.error_code_count)
+        return range(self.error_code_count - num_error_codes,
+                     self.error_code_count)
 
-    def query(self, name_string: str) -> int:
+    def query(self, name_string):
         """Return the corresponding name ID for name_string.
+
         If the name string is not present in the names list, return None.
 
         Args:
@@ -75,7 +78,7 @@ class Names:
         else:
             return None
 
-    def lookup(self, name_string_list: list[str]) -> list:
+    def lookup(self, name_string_list):
         """Return a list of name IDs for each name string in name_string_list.
 
         If the name string is not present in the names list, add it.
@@ -95,7 +98,7 @@ class Names:
                 results.append(len(self.__names_list) - 1)
         return results
 
-    def get_name_string(self, name_id: int) -> str:
+    def get_name_string(self, name_id):
         """Return the corresponding name string for name_id.
 
         If the name_id is not an index in the names list, return None.

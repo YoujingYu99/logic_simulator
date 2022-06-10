@@ -9,7 +9,6 @@ Network - builds and executes the network.
 
 
 class Network:
-
     """Build and execute the network.
 
     This class contains many functions required for connecting devices together
@@ -34,6 +33,8 @@ class Network:
     make_connection(self, first_device_id, first_port_id, second_device_id,
                     second_port_id): Connects the first device to the second
                                      device.
+    remove_connection(self, first_device_id, first_port_id, second_device_id,
+                    second_port_id):Remove connection between devices.
 
     check_network(self): Checks if all inputs in the network are connected.
 
@@ -114,7 +115,8 @@ class Network:
         return None
 
     def make_connection(
-        self, first_device_id, first_port_id, second_device_id, second_port_id
+            self, first_device_id, first_port_id, second_device_id,
+            second_port_id
     ):
         """Connect the first device to the second device.
 
@@ -125,17 +127,18 @@ class Network:
 
         if first_device is None or second_device is None:
             error_type = self.DEVICE_ABSENT
-
         elif first_port_id in first_device.inputs:
             if first_device.inputs[first_port_id] is not None:
                 # Input is already in a connection
                 error_type = self.INPUT_CONNECTED
+
             elif second_port_id in second_device.inputs:
                 # Both ports are inputs
                 error_type = self.INPUT_TO_INPUT
             elif second_port_id in second_device.outputs:
                 # Make connection
-                first_device.inputs[first_port_id] = (second_device_id, second_port_id)
+                first_device.inputs[first_port_id] = \
+                    (second_device_id, second_port_id)
                 error_type = self.NO_ERROR
             else:  # second_port_id is not a valid input or output port
                 error_type = self.PORT_ABSENT
@@ -155,6 +158,36 @@ class Network:
                     )
                     error_type = self.NO_ERROR
             else:
+                error_type = self.PORT_ABSENT
+
+        else:  # first_port_id not a valid input or output port
+            error_type = self.PORT_ABSENT
+
+        return error_type
+
+    def remove_connection(
+            self, first_device_id, first_port_id, second_device_id,
+            second_port_id
+    ):
+        """Remove connetion between first device and second device.
+
+        Return self.NO_ERROR if successful, or the corresponding error if not.
+        """
+        first_device = self.devices.get_device(first_device_id)
+        second_device = self.devices.get_device(second_device_id)
+
+        if first_device is None or second_device is None:
+            error_type = self.DEVICE_ABSENT
+
+        # If valid port ids
+        elif first_port_id in first_device.inputs \
+                and second_port_id in second_device.outputs:
+            if first_device.inputs[first_port_id] is not None \
+                    and second_device.outputs[second_port_id] is not None:
+                # Remove connection
+                first_device.inputs[first_port_id] = None
+                error_type = self.NO_ERROR
+            else:  # second_port_id is not a valid input or output port
                 error_type = self.PORT_ABSENT
 
         else:  # first_port_id not a valid input or output port
@@ -247,7 +280,8 @@ class Network:
 
         if device.device_kind == self.devices.XOR:
             # Output is high only if both inputs are different
-            if input_signal_list[0] == input_signal_list[1]:  # assume 2 inputs
+            # assume 2 inputs
+            if input_signal_list[0] == input_signal_list[1]:
                 output_signal = self.devices.LOW
             else:
                 output_signal = self.devices.HIGH
@@ -319,7 +353,8 @@ class Network:
         output_signal = device.outputs[None]  # output ID is None
 
         if output_signal == self.devices.RISING:
-            new_signal = self.update_signal(output_signal, self.devices.HIGH)
+            new_signal = self.update_signal(output_signal,
+                                            self.devices.HIGH)
             if new_signal is None:  # update is unsuccessful
                 return False
             device.outputs[None] = new_signal
@@ -345,7 +380,8 @@ class Network:
             device = self.devices.get_device(device_id)
             if device.clock_counter == device.clock_half_period:
                 device.clock_counter = 0
-                output_signal = self.get_output_signal(device_id, output_id=None)
+                output_signal = self.get_output_signal(device_id,
+                                                       output_id=None)
                 if output_signal == self.devices.HIGH:
                     device.outputs[None] = self.devices.FALLING
                 elif output_signal == self.devices.LOW:
@@ -381,8 +417,8 @@ class Network:
             for device_id in switch_devices:  # execute switch devices
                 if not self.execute_switch(device_id):
                     return False
-            # Execute D-type devices before clocks to catch the rising edge of
-            # the clock
+            # Execute D-type devices before clocks to catch the rising
+            # edge of the clock
             for device_id in d_type_devices:  # execute DTYPE devices
                 if not self.execute_d_type(device_id):
                     return False
@@ -391,20 +427,21 @@ class Network:
                     return False
             for device_id in and_devices:  # execute AND gate devices
                 if not self.execute_gate(
-                    device_id, self.devices.HIGH, self.devices.HIGH
+                        device_id, self.devices.HIGH, self.devices.HIGH
                 ):
                     return False
             for device_id in or_devices:  # execute OR gate devices
-                if not self.execute_gate(device_id, self.devices.LOW, self.devices.LOW):
+                if not self.execute_gate(device_id, self.devices.LOW,
+                                         self.devices.LOW):
                     return False
             for device_id in nand_devices:  # execute NAND gate devices
                 if not self.execute_gate(
-                    device_id, self.devices.HIGH, self.devices.LOW
+                        device_id, self.devices.HIGH, self.devices.LOW
                 ):
                     return False
             for device_id in nor_devices:  # execute NOR gate devices
                 if not self.execute_gate(
-                    device_id, self.devices.LOW, self.devices.HIGH
+                        device_id, self.devices.LOW, self.devices.HIGH
                 ):
                     return False
             for device_id in xor_devices:  # execute XOR devices

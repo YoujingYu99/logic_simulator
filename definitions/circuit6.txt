@@ -1,0 +1,17 @@
+DEVICES{
+    DTYPE dtype1;
+    DTYPE dtype2;
+    CLOCK clock(10);
+}
+CONNECT{
+    sw1 => and1.I1;
+    sw2 => and1.I2;
+    sw3 => and2.I1;
+    sw4 => and2.I2;
+    and1 => and3.I1;
+    and2 => and3.I2;
+}
+MONITOR{
+    and3;
+}
+END
