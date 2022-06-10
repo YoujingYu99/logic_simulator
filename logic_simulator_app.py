@@ -36,7 +36,7 @@ class LogicSimulatorApp(wx.App):
                                 wx.LANGUAGE_ENGLISH]
         system_lang = wx.Locale.GetSystemLanguage()
         # Test if simplified chinese works
-        system_lang = wx.LANGUAGE_CHINESE_SIMPLIFIED
+        # system_lang = wx.LANGUAGE_CHINESE_SIMPLIFIED
         if system_lang in SUPPORTED_LANGS_INTS:
             app_lang = system_lang
         else:

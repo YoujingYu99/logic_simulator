@@ -273,7 +273,6 @@ class HelpMenu(wx.Menu):
 
     def on_info(self, event):
         """Display Basic Help information."""
-        # FIXME
         wx.MessageBox(
             _("Start by uploading your definition file by selecting "
               "'File/Open'.\nChoose the number of cycles you wish "
