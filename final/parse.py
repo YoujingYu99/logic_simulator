@@ -289,7 +289,6 @@ class Parser:
 
             self.symbol = self.scanner.get_symbol()
 
-            # TODO, do not need specify input of not gates
             if self.symbol.type != self.scanner.DOT:
                 self.error("INPUT_SPECIFICATION_EXPECTED")
             else:
