@@ -213,11 +213,11 @@ msgstr "选择开关"
 
 #: gui.py:207
 msgid "Make Connection"
-msgstr "错误！无法制作监视器。"
+msgstr "建立连接"
 
 #: gui.py:209
 msgid "Remove Connection"
-msgstr "错误！无法制作监视器。"
+msgstr "删除连接"
 
 #: gui.py:314
 msgid "New spin control value: "
