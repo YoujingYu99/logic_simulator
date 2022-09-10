@@ -6,18 +6,22 @@ The aim of our project is to design a logic simulator. The logic network is defi
 ## Demonstration
 ### Software Structure
 The flowchart below describes the structure of the software.
-![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/software_structure.png?raw=true)
+
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/main/plots/software_structure.png?raw=true)
 
 ### GUI
 The graphical user interface is shown below.
-![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/whole.jpg?raw=true)
+
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/main/plots/whole.jpg?raw=true)
 
 It is also availabel in Chinese:
-![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/chinese.jpg?raw=true)
+
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/main/plots/chinese.png?raw=true)
 
 ### User Guide
 The user guide is attached as below.
-![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/user_guide.jpg?raw=true)
+
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/main/plots/user_guide.jpg?raw=true)
 
 ## Installation to run on Linux
 
