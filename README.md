@@ -3,7 +3,21 @@
 ## Goal
 The aim of our project is to design a logic simulator. The logic network is defined by a circuit definition text file which is to be uploaded by the user. A detailed specification for the language of the circuit definition, using the Extended Backus Naur Form (EBNF) notation, has also been provided in `grammer.ebnf`. The functionality of the logic simulator is to simulate the operations of an electrical circuit computationally, which provides a time-saving way to test the functionalities of circuits designed. Click on the [final](https://github.com/YoujingYu99/logic_simulator/tree/main/final) folder to see the code!
 
+## Demonstration
+### Software Structure
+The flowchart below describes the structure of the software.
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/software_structure.png?raw=true)
 
+### GUI
+The graphical user interface is shown below.
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/whole.jpg?raw=true)
+
+It is also availabel in Chinese:
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/chinese.jpg?raw=true)
+
+### User Guide
+The user guide is attached as below.
+![alt text](https://github.com/YoujingYu99/logic_simulator/blob/master/plots/user_guide.jpg?raw=true)
 
 ## Installation to run on Linux
 
@@ -73,5 +87,5 @@ Save the canvas plot as an image file by clicking `Menu`, then choose `Save Canv
 All files are fully compliant with PEP 8 and PEP 257. Code styles are autoformatted with `black` and checked with `pycodestyle` and `pydocstyle`.
 
 ## Contributors
-This project is developed by Nikodem, Youjing and Gleb in collaboration.
+This project is developed by [Nikodem](https://github.com/nczarli), [Youjing](https://github.com/YoujingYu99) and [Gleb](https://github.com/hv275) in collaboration.
 
